@@ -1,8 +1,15 @@
 'use server'
-import { INT_GET_ORDER } from "@/urls/internal";
+import { INT_GET_ORDER, INT_ORDER_BYCHANNEL } from "@/urls/internal";
 
 export async function getOrders (orderId:string) {
     const orderRaw = await fetch(INT_GET_ORDER(orderId));
+    console.log(orderRaw);
+    const order = await orderRaw.json();
+    return order;
+}
+
+export async function getOrdersCnl (channel:string) {
+    const orderRaw = await fetch(INT_ORDER_BYCHANNEL(channel));
     const order = await orderRaw.json();
     return order;
 }

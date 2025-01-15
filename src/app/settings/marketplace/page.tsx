@@ -25,6 +25,7 @@ const Settings = () => {
   console.log(params.get('code'));
   if (authCode) {
     let isSuccess = generateToken(authCode);
+    console.log(isSuccess)
   }
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const [isNew, setNew] = useState(true);
@@ -111,7 +112,14 @@ const Settings = () => {
                   Add Shopee Store
                 </Button>
                 <Button disabled className="bg-gradient-to-tr from-blue-800 to-red-500 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
-                  Add Lazada Store
+                  <Link href="https://auth.lazada.com/oauth/authorize?response_type=code&force_auth=true&redirect_uri=https://2391-122-129-96-106.ngrok-free.app/settings/marketplace/callback&client_id=131557">
+                    Add Lazada Store (Chat)
+                  </Link>
+                </Button>
+                <Button disabled className="bg-gradient-to-tr from-blue-800 to-red-500 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
+                  <Link href="https://auth.lazada.com/oauth/authorize?response_type=code&force_auth=true&redirect_uri=https://2391-122-129-96-106.ngrok-free.app/settings/marketplace/callback&client_id=131557">
+                    Add Lazada Store (Order)
+                  </Link>
                 </Button>
                 <Button disabled className="bg-gradient-to-tr from-black to-white text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
                   Add TikTok Store

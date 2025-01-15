@@ -5,6 +5,7 @@ import {Tabs, Tab, Card, CardBody} from "@nextui-org/react";
 import { useState, useEffect } from "react";
 import { OrdersStatusTabs } from "./OrdersStatusTabs";
 import { INT_ORDER_BYCHANNEL } from "@/urls/internal";
+import { getOrdersCnl } from "@/app/actions/order/actions";
 
 export const OrdersTab = (tabsData : any) => {
     const [channelTab, setChannelTab] : any = useState(null);
@@ -22,12 +23,12 @@ export const OrdersTab = (tabsData : any) => {
     useEffect(() => {
         const fetchData = async () => {
             let data:any[] = [];
-            let orderApi = INT_ORDER_BYCHANNEL(channelTab.toLowerCase());
             try {
-                const response = await fetch(orderApi);
-                const ordersData = await response.json();
+                const ordersData = await getOrdersCnl(channelTab.toLowerCase());
+                console.log(ordersData);
                 data = ordersData;
             } catch (err) {
+                console.log(err);
                 console.log('Error getting orders data: ', err);
             }
             setTableData(data);
@@ -38,13 +39,19 @@ export const OrdersTab = (tabsData : any) => {
     }, [channelTab]);
     
     const inactiveChannel:any[] = [];
-    channels.forEach((channel) => {
+    channels.forEach(channel => {
+        let isExist = false;
         tabsData.tabsData.forEach((activeTabs:any) => {
-            if (!channel.name.toLowerCase().includes(activeTabs.name.toLowerCase())) {
-                inactiveChannel.push(channel.name);
+            if (channel.name.toLocaleLowerCase().includes(activeTabs.name.toLowerCase())) {
+                isExist = true;
             }
         });
+        if (!isExist) {
+            inactiveChannel.push(channel.name);
+        }
     });
+
+    // console.log(inactiveChannel)
     return (
         <Card>
             <CardBody>

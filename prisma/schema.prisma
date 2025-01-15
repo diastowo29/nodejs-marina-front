@@ -4,9 +4,9 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
-generator erd {
-  provider = "prisma-erd-generator"
-}
+// generator erd {
+//  provider = "prisma-erd-generator"
+// }
 
 generator client {
   provider = "prisma-client-js"
@@ -117,6 +117,8 @@ model store {
   userId        String?
   orders        orders[]
   main_products main_products[]
+  token String?
+  refToken String?
   chat          chat[]
   omnichat      omnichat[]
 }

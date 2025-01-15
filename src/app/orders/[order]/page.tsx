@@ -23,7 +23,7 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
               <div className="grid grid-cols-4 border-b border-stroke px-7 py-4 dark:border-strokedark">
                 <div className="col-span-3">
                   <h3 className="font-medium text-black dark:text-white">
-                    Order Information : {data.invoice}
+                    Order Information : {data.invoice ? data.invoice : data.origin_id}
                   </h3>
                 </div>
                 <div className="flex justify-end">
@@ -36,12 +36,12 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
                     className="mb-3 block text-sm font-medium text-black dark:text-white"
                     htmlFor="emailAddress">Product(s)</label>
                   <div className="relative">
-                    {data.products.map((product:any) => (
-                      <Card key={product.main_productsId} className="mb-3">
+                    {data.order_items.map((product:any) => (
+                      <Card key={product.productsId} className="mb-3">
                         <CardBody>
-                          <Link isExternal showAnchorIcon href="https://github.com/nextui-org/nextui">{product.main_product.name}</Link>
-                          <p>Qty: {product.qty} | Stock: {product.main_product.stock}</p>
-                          <p>SKU: {product.main_product.sku}</p>
+                          <Link isExternal showAnchorIcon href="https://github.com/nextui-org/nextui">{product.products.name}</Link>
+                          <p>Qty: {product.qty} | Stock: {product.products.stock}</p>
+                          <p>SKU: {product.products.sku}</p>
                         </CardBody>
                       </Card>
                     ))}

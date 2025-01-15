@@ -11,6 +11,34 @@ export async function GET() {
     return Response.json(allStores);
 }
 
+export async function PUT(request:Request) {
+    const req = await request.json();
+    const store = await prisma.store.upsert({
+        where: {
+            identifier: req.identifier
+        },
+        create: {
+            name: req.name,
+            identifier: req.identifier,
+            channel: {
+                connect: {
+                    name: req.channel
+                }
+            },
+            status: req.status,
+            user: {
+                connect: {
+                    email: 'diastowo@gmail.com'
+                }
+            }
+        },
+        update: {
+            status: req.status
+        }
+    })
+    return Response.json(store);
+}
+
 
 export async function POST(request:Request) {
     const req = await request.json();
