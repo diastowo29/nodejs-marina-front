@@ -76,34 +76,34 @@ export async function generateToken (code:string) {
     return token; */
 }
 
-function lazParamz (key:string, secret:string, code:string, ts:Number, endpoint:string) {
-    let params = {
-        app_key: key,
-        timestamp: ts,
-        code: code,
-        sign_method: 'sha256'
-        // ...(code=='' ? { access_token: accToken } : { code: code, refresh_token: refToken }),
-    };
-    // Sort alphabetically by key :*
-    let sortedObject = Object.keys(params).sort().reduce((Obj:any, key:any) => {
-        Obj[key] = params[key];
-        return Obj;
-    }, {});
-    let joinedPresigned = endpoint;
-    let joinedParams;
-    for(let keys in sortedObject) {
-        let joined = [keys, sortedObject[keys]].join('');
-        joinedPresigned = [joinedPresigned, joined].join('');
-        joined = [keys, sortedObject[keys]].join('=');
-        if (joinedParams) {
-            joinedParams = [joinedParams, joined].join('&');
-        } else {
-            joinedParams = [joinedParams, joined].join('');
-        }
-    }
-    let signed = CryptoJS.HmacSHA256(joinedPresigned, secret).toString(CryptoJS.enc.Hex).toUpperCase();
-    return {signed: signed, params: joinedParams};
-}
+// function lazParamz (key:string, secret:string, code:string, ts:Number, endpoint:string) {
+//     let params = {
+//         app_key: key,
+//         timestamp: ts,
+//         code: code,
+//         sign_method: 'sha256'
+//         // ...(code=='' ? { access_token: accToken } : { code: code, refresh_token: refToken }),
+//     };
+//     // Sort alphabetically by key :*
+//     let sortedObject = Object.keys(params).sort().reduce((Obj:any, key:any) => {
+//         Obj[key] = params[key];
+//         return Obj;
+//     }, {});
+//     let joinedPresigned = endpoint;
+//     let joinedParams;
+//     for(let keys in sortedObject) {
+//         let joined = [keys, sortedObject[keys]].join('');
+//         joinedPresigned = [joinedPresigned, joined].join('');
+//         joined = [keys, sortedObject[keys]].join('=');
+//         if (joinedParams) {
+//             joinedParams = [joinedParams, joined].join('&');
+//         } else {
+//             joinedParams = [joinedParams, joined].join('');
+//         }
+//     }
+//     let signed = CryptoJS.HmacSHA256(joinedPresigned, secret).toString(CryptoJS.enc.Hex).toUpperCase();
+//     return {signed: signed, params: joinedParams};
+// }
 
 const sampleTokenResponse = {
     access_token: '50000101931f6hdsqG9BfT3O0ylGmNhylszljYFrriv15dcfcaaoWvMr0exJaIJl',
