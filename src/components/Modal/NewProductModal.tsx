@@ -9,7 +9,7 @@ export default function NewProductModal() {
   return (
     <>
       <Button onPress={onOpen}>Open Modal</Button>
-      <Modal placement="center" portalContainer={divRef.current} size="4xl" isOpen={isOpen} onOpenChange={onOpenChange}>
+      {/* <Modal placement="center" portalContainer={divRef.current} size="4xl" isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
             <>
@@ -44,7 +44,7 @@ export default function NewProductModal() {
             </>
           )}
         </ModalContent>
-      </Modal>
+      </Modal> */}
     </>
   );
 }
