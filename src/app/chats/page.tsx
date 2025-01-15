@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useMemo } from "react";
 import { Metadata } from "next";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
@@ -17,7 +17,7 @@ const ChatPage = () => {
 
   const { chat, isLoading, isError } = GetChat();
 
-  const topContent = React.useMemo(() => {
+  const topContent = useMemo(() => {
     return (
       <div className="flex flex-col gap-4">
         <div className="flex justify-between gap-3 items-end">
@@ -38,7 +38,7 @@ const ChatPage = () => {
         </div>
       </div>
     )
-  });
+  }, []);
   if (isError) return <div>Failed to load</div>
   if (!chat) return <div>Loading...</div>
 
