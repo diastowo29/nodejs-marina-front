@@ -7,9 +7,9 @@ import { Listbox, ListboxItem, ListboxSection, Card, CardHeader, Divider, CardBo
 import {Input, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
 import { BliBliIcon } from "../assets/BliBli";
 import { TokoIcon } from "../assets/Tokopedia";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { createStore } from "@/app/actions/marketplace/actions";
-import { store } from "@prisma/client";
+// import { store } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
 import { generateToken } from "@/app/actions/marketplace/lazada/action";
 
