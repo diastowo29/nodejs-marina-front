@@ -129,7 +129,7 @@ const TablesPage = () => {
                     
                 </div>
                 
-                <Button onPress={onOpen}>Open Modal</Button>
+                {/* <Button onPress={onOpen}>Open Modal</Button>
                 <Modal portalContainer={divRef.current}  style={{zIndex: 1000}} placement="center" size="4xl" isOpen={isOpen} onOpenChange={onOpenChange}>
                     <ModalContent>
                     {(onClose) => (
@@ -165,7 +165,7 @@ const TablesPage = () => {
                         </>
                     )}
                     </ModalContent>
-                </Modal>
+                </Modal> */}
                 
             </div>
             
