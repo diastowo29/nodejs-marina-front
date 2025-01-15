@@ -14,6 +14,8 @@ export async function getOrdersCnl (channel:string) {
     return order;
 }
 
+
+
 export async function updateOrders (orderId:string) {
     const orderRaw = await fetch(INT_GET_ORDER(orderId));
     const order = await orderRaw.json();
