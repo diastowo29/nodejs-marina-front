@@ -68,8 +68,8 @@ export const ChatWindow = (comments : any) => {
         });
         const newChat = await newChatJson.json();
         console.log(newChat);
-        messagesEndRef
-                .current?.scrollIntoView({behaviour: 'smooth'})
+        // messagesEndRef
+        //         .current?.scrollIntoView({behaviour: 'smooth'})
         // const commentSection = document.getElementById('commentSection');
         // commentSection.scrollTop = (commentSection?.scrollHeight)+100;
         setNewMessage('');
@@ -77,15 +77,7 @@ export const ChatWindow = (comments : any) => {
         // sent: true,   timestamp: new Date().toLocaleTimeString([], { hour: "2-digit",
         // minute: "2-digit" }), }; setNewMessage("");
     };
-    useEffect(() => {
-      const socket = io('http://localhost:3000');
-      messagesEndRef.current?.scrollIntoView({behaviour: 'smooth'});
-      socket.on('chatTokopedia', handleNewMessage);
-      // socket.on('chatTokopedia', (data:any) => {
-      //   console.log(data);
-      // })
-      return() => socket.disconnect();
-    }, []);
+    
 
     const handleNewMessage = (data:any) => {
       console.log(data);
@@ -110,6 +102,17 @@ export const ChatWindow = (comments : any) => {
           console.log(data.user_id.toString());
         }
     }
+
+    useEffect(() => {
+      const socket = io('http://localhost:3000');
+      // messagesEndRef.current?.scrollIntoView({behaviour: 'smooth'});
+      socket.on('chatTokopedia', handleNewMessage);
+      // socket.on('chatTokopedia', (data:any) => {
+      //   console.log(data);
+      // })
+      socket.disconnect();
+      // return() => socket.disconnect();
+    }, []);
     return (
         <Card className="col-span-3">
             <CardHeader className="justify-between">
