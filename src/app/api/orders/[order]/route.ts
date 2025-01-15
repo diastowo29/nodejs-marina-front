@@ -1,43 +1,47 @@
-import { PrismaClient } from '@prisma/client';
+// import { PrismaClient } from '@prisma/client';
 import { NextResponse } from 'next/server';
-const prisma = new PrismaClient()
+// const prisma = new PrismaClient()
 
 export async function GET(request:Request, { params } : any) {
-    const allOrders = await prisma.orders.findUnique({
-        where: {
-            id: Number.parseInt(params.order)
-        },
-        include: {
-            products: {
-                include: {
-                    main_product : true
-                }
-            },
-            store: {
-                include: {
-                    channel: true
-                }
-            },
-            customers: true,
-            logistic: true
-        }
-    });
-    return Response.json(allOrders ? allOrders:[]);
+    // const allOrders = await prisma.orders.findUnique({
+    //     where: {
+    //         id: Number.parseInt(params.order)
+    //     },
+    //     include: {
+    //         products: {
+    //             include: {
+    //                 main_product : true
+    //             }
+    //         },
+    //         store: {
+    //             include: {
+    //                 channel: true
+    //             }
+    //         },
+    //         customers: true,
+    //         logistic: true
+    //     }
+    // });
+    // return Response.json(allOrders ? allOrders:[]);
+    return Response.json({});
+
 }
 
 export async function PUT(request:Request, { params } : any) {
-    try {
-        let reqBody = await request.json();
-        const orderId = params.order;
-        const getOrder = await prisma.orders.update({
-            data: reqBody,
-            where: { id: Number.parseInt(orderId) }
-        });
-        return NextResponse.json(getOrder);
-    } catch (err) {
-        console.log(err);
-        return NextResponse.json(err, {status: 422});
-    }
+    // try {
+    //     let reqBody = await request.json();
+    //     const orderId = params.order;
+    //     const getOrder = await prisma.orders.update({
+    //         data: reqBody,
+    //         where: { id: Number.parseInt(orderId) }
+    //     });
+    //     return NextResponse.json(getOrder);
+    // } catch (err) {
+    //     console.log(err);
+    //     return NextResponse.json(err, {status: 422});
+    // }
+    return Response.json({});
+
 }
 
 

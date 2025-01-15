@@ -1,53 +1,56 @@
 import { TOKO_GETTOKEN, TOKO_REPLYCHAT } from '@/urls/tokopedia';
-import { PrismaClient } from '@prisma/client'
+// import { PrismaClient } from '@prisma/client'
 import { NextApiRequest, NextApiResponse } from 'next';
 import { NextRequest, NextResponse } from 'next/server';
-const prisma = new PrismaClient()
+// const prisma = new PrismaClient()
 
 export async function GET() {
-    const chats = await prisma.omnichat.findMany({
-        include: {
-            store: {
-                include: {
-                    channel: true
-                }
-            },
-            omnichat_user: true
-        }
-    })
-    return Response.json({chats});
+    // const chats = await prisma.omnichat.findMany({
+    //     include: {
+    //         store: {
+    //             include: {
+    //                 channel: true
+    //             }
+    //         },
+    //         omnichat_user: true
+    //     }
+    // })
+    // return Response.json({chats});
+    return Response.json({});
 }
 
 export async function POST(request:Request) {
-    const req = await request.json();
-    const token = await prisma.cred_channel.findFirst({where: {channelId: req.channel_id}});
-    const clientIdSecret = btoa(`${token?.clientId}:${token?.clientSecret}`);
-    const accessToken = `${token?.tokenType} ${token?.accToken}`;
-    const replyTo = req.id.split('-')[0];
-    const mathRandom = Math.floor(Math.random() * 90000) + 10000
-    const newChat = await prisma.omnichat_line.create({
-        data: {
-            line_text: req.line_text,
-            author: 'agent',
-            origin_id: `${replyTo}-${mathRandom}`,
-            omnichatId: req.omnichatId
-        }
-    });
-    const tokoReplyPayload = {
-        shop_id: Number.parseInt(req.shop_id),
-        message: req.line_text
-    }
+    // const req = await request.json();
+    // const token = await prisma.cred_channel.findFirst({where: {channelId: req.channel_id}});
+    // const clientIdSecret = btoa(`${token?.clientId}:${token?.clientSecret}`);
+    // const accessToken = `${token?.tokenType} ${token?.accToken}`;
+    // const replyTo = req.id.split('-')[0];
+    // const mathRandom = Math.floor(Math.random() * 90000) + 10000
+    // const newChat = await prisma.omnichat_line.create({
+    //     data: {
+    //         line_text: req.line_text,
+    //         author: 'agent',
+    //         origin_id: `${replyTo}-${mathRandom}`,
+    //         omnichatId: req.omnichatId
+    //     }
+    // });
+    // const tokoReplyPayload = {
+    //     shop_id: Number.parseInt(req.shop_id),
+    //     message: req.line_text
+    // }
 
-    const sendReply = await callWithRetry(TOKO_REPLYCHAT(token?.appId!, replyTo), 'POST', accessToken, clientIdSecret, token!.id, tokoReplyPayload)
-    console.log(sendReply);
-    return Response.json(sendReply);
+    // const sendReply = await callWithRetry(TOKO_REPLYCHAT(token?.appId!, replyTo), 'POST', accessToken, clientIdSecret, token!.id, tokoReplyPayload)
+    // console.log(sendReply);
+    // return Response.json(sendReply);
+    return Response.json({});
+
 
     // console.log(req);
     // console.log(token);
     // return Response.json({})
 }
 
-async function callWithRetry (url: string, method:string, credential:string, clientIdSecret:string, tokenId:number, payload:{}) {
+/* async function callWithRetry (url: string, method:string, credential:string, clientIdSecret:string, tokenId:number, payload:{}) {
 
     try {
         const requestPayload = {
@@ -109,4 +112,4 @@ async function refreshTokoToken (clientIdSecret:string) {
             'Authorization': `Basic ${clientIdSecret}`
         },
     });
-}
+} */
