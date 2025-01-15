@@ -11,7 +11,7 @@ import {Dropdown, DropdownTrigger, DropdownMenu, Input, DropdownItem, Button} fr
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 // import { products } from "@/data/tokopedia";
 
-const statusColorMap = {
+const statusColorMap:any = {
     Active: "success",
     'Out of stock': "danger",
     Inactive: "warning",
