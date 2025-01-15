@@ -1,4 +1,5 @@
-const HOST = `http://localhost:3002`;
+// const HOST = `http://localhost:3002`;
+const HOST = 'https://marina-apps.et.r.appspot.com/';
 // const HOST = `https://4be4-122-129-96-106.ngrok-free.app`
 
 export const INT_LIST_CHANNEL = `${HOST}/api/v1/channels`;
