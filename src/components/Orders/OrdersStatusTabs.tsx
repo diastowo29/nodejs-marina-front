@@ -198,10 +198,10 @@ export const OrdersStatusTabs = (currentData:any) => {
                 <DataTable
                     columns={dtTable_columns}
                     data={tableData}
-                    expandableRows
+                    // expandableRows
                     pagination
                     onRowClicked={orderSelected}
-                    expandableRowsComponent={ExpandedComponent}
+                    // expandableRowsComponent={ExpandedComponent}
                 />
                 {/* <DataTable data={tableData} className="display table" columns={columns}>
                     <thead>
