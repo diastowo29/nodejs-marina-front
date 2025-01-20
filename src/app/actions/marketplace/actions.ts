@@ -1,7 +1,6 @@
 'use server'
 
 import { INT_STORES } from "@/urls/internal";
-import * as crypto from "crypto";
 
 export async function createStore (payload:{}) {
     const storesRaw = await fetch(INT_STORES, {

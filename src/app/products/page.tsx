@@ -9,6 +9,7 @@ import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Chip, A
 import {Dropdown, DropdownTrigger, DropdownMenu, Input, DropdownItem, Button} from "@nextui-org/react";
 // import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import { getListProducts, getProductByChannel } from "../actions/product/actions";
 // import { products } from "@/data/tokopedia";
 
 const statusColorMap:any = {
@@ -36,17 +37,23 @@ const TablesPage = () => {
         
         const fetchData = async () => {
             setLoading(true);
+            console.log(activeTab)
             let data:any[] = [];
-            let productApi = `/api/products?c=${activeTab}`;
-            try {
-                const response = await fetch(productApi);
-                const productData = await response.json();
-                data = productData;
-                productList.current = productData;
-            } catch (err) {
-                console.log('Error getting orders data: ', err);
+            let listProducts = await getProductByChannel(activeTab);
+            if (listProducts == null) {
+                console.log('still null')
+            } else {
+                data = listProducts;
+                setTableData(data);
             }
-            setTableData(data);
+            // let productApi = `/api/products?c=${activeTab}`;
+            // try {
+            //     const response = await fetch(productApi);
+            //     const productData = await response.json();
+            //     productList.current = productData;
+            // } catch (err) {
+            //     console.log('Error getting orders data: ', err);
+            // }
         };
 
         fetchData();
@@ -127,7 +134,7 @@ const TablesPage = () => {
                     {/* <p>Make beautiful websites regardless of your design experience.</p> */}
                     <div className="flex w-full flex-col">
                         <Tabs aria-label="Dynamic tabs" 
-                            disabledKeys={["BliBli"]} 
+                            disabledKeys={["Shopee", "Tiktok"]} 
                             // selectedKey={selected}
                             onSelectionChange={(tabKey) => setActiveTab(tabKey)}
                             items={tabs} 
@@ -166,7 +173,7 @@ const TablesPage = () => {
                                                         </div>
                                                     </TableCell>
                                                     <TableCell>{item.createdAt.split('T')[0]}</TableCell>
-                                                    <TableCell>{item.shop_id.name}</TableCell>
+                                                    <TableCell>{item.store.name}</TableCell>
                                                     {/* <TableCell>{item.status}</TableCell> */}
                                                     <TableCell>
                                                     <Chip className="capitalize" color={statusColorMap['Active']} size="sm" variant="flat">

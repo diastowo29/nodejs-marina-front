@@ -1,26 +1,29 @@
-// const HOST = `http://localhost:3002`;
-const HOST = 'https://marina-apps.et.r.appspot.com/';
-// const HOST = `https://4be4-122-129-96-106.ngrok-free.app`
+const HOST = process.env.BACKEND_HOST;
 
-export const INT_LIST_CHANNEL = `${HOST}/api/v1/channels`;
-export const INT_STORES = `${HOST}/api/stores`;
+let CHANNEL_ENDPOINT = `${HOST}/api/v1/channels`;
+let PRODUCT_ENDPOINT = `${HOST}/api/v1/products`;
+let ORDER_ENDPOINT = `${HOST}/api/v1/orders`;
+export const CHAT_ENDPOINT = `${HOST}/api/v1/chats`;
+let STORE_ENDPOINT = `${HOST}/api/v1/stores`;
+
+export const INT_STORES = STORE_ENDPOINT;
+export const INT_LIST_CHAT = CHAT_ENDPOINT;
+export const INT_LIST_CHANNEL = CHANNEL_ENDPOINT;
+export const INT_LIST_PRODUCT = PRODUCT_ENDPOINT;
+export const CHANNEL_PRODUCT_API = `${CHANNEL_ENDPOINT}/products`;
+
+export const INT_LIST_PRODUCT_ByC = (channelId:string) => {
+    return `${CHANNEL_ENDPOINT}/${channelId}/products`;
+};
+export const INT_QUERY_PRODUCT_ByC = (channelName:string) => {
+    return `${PRODUCT_ENDPOINT}?c=${channelName}`;
+};
 export const INT_ORDER_BYCHANNEL = (channel:string) => {
-    return `${HOST}/api/v1/orders?c=${channel}`;
+    return `${ORDER_ENDPOINT}?c=${channel}`;
 };
 export const INT_GET_ORDER = (orderId:string) => {
-    return `${HOST}/api/v1/orders/${orderId}`;
-};
-export const INT_GET_PRODUCT = (productId:string) => {
-    return `${HOST}/api/products/${productId}`;
-};
-export const REPLY_CHAT = () => {
-    return `${HOST}/api/chat/`;
+    return `${ORDER_ENDPOINT}/${orderId}`;
 };
 export const INT_CHAT_COMMENTS = (chatId:string) => {
-    return `${HOST}/api/chat/${chatId}/comments`;
+    return `${CHAT_ENDPOINT}/${chatId}/comments`;
 };
-export const INT_CREATE_STORE = (chatId:string) => {
-    return `${HOST}/api/stores`;
-};
-
-

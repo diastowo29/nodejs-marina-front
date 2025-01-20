@@ -1,8 +1,10 @@
+"use client";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Avatar, Skeleton } from "@nextui-org/react"
 import { useEffect, useState } from "react";
 import { ChatWindow } from "./ChatWindow";
 import { ChatSidebar } from "./ChatSidebar";
 import { GetChatComments } from "@/functions/swr";
+import DataTable from 'react-data-table-component';
 
 // import io from 'socket.io-client';
 // const socket = io('http://localhost:3000');
@@ -66,6 +68,27 @@ export const ChatListTable = (chat:any) => {
           "createdAt": "2024-11-01T10:52:55.297Z"
         }
     }
+
+    const ChatCell = ({ row }:any) => (
+      <div className="flex gap-5 p-3">
+          <div>
+              <Avatar isBordered radius="full" size="md" src={row.omnichat_user.thumbnailUrl} />
+          </div>
+          <div className="flex flex-col gap-1 items-start justify-center">
+          <h4 className="text-small font-semibold leading-none text-default-600">{row.omnichat_user.username}</h4>
+          <h4 className="text-small leading-none text-default-600 truncate text-ellipsis overflow-hidden ...">{row.store.channel.name}</h4>
+          </div>
+      </div>
+    )
+
+    const chatCol = [
+      {
+          name: 'Username',
+          selector: (row:any) => row.id,
+          cell: (row:any) => <ChatCell row={row} />
+      }
+    ];
+    console.log(chat);
     const [selectedContact, setSelectedContact] = useState(sampleContacts);
     const [listComments, setListComments] = useState(sampleComments);
     const [useSample, setUseSample] = useState(true);
@@ -91,9 +114,22 @@ export const ChatListTable = (chat:any) => {
         //   console.log("Recieved from SERVER ::", data);
         // })
       // }, []);
+
+    const paginationComponentOptions = {
+      noRowsPerPage: true
+    };
+      
     return (
         <div className="grid grid-cols-7 gap-2">
-            <Table className="col-span-2" hideHeader topContent={chat.topContent} aria-label="Example static collection table">
+          <div className="col-span-2">
+            <DataTable
+                columns={chatCol}
+                data={chat.chat}
+                pagination
+                paginationComponentOptions={paginationComponentOptions}
+            />
+          </div>
+            {/* <Table className="col-span-2" hideHeader topContent={chat.topContent} aria-label="Example static collection table">
                 <TableHeader>
                     <TableColumn>NAME</TableColumn>
                 </TableHeader>
@@ -114,7 +150,7 @@ export const ChatListTable = (chat:any) => {
                     </TableRow>
                     ))}
                 </TableBody>
-            </Table>
+            </Table> */}
             {isLoading ?
             <>
               <ChatWindow loading={isLoading} sample={useSample} comments={sampleComments} contacts={sampleContacts}></ChatWindow>

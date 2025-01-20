@@ -11,7 +11,7 @@ import {
     Skeleton
 } from "@nextui-org/react";
 import {useState, useEffect, useRef} from "react";
-import { REPLY_CHAT } from "@/urls/internal";
+import { CHAT_ENDPOINT } from "@/urls/internal";
 import io from 'socket.io-client';
 // const socket = io('http://localhost:3000');
 
@@ -58,7 +58,7 @@ export const ChatWindow = (comments : any) => {
             ...messages,
             newMsg
         ]);
-        const newChatJson = await fetch(REPLY_CHAT(),{
+        const newChatJson = await fetch(CHAT_ENDPOINT,{
           method: 'POST',
           headers: {
             'Accept': 'application/json',

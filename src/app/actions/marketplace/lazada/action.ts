@@ -1,15 +1,6 @@
 'use server'
-// import * as crypto from "crypto";
-import CryptoJS from 'crypto-js';
-import { createClient } from 'redis';
-const client = createClient();
-const lazAuthHost = 'https://auth.lazada.com/rest';
-const lazTokenApi = '/auth/token/create';
-let test = require('dotenv').config()
 
-// let backendHost = 'http://localhost:3002';
-let backendHost = 'https://marina-apps.et.r.appspot.com/';
-
+let backendHost = process.env.BACKEND_HOST || 'http://localhost:3002';
 
 export async function updateOrder (orderId:string) {
     let authResponse = await fetch(`${backendHost}/api/v1/lazada/order/${orderId}`, {
