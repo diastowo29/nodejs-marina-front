@@ -18,6 +18,9 @@ export const INT_LIST_PRODUCT_ByC = (channelId:string) => {
 export const INT_QUERY_PRODUCT_ByC = (channelName:string) => {
     return `${PRODUCT_ENDPOINT}?c=${channelName}`;
 };
+export const INT_FIND_ONE_PRODUCT = (productId:string) => {
+    return `${PRODUCT_ENDPOINT}/${productId}`;
+};
 export const INT_ORDER_BYCHANNEL = (channel:string) => {
     return `${ORDER_ENDPOINT}?c=${channel}`;
 };
