@@ -1,7 +1,7 @@
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import NewProductModal from "@/components/Modal/NewProductModal";
-import { INT_GET_PRODUCT } from "@/urls/internal";
+import { INT_FIND_ONE_PRODUCT } from "@/urls/internal";
 import {
     Card,
     CardHeader,
@@ -26,7 +26,7 @@ const TablesPage = async ({ params }: { params: { product: string } }) => {
     console.log(params.product);
     let data:any = {};
     try {
-        const res = await fetch(INT_GET_PRODUCT(params.product));
+        const res = await fetch(INT_FIND_ONE_PRODUCT(params.product));
         data = await res.json();
         // productRef.current = data;
       } catch (err) {
