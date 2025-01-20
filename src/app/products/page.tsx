@@ -40,7 +40,12 @@ const TablesPage = () => {
             console.log(activeTab)
             let data:any[] = [];
             let listProducts = await getProductByChannel(activeTab);
-            data = listProducts;
+            if (listProducts == null) {
+                console.log('still null')
+            } else {
+                data = listProducts;
+                setTableData(data);
+            }
             // let productApi = `/api/products?c=${activeTab}`;
             // try {
             //     const response = await fetch(productApi);
@@ -49,7 +54,6 @@ const TablesPage = () => {
             // } catch (err) {
             //     console.log('Error getting orders data: ', err);
             // }
-            setTableData(data);
         };
 
         fetchData();
