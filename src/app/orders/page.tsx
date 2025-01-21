@@ -20,6 +20,7 @@ const TablesPage = async () => {
 
     // let {accessToken} = await getAccessToken();
     // console.log(accessToken);
+    console.log(process.env);
     console.log('calling endpoint: ', INT_LIST_CHANNEL);
     let channelsRaw = await fetch(INT_LIST_CHANNEL);
     let channels = await channelsRaw.json();
