@@ -58,7 +58,7 @@ export const ChatWindow = (comments : any) => {
             ...messages,
             newMsg
         ]);
-        console.log('calling endpoint: ', CHAT_ENDPOINT);
+        // console.log('calling endpoint: ', CHAT_ENDPOINT);
         const newChatJson = await fetch(CHAT_ENDPOINT,{
           method: 'POST',
           headers: {
