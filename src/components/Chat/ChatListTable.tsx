@@ -5,6 +5,7 @@ import { ChatWindow } from "./ChatWindow";
 import { ChatSidebar } from "./ChatSidebar";
 import { GetChatComments } from "@/functions/swr";
 import DataTable from 'react-data-table-component';
+import { listChatComments } from "@/app/actions/chat/actions";
 
 // import io from 'socket.io-client';
 // const socket = io('http://localhost:3000');
@@ -88,23 +89,23 @@ export const ChatListTable = (chat:any) => {
           cell: (row:any) => <ChatCell row={row} />
       }
     ];
-    console.log(chat);
+    // console.log(chat);
     const [selectedContact, setSelectedContact] = useState(sampleContacts);
     const [listComments, setListComments] = useState(sampleComments);
     const [useSample, setUseSample] = useState(true);
     const [isLoading, setLoading] = useState(false);
     const handleContactClick = async (contact:any) => {
+      // console.log(contact);
         setUseSample(true);
         setListComments([]);
         setSelectedContact(contact);
         setLoading(true);
         // const { chat, isLoading, isError } = GetChatComments(contact.id);
         // console.log(chat);
-        const chatListJson = await fetch(`/api/chat/${contact.id}/comments`);
-        const chatList = await chatListJson.json();
-        setListComments(chatList);
+        const chatList = await listChatComments(contact.id);
+        setListComments(chatList.messages);
         setLoading(false);
-        console.log(listComments);
+        // console.log(listComments);
         // console.log(comments)
         setUseSample(false);
     }
@@ -126,6 +127,7 @@ export const ChatListTable = (chat:any) => {
                 columns={chatCol}
                 data={chat.chat}
                 pagination
+                onRowClicked={(row:any) => handleContactClick(row)}
                 paginationComponentOptions={paginationComponentOptions}
             />
           </div>

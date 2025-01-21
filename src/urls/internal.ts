@@ -1,4 +1,5 @@
-const HOST = `https://marina-apps.et.r.appspot.com`;
+// const HOST = `https://marina-apps.et.r.appspot.com`;
+const HOST = `http://localhost:3002`;
 
 let CHANNEL_ENDPOINT = `${HOST}/api/v1/channels`;
 let PRODUCT_ENDPOINT = `${HOST}/api/v1/products`;
