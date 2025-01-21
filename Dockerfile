@@ -35,6 +35,5 @@ USER nextjs
 EXPOSE 3000
 
 ENV PORT 3000
-ENV BACKEND_HOST marina-apps.et.r
 
 CMD ["npm", "start"]
