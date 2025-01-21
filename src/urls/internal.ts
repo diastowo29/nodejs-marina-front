@@ -1,4 +1,4 @@
-const HOST = `https://${process.env._BACKEND_HOST}.appspot.com`;
+const HOST = `https://marina-apps.et.r.appspot.com`;
 
 let CHANNEL_ENDPOINT = `${HOST}/api/v1/channels`;
 let PRODUCT_ENDPOINT = `${HOST}/api/v1/products`;
