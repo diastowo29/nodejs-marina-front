@@ -1,6 +1,6 @@
 const HOST = process.env.BACKEND_HOST;
 
-let CHANNEL_ENDPOINT = `${HOST}/api/v1/channels`;
+let CHANNEL_ENDPOINT = `${HOST}/api/v2/channels`;
 let PRODUCT_ENDPOINT = `${HOST}/api/v1/products`;
 let ORDER_ENDPOINT = `${HOST}/api/v1/orders`;
 export const CHAT_ENDPOINT = `${HOST}/api/v1/chats`;
