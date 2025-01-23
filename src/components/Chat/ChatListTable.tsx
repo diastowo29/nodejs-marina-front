@@ -159,7 +159,7 @@ export const ChatListTable = (chat:any) => {
             </> : 
                 <ChatWindow loading={isLoading} sample={useSample} comments={listComments} contacts={selectedContact}></ChatWindow> 
             }
-            <ChatSidebar></ChatSidebar>
+            {/* <ChatSidebar></ChatSidebar> */}
         </div>
     )
 }

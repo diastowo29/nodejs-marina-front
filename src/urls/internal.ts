@@ -1,5 +1,5 @@
-const HOST = `https://marina-apps.et.r.appspot.com`;
-// const HOST = `http://localhost:3002`;
+// const HOST = `https://marina-apps.et.r.appspot.com`;
+const HOST = `http://localhost:3002`;
 
 let CHANNEL_ENDPOINT = `${HOST}/api/v1/channels`;
 let PRODUCT_ENDPOINT = `${HOST}/api/v1/products`;
@@ -10,6 +10,7 @@ let STORE_ENDPOINT = `${HOST}/api/v1/stores`;
 export const INT_STORES = STORE_ENDPOINT;
 export const INT_LIST_CHAT = CHAT_ENDPOINT;
 export const INT_LIST_CHANNEL = CHANNEL_ENDPOINT;
+export const INT_LIST_STORE_ByC = `${CHANNEL_ENDPOINT}/stores`;
 export const INT_LIST_PRODUCT = PRODUCT_ENDPOINT;
 export const CHANNEL_PRODUCT_API = `${CHANNEL_ENDPOINT}/products`;
 

@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Image from "next/image";
 import { Metadata } from "next";
@@ -7,11 +7,17 @@ import { Listbox, ListboxItem, ListboxSection, Card, CardHeader, Divider, CardBo
 import {Input, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
 import { BliBliIcon } from "../assets/BliBli";
 import { TokoIcon } from "../assets/Tokopedia";
-import { useState } from "react";
+// import React, { useState } from "react";
 import { createStore } from "@/app/actions/marketplace/actions";
 // import { store } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
 import { generateToken } from "@/app/actions/marketplace/lazada/action";
+import { getListStores } from "@/app/actions/store/actions";
+import MarketplaceList from "@/components/Settings/MarketplaceList";
+import { Suspense } from "react";
+import { initScriptLoader } from "next/script";
+import SidebarSetting from "@/components/Settings/SidebarSettings";
+import AddMarketplace from "@/components/Settings/AddMarketplace";
 
 // export const metadata: Metadata = {
 //   title: "Next.js Settings | TailAdmin - Next.js Dashboard Template",
@@ -19,15 +25,31 @@ import { generateToken } from "@/app/actions/marketplace/lazada/action";
 //     "This is Next.js Settings page for TailAdmin - Next.js Tailwind CSS Admin Dashboard Template",
 // };
 
-const Settings = () => {
-  let params = useSearchParams();
-  let authCode = params.get('code');
-  console.log(params.get('code'));
-  if (authCode) {
-    let isSuccess = generateToken(authCode);
-    console.log(isSuccess)
-  }
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+const fetcher = (url:any) => fetch(url).then((r) => r.json())
+
+const Settings = async () => {
+  // console.log(process.env.NEXT_PUBLIC_AUTH0_BASE_URL);
+  // let host = process.env.NEXT_PUBLIC_AUTH0_BASE_URL;
+  // let lazadaAuth = 'https://auth.lazada.com/oauth/authorize?response_type=code&force_auth=true';
+  // let callbackEndpoint = `${host}/settings/marketplace`;
+  // let params = useSearchParams();
+  // let authCode:any = params.get('code');
+  // let appsNumber:any = params.get('app');
+  // if (authCode) {
+  //   let isSuccess = generateToken(authCode, appsNumber);
+  //   console.log(isSuccess);
+  // }
+
+  let stores = await getListStores();
+
+  // if (stores.error) {
+  //   console.log('error');
+  // }
+  // console.log(stores);
+  // if (stores) {
+  //   console.log(stores);
+  // }
+  /* const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const [isNew, setNew] = useState(true);
   const [name, setName] = useState('');
   const [marketUrl, setMarketUrl] = useState('');
@@ -68,7 +90,7 @@ const Settings = () => {
     await createStore(payload);
     setLoading(false);
     console.log(marketUrl);
-  }
+  } */
 
   return (
     <DefaultLayout>
@@ -76,21 +98,7 @@ const Settings = () => {
         <Breadcrumb pageName="Settings" />
         <div className="grid grid-cols-7 gap-2">
           <div className="col-span-2 max-w-[260px] border-small px-1 py-2 rounded-small border-default-200 dark:border-default-100">
-            <Listbox aria-label="Actions" 
-              disabledKeys={["api", "wms"]} selectedKeys={["overview"]} onAction={(key) => alert(key)} >
-              <ListboxSection title="Home" showDivider>
-                <ListboxItem key="overview">Overview</ListboxItem>
-              </ListboxSection>
-              <ListboxSection title="Accounts" showDivider>
-                <ListboxItem key="billing">Billing</ListboxItem>
-              </ListboxSection>
-              <ListboxSection title="Accounts" showDivider>
-                <ListboxItem key="store"><Link href="/settings/marketplace">Store Connection</Link></ListboxItem>
-                <ListboxItem key="crm"><Link href="/settings/crm">CRM Integration</Link></ListboxItem>
-                <ListboxItem key="wms">Marina WMS (Soon)</ListboxItem>
-                <ListboxItem key="api">Marina API (Soon)</ListboxItem>
-              </ListboxSection>
-            </Listbox>
+            <SidebarSetting selected="store"/>
           </div>
           <Card className="col-span-5">
             <CardHeader className="flex gap-3">
@@ -101,7 +109,8 @@ const Settings = () => {
             <Divider/>
             <CardBody>
               <p>Connect your stores to Marina.</p>
-              <div className="flex flex-wrap gap-4 items-center">
+              <AddMarketplace/>
+              {/* <div className="flex flex-wrap gap-4 items-center">
                 <Button disabled onClick={() => modalMarketplace('blibli', true)} className="bg-gradient-to-tr from-blue-400 to-sky-400 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
                   Add BliBli Store
                 </Button>
@@ -112,20 +121,24 @@ const Settings = () => {
                   Add Shopee Store
                 </Button>
                 <Button disabled className="bg-gradient-to-tr from-blue-800 to-red-500 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
-                  <Link href="https://auth.lazada.com/oauth/authorize?response_type=code&force_auth=true&redirect_uri=https://2391-122-129-96-106.ngrok-free.app/settings/marketplace/callback&client_id=131557">
+                  <Link href={`${lazadaAuth}&redirect_uri=${callbackEndpoint}?app=chat&client_id=${process.env.NEXT_PUBLIC_LAZ_APP_CHAT_KEY_ID}`}>
                     Add Lazada Store (Chat)
                   </Link>
                 </Button>
                 <Button disabled className="bg-gradient-to-tr from-blue-800 to-red-500 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
-                  <Link href="https://auth.lazada.com/oauth/authorize?response_type=code&force_auth=true&redirect_uri=https://2391-122-129-96-106.ngrok-free.app/settings/marketplace/callback&client_id=131557">
+                  <Link href={`${lazadaAuth}&redirect_uri=${callbackEndpoint}?app=oms&client_id=${process.env.NEXT_PUBLIC_LAZ_APP_OMS_KEY_ID}`}>
                     Add Lazada Store (Order)
                   </Link>
                 </Button>
                 <Button disabled className="bg-gradient-to-tr from-black to-white text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
                   Add TikTok Store
                 </Button>
-              </div>
-              <Listbox aria-label="Actions" 
+              </div> */}
+              {/* <Suspense fallback={<div>Loading...</div>}> */}
+                <MarketplaceList stores={stores}></MarketplaceList>
+              {/* </Suspense> */}
+              {/* <MarketplaceList></MarketplaceList> */}
+              {/* <Listbox aria-label="Actions" 
                 disabledKeys={["api", "wms"]} selectedKeys={["overview"]} onAction={(key) => modalMarketplace(key, false)} >
                 <ListboxSection title="Tokopedia" showDivider>
                   <ListboxItem startContent={<TokoIcon/>} key="overview">Toko Kelontong</ListboxItem>
@@ -137,7 +150,7 @@ const Settings = () => {
                 <ListboxSection title="BliBli" showDivider>
                   <ListboxItem startContent={<BliBliIcon/>} key="store">Kelontong Ceria</ListboxItem>
                 </ListboxSection>
-              </Listbox>
+              </Listbox> */}
             </CardBody>
             <Divider/>
             {/* <CardFooter>
@@ -149,7 +162,7 @@ const Settings = () => {
               </Link>
             </CardFooter> */}
           </Card>
-          <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+          {/* <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
               <ModalContent>
               {(onClose) => (
                   <>
@@ -181,7 +194,7 @@ const Settings = () => {
                         <Button color="danger" variant="light" onPress={onClose}>
                             Close
                         </Button>
-                        <Button color="primary" onClick={() => saveMarketplace(marketName)} isLoading={isLoading} /* onPressStart={() => submitReject(reason, orderId)} */>
+                        <Button color="primary" onClick={() => saveMarketplace(marketName)} isLoading={isLoading}>
                             Submit
                         </Button>
                     </ModalFooter>
@@ -191,7 +204,7 @@ const Settings = () => {
                         <Button color="danger" variant="light" onPress={onClose}>
                             Delete
                         </Button>
-                        <Button color="primary" /* onPressStart={() => submitReject(reason, orderId)} */ onPress={onClose}>
+                        <Button color="primary" onPress={onClose}>
                             Save
                         </Button>
                     </ModalFooter>
@@ -199,7 +212,7 @@ const Settings = () => {
                   </>
               )}
               </ModalContent>
-          </Modal>
+          </Modal> */}
         </div>
     </DefaultLayout>
   );

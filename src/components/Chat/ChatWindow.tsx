@@ -18,9 +18,19 @@ import io from 'socket.io-client';
 export const ChatWindow = (comments : any) => {
     const messagesEndRef = useRef(null);
     console.log(comments);
-    const [messages, setMessages] = useState(comments.comments);
-    // console.log(messages);
-    
+    let newMessages = [];
+    if (comments.contacts.store.channel.name.toString().toLowerCase() == 'lazada') {
+      newMessages = comments.comments.map((comment : any) => {
+        return {
+          id: comment.id,
+          line_text: JSON.parse(comment.line_text).txt,
+          createdAt: comment.createdAt,
+          author: comment.author
+        }
+      });
+    }
+    console.log(newMessages);
+    const [messages, setMessages] = useState(newMessages);
     // console.log(messages); setMessages(comments.comments);
     let msgId = '';
     let omnichatId = ((comments.sample) ? 0 : comments.contacts.id);
@@ -155,16 +165,17 @@ export const ChatWindow = (comments : any) => {
                 className="max-h-[380px] min-h-[380px] px-3 py-0 text-small text-default-400">
                   {comments.sample ?
                     <div
-                    id={messages[0].id}
-                    key={messages[0].id}
-                    className={`mb-1 flex ${messages[0].author != 'end-user'
-                            ? "justify-end"
-                            : "justify-start"}`}>
+                    // id={messages[0].id}
+                    // key={messages[0].id}
+                    // className={`mb-1 flex ${messages[0].author != 'end-user'
+                            // ? "justify-end"
+                            // : "justify-start"}`}
+                            >
                       <Skeleton>
                         <div
-                            className={`max-w-xs lg:max-w-md xl:max-w-lg px-4 py-2 rounded-lg  ${messages[0].author != 'end-user' ? 'bg-zinc-600' : 'bg-blue-500'} text-white`}>
-                            <p>{messages[0].line_text}</p>
-                            <p className="text-xs mt-1 text-stone-300">{messages[0].createdAt}</p>
+                            className={`max-w-xs lg:max-w-md xl:max-w-lg px-4 py-2 rounded-lg text-white`}>
+                            {/* <p>{messages[0].line_text}</p> */}
+                            {/* <p className="text-xs mt-1 text-stone-300">{messages[0].createdAt}</p> */}
                         </div>
                       </Skeleton> 
                   </div> :

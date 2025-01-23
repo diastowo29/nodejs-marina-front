@@ -1,6 +1,6 @@
 'use server'
 
-let backendHost = process.env.BACKEND_HOST || 'http://localhost:3002';
+let backendHost = process.env.BACKEND_HOST;
 
 export async function updateOrder (orderId:string) {
     let authResponse = await fetch(`${backendHost}/api/v1/lazada/order/${orderId}`, {
@@ -15,7 +15,7 @@ export async function updateOrder (orderId:string) {
     });
 }
 
-export async function generateToken (code:string) {
+export async function generateToken (code:string, apps:string) {
 
     let authResponse = await fetch(`${backendHost}/api/v1/lazada/authorize`, {
         method: 'POST',
@@ -25,12 +25,13 @@ export async function generateToken (code:string) {
         },
         body: JSON.stringify({
             code: code,
-            app: 2
+            app: apps
         })
     });
 
     let auth = await authResponse.json();
-    console.log(auth);
+    // console.log(auth);
+    return auth;
     /* let keyId = test.parsed.LAZ_APP_KEY_ID || 'abc';
     // let keyId = process.env.LAZ_APP_KEY_ID || 'abc';
     let keySecret = test.parsed.LAZ_APP_KEY_SECRET || 'abc';
