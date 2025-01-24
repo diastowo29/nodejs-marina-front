@@ -153,7 +153,6 @@ export const ChatWindow = (comments : any) => {
         </Card>
       )
     }
-
     return (
         <Card className="col-span-3">
             <CardHeader className="justify-between">
