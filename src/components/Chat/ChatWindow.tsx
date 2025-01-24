@@ -127,17 +127,17 @@ export const ChatWindow = (comments : any) => {
     }, []);
 
     if (comments.loading) {
-      console.log('loading');
+      // console.log('loading');
       return (
         <Card className="col-span-3">
             <CardHeader className="justify-between">
                 <div className="flex gap-5">
                   <Skeleton className="rounded-lg">
-                  <Avatar
-                      isBordered={true}
-                      radius="full"
-                      size="md"/>
-                </Skeleton>
+                    <Avatar
+                        isBordered
+                        radius="full"
+                        size="md"/>
+                  </Skeleton>
                 </div>
             </CardHeader>
             <Divider className="mb-4"/>
@@ -149,6 +149,7 @@ export const ChatWindow = (comments : any) => {
                     <p>Select one of the contact list on the left</p>
                   </div>
             </CardBody>
+            <CardFooter></CardFooter>
         </Card>
       )
     }
