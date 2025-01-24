@@ -1,7 +1,6 @@
 import {
     Card,
     CardHeader,
-    Input,
     CardBody,
     CardFooter,
     Avatar,
@@ -13,12 +12,11 @@ import {
 import {useState, useEffect, useRef} from "react";
 import { CHAT_ENDPOINT } from "@/urls/internal";
 import io from 'socket.io-client';
-import { Label } from "flowbite-react";
 // const socket = io('http://localhost:3000');
 
 export const ChatWindow = (comments : any) => {
     const messagesEndRef = useRef(null);
-    console.log(comments);
+    // console.log(comments);
     let newMessages = [];
     if (comments.contacts.store.channel.name.toString().toLowerCase() == 'lazada') {
       newMessages = comments.comments.map((comment : any) => {
@@ -30,7 +28,9 @@ export const ChatWindow = (comments : any) => {
         }
       });
     }
-    console.log(newMessages);
+
+    
+    // console.log(newMessages);
     const [messages, setMessages] = useState(newMessages);
     // console.log(messages); setMessages(comments.comments);
     let msgId = '';
@@ -79,7 +79,7 @@ export const ChatWindow = (comments : any) => {
           body: JSON.stringify(newMsg)
         });
         const newChat = await newChatJson.json();
-        console.log(newChat);
+        // console.log(newChat);
         // messagesEndRef
         //         .current?.scrollIntoView({behaviour: 'smooth'})
         // const commentSection = document.getElementById('commentSection');
@@ -145,7 +145,7 @@ export const ChatWindow = (comments : any) => {
                 id="commentSection"
                 className="max-h-[380px] min-h-[380px] px-3 py-0 text-small text-default-400">
                   <div>
-                    <p>Let's have a chat..</p>
+                    <p>Let&apos;s have a chat..</p>
                     <p>Select one of the contact list on the left</p>
                   </div>
             </CardBody>

@@ -1,11 +1,11 @@
 "use client";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Avatar, Skeleton } from "@nextui-org/react"
-import { useEffect, useState } from "react";
+import { Avatar, Card, CardBody, CardFooter, CardHeader, Divider } from "@nextui-org/react"
+import { useState } from "react";
 import { ChatWindow } from "./ChatWindow";
-import { ChatSidebar } from "./ChatSidebar";
-import { GetChatComments } from "@/functions/swr";
 import DataTable from 'react-data-table-component';
 import { listChatComments } from "@/app/actions/chat/actions";
+import { ChatSidebar } from "./ChatSidebar";
+import { getOrdersByUser } from "@/app/actions/order/actions";
 
 // import io from 'socket.io-client';
 // const socket = io('http://localhost:3000');
@@ -84,9 +84,8 @@ export const ChatListTable = (chat:any) => {
 
     const chatCol = [
       {
-          name: 'Username',
-          selector: (row:any) => row.id,
-          cell: (row:any) => <ChatCell row={row} />
+        name: 'Contacts',
+        cell: (row:any) => <ChatCell row={row} />
       }
     ];
     // console.log(chat);
@@ -94,6 +93,7 @@ export const ChatListTable = (chat:any) => {
     const [listComments, setListComments] = useState(sampleComments);
     const [useSample, setUseSample] = useState(true);
     const [isLoading, setLoading] = useState(true);
+    const [orderList, setOrderList] = useState([]); 
     console.log(selectedContact);
     const handleContactClick = async (contact:any) => {
       // console.log(contact);
@@ -103,8 +103,19 @@ export const ChatListTable = (chat:any) => {
         setLoading(true);
         // const { chat, isLoading, isError } = GetChatComments(contact.id);
         // console.log(chat);
-        const chatList = await listChatComments(contact.id);
-        setListComments(chatList.messages);
+        
+        let chatData = await Promise.all([
+          listChatComments(contact.id),
+          getOrdersByUser(contact.omnichat_user.origin_id)
+        ])
+        // const chatList = await listChatComments(contact.id);
+        // const orderList = await getOrdersByUser(contact.omnichat_user.origin_id);
+        // setOrderList(orderList);
+        // setListComments(chatList.messages);
+
+        setListComments(chatData[0].messages);
+        setOrderList(chatData[1]);
+
         setLoading(false);
         // console.log(listComments);
         // console.log(comments)
@@ -123,48 +134,46 @@ export const ChatListTable = (chat:any) => {
       
     return (
         <div className="grid grid-cols-7 gap-2">
-          <div className="col-span-2">
-            <DataTable
-                columns={chatCol}
-                data={chat.chat}
-                pagination
-                pointerOnHover
-                onRowClicked={(row:any) => handleContactClick(row)}
-                paginationComponentOptions={paginationComponentOptions}
-            />
-          </div>
-            {/* <Table className="col-span-2" hideHeader topContent={chat.topContent} aria-label="Example static collection table">
-                <TableHeader>
-                    <TableColumn>NAME</TableColumn>
-                </TableHeader>
-                <TableBody style={{cursor:'pointer'}}>
-                    {chat.chat.map((contact:any) => (
-                    <TableRow key={contact.id} onClick={() => handleContactClick(contact)}>
-                        <TableCell>
-                        <div className="flex gap-5">
-                            <div>
-                                <Avatar isBordered radius="full" size="md" src={contact.omnichat_user.thumbnailUrl} />
-                            </div>
-                            <div className="flex flex-col gap-1 items-start justify-center">
-                            <h4 className="text-small font-semibold leading-none text-default-600">{contact.omnichat_user.username}</h4>
-                            <h4 className="text-small leading-none text-default-600 truncate text-ellipsis overflow-hidden ...">{contact.last_message}</h4>
-                            </div>
-                        </div>
-                        </TableCell>
-                    </TableRow>
-                    ))}
-                </TableBody>
-            </Table> */}
+          {/* <div className="col-span-2"> */}
+          <Card className="col-span-2">
+            <CardHeader className="justify-between">
+                <div className="flex gap-5">
+                  Recent Chats
+                  {/* <Skeleton className="rounded-lg">
+                    <Avatar
+                        isBordered
+                        radius="full"
+                        size="md"/>
+                  </Skeleton> */}
+                </div>
+            </CardHeader>
+            <Divider className="mb-4"/>
+            <CardBody
+                id="commentSection"
+                className="px-3 py-0 text-small text-default-400">
+                <DataTable
+                    columns={chatCol}
+                    data={chat.chat}
+                    pagination
+                    pointerOnHover
+                    onRowClicked={(row:any) => handleContactClick(row)}
+                    noHeader={true}
+                    paginationComponentOptions={paginationComponentOptions} />
+                  {/* <div>
+                    <p>Let&apos;s have a chat..</p>
+                    <p>Select one of the contact list on the left</p>
+                  </div> */}
+            </CardBody>
+            <CardFooter></CardFooter>
+        </Card>
+          {/* </div> */}
             {isLoading ?
             <>
-              {/* <div className="col-span-5">
-                <label>Loading...</label>
-              </div> */}
               <ChatWindow loading={isLoading} sample={useSample} comments={sampleComments} contacts={sampleContacts}></ChatWindow>
             </> : 
-                <ChatWindow loading={isLoading} sample={useSample} comments={listComments} contacts={selectedContact}></ChatWindow> 
+            <ChatWindow loading={isLoading} sample={useSample} comments={listComments} contacts={selectedContact}></ChatWindow> 
             }
-            {/* <ChatSidebar></ChatSidebar> */}
+            <ChatSidebar orderList={orderList} ></ChatSidebar>
         </div>
     )
 }

@@ -29,6 +29,9 @@ export const INT_ORDER_BYCHANNEL = (channel:string) => {
 export const INT_GET_ORDER = (orderId:string) => {
     return `${ORDER_ENDPOINT}/${orderId}`;
 };
+export const INT_GET_ORDER_ByU = (userId:string) => {
+    return `${ORDER_ENDPOINT}?u=${userId}`;
+};
 export const INT_CHAT_COMMENTS = (chatId:string) => {
     return `${CHAT_ENDPOINT}/${chatId}/comments`;
 };
