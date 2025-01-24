@@ -12,7 +12,7 @@ export default function MarketplaceList(channels:any) {
             disabledKeys={["api", "wms"]} 
             selectedKeys={["overview"]} >
                 {listChannels.map((channel:any) => (
-                    <ListboxSection title={channel.name} showDivider>
+                    <ListboxSection key={channel.id} title={channel.name} showDivider>
                         {channel.store.map((store:any) => (
                             <ListboxItem startContent={<TokoIcon/>} key={store.id}>{store.name}</ListboxItem>
                         ))}
