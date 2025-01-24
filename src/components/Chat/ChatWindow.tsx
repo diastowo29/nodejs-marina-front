@@ -13,6 +13,7 @@ import {
 import {useState, useEffect, useRef} from "react";
 import { CHAT_ENDPOINT } from "@/urls/internal";
 import io from 'socket.io-client';
+import { Label } from "flowbite-react";
 // const socket = io('http://localhost:3000');
 
 export const ChatWindow = (comments : any) => {
@@ -124,6 +125,34 @@ export const ChatWindow = (comments : any) => {
       socket.disconnect();
       // return() => socket.disconnect();
     }, []);
+
+    if (comments.loading) {
+      console.log('loading');
+      return (
+        <Card className="col-span-3">
+            <CardHeader className="justify-between">
+                <div className="flex gap-5">
+                  <Skeleton className="rounded-lg">
+                  <Avatar
+                      isBordered={true}
+                      radius="full"
+                      size="md"/>
+                </Skeleton>
+                </div>
+            </CardHeader>
+            <Divider className="mb-4"/>
+            <CardBody
+                id="commentSection"
+                className="max-h-[380px] min-h-[380px] px-3 py-0 text-small text-default-400">
+                  <div>
+                    <p>Let's have a chat..</p>
+                    <p>Select one of the contact list on the left</p>
+                  </div>
+            </CardBody>
+        </Card>
+      )
+    }
+
     return (
         <Card className="col-span-3">
             <CardHeader className="justify-between">

@@ -93,7 +93,8 @@ export const ChatListTable = (chat:any) => {
     const [selectedContact, setSelectedContact] = useState(sampleContacts);
     const [listComments, setListComments] = useState(sampleComments);
     const [useSample, setUseSample] = useState(true);
-    const [isLoading, setLoading] = useState(false);
+    const [isLoading, setLoading] = useState(true);
+    console.log(selectedContact);
     const handleContactClick = async (contact:any) => {
       // console.log(contact);
         setUseSample(true);
@@ -127,6 +128,7 @@ export const ChatListTable = (chat:any) => {
                 columns={chatCol}
                 data={chat.chat}
                 pagination
+                pointerOnHover
                 onRowClicked={(row:any) => handleContactClick(row)}
                 paginationComponentOptions={paginationComponentOptions}
             />
@@ -155,6 +157,9 @@ export const ChatListTable = (chat:any) => {
             </Table> */}
             {isLoading ?
             <>
+              {/* <div className="col-span-5">
+                <label>Loading...</label>
+              </div> */}
               <ChatWindow loading={isLoading} sample={useSample} comments={sampleComments} contacts={sampleContacts}></ChatWindow>
             </> : 
                 <ChatWindow loading={isLoading} sample={useSample} comments={listComments} contacts={selectedContact}></ChatWindow> 
