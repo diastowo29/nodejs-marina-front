@@ -35,6 +35,7 @@ export const INT_FIND_ONE_PRODUCT = (productId:string) => {
     return `${PRODUCT_ENDPOINT}/${productId}`;
 };
 export const INT_ORDER_BYCHANNEL = (channel:string) => {
+    console.log('backendhost: ', process.env.BACKEND_HOST);
     return `${ORDER_ENDPOINT}?c=${channel}`;
 };
 export const INT_GET_ORDER = (orderId:string) => {
