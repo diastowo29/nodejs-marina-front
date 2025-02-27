@@ -15,6 +15,9 @@ export const INT_LIST_STORE_ByC = `${CHANNEL_ENDPOINT}/stores`;
 export const INT_LIST_PRODUCT = PRODUCT_ENDPOINT;
 export const CHANNEL_PRODUCT_API = `${CHANNEL_ENDPOINT}/products`;
 
+console.log('backendhost: ', process.env.BACKEND_HOST);
+
+
 // export const HANDSHAKE_SUNCO = 'https://api.smooch.io/v2/apps/5ea6f52b536ecb000f732a35/integrations';
 
 export const HANDSHAKE_ZD = (host:string) => {
@@ -35,7 +38,6 @@ export const INT_FIND_ONE_PRODUCT = (productId:string) => {
     return `${PRODUCT_ENDPOINT}/${productId}`;
 };
 export const INT_ORDER_BYCHANNEL = (channel:string) => {
-    console.log('backendhost: ', process.env.BACKEND_HOST);
     return `${ORDER_ENDPOINT}?c=${channel}`;
 };
 export const INT_GET_ORDER = (orderId:string) => {
