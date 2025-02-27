@@ -1,5 +1,5 @@
 // const HOST = process.env.BACKEND_HOST || `https://marina-apps.et.r.appspot.com`;
-const HOST = process.env.BACKEND_HOST || `http://localhost:3002`;
+const HOST = `https://${process.env.BACKEND_HOST}` || `http://localhost:3002`;
 
 let CHANNEL_ENDPOINT = `${HOST}/api/v1/channels`;
 let PRODUCT_ENDPOINT = `${HOST}/api/v1/products`;

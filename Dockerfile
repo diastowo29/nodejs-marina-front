@@ -13,7 +13,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED 1
-ENV BACKEND_HOST marina-apps.et.r
+ENV BACKEND_HOST marina-apps.et.r.appspot.com
 
 RUN npm run build
 
