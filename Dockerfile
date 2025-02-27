@@ -13,6 +13,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED 1
+ENV BACKEND_HOST marina-apps.et.r
 
 RUN npm run build
 
@@ -35,6 +36,5 @@ USER nextjs
 EXPOSE 3000
 
 ENV PORT 3000
-ENV BACKEND_HOST marina-apps.et.r
 
 CMD ["npm", "start"]
