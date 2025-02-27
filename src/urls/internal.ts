@@ -14,19 +14,14 @@ export const INT_LIST_STORE_ByC = `${CHANNEL_ENDPOINT}/stores`;
 export const INT_LIST_PRODUCT = PRODUCT_ENDPOINT;
 export const CHANNEL_PRODUCT_API = `${CHANNEL_ENDPOINT}/products`;
 
-console.log('backendhost: ', process.env.BACKEND_HOST);
-
-
 // export const HANDSHAKE_SUNCO = 'https://api.smooch.io/v2/apps/5ea6f52b536ecb000f732a35/integrations';
 
 export const HANDSHAKE_ZD = (host:string) => {
     return `${host}/api/v2/users/me.json`;
 }
-
 export const HANDSHAKE_SUNCO = (appsId:string) => {
     return `https://api.smooch.io/v2/apps/${appsId}/integrations`;
 }
-
 export const INT_LIST_PRODUCT_ByC = (channelId:string) => {
     return `${CHANNEL_ENDPOINT}/${channelId}/products`;
 };
