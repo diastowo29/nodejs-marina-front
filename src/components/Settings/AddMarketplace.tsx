@@ -48,7 +48,7 @@ export default function AddMarketplace() {
     }
     await createStore(payload);
     setLoading(false);
-    console.log(marketUrl);
+    // console.log(marketUrl);
   }
 
   return (

@@ -1,7 +1,7 @@
-import { TOKO_GETTOKEN, TOKO_REPLYCHAT } from '@/urls/tokopedia';
+// import { TOKO_GETTOKEN, TOKO_REPLYCHAT } from '@/urls/tokopedia';
 // import { PrismaClient } from '@prisma/client'
-import { NextApiRequest, NextApiResponse } from 'next';
-import { NextRequest, NextResponse } from 'next/server';
+// import { NextApiRequest, NextApiResponse } from 'next';
+// import { NextRequest, NextResponse } from 'next/server';
 // const prisma = new PrismaClient()
 
 export async function GET() {

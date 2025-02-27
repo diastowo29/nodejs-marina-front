@@ -7,34 +7,43 @@ import {
     Divider,
     Textarea,
     Button,
-    Skeleton
+    Skeleton,
+    Image
 } from "@nextui-org/react";
 import {useState, useEffect, useRef} from "react";
-import { CHAT_ENDPOINT } from "@/urls/internal";
-import io from 'socket.io-client';
+// import { CHAT_ENDPOINT } from "@/urls/internal";
+// import io from 'socket.io-client';
+import { marinaChannel, marinaChatContent } from "@/config/enum";
+import { replyChat } from "@/app/actions/chat/actions";
 // const socket = io('http://localhost:3000');
 
 export const ChatWindow = (comments : any) => {
     const messagesEndRef = useRef(null);
+    // console.log(comments.orderId);
     // console.log(comments);
     let newMessages = [];
-    if (comments.contacts.store.channel.name.toString().toLowerCase() == 'lazada') {
+    const isLazada = (comments.contacts.store.channel.name.toString().toLowerCase() == marinaChannel.Lazada.toString().toLowerCase()) ? true : false;
+    // if (isLazada) {
       newMessages = comments.comments.map((comment : any) => {
         return {
           id: comment.id,
-          line_text: JSON.parse(comment.line_text).txt,
-          createdAt: comment.createdAt,
+          chat_type: comment.chat_type,
+          line_text: (comment.author === 'agent') ? comment.line_text: (isLazada) ? JSON.parse(comment.line_text).txt : comment.line_text,
+          createdAt: new Date(comment.createdAt).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit"
+        }),
           author: comment.author
         }
       });
-    }
+    // }
 
     
     // console.log(newMessages);
     const [messages, setMessages] = useState(newMessages);
     // console.log(messages); setMessages(comments.comments);
     let msgId = '';
-    let omnichatId = ((comments.sample) ? 0 : comments.contacts.id);
+    // let omnichatId = ((comments.sample) ? 0 : comments.contacts.id);
     comments
         .comments
         .forEach((comment : any) => {
@@ -47,38 +56,44 @@ export const ChatWindow = (comments : any) => {
         // console.log(msgId);
         if (newMessage.trim() === "") 
             return;
-        if (newMessage.length > 500) {
+        if (newMessage.length > 500)
             //   setError("Message exceeds 500 characters");
             return;
-        }
+        
         // messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-        const mathRandom = Math.floor(Math.random() * 90000) + 10000
+        // const mathRandom = Math.floor(Math.random() * 90000) + 10000
+        let contentType = marinaChatContent.TEXT;
         const newMsg = {
             id: msgId,
             line_text: newMessage,
             author: 'agent',
-            timestamp: new Date().toLocaleTimeString([], {
+            createdAt: new Date().toLocaleTimeString([], {
                 hour: "2-digit",
                 minute: "2-digit"
             }),
-            omnichatId: omnichatId,
-            channel_id: comments.contacts.store.channel.id,
-            shop_id: comments.contacts.store.origin_id
+            omnichat_origin_id: comments.contacts.origin_id,
+            store_origin_id: comments.contacts.store.origin_id,
+            channel_name: comments.contacts.store.channel.name,
+            last_messageId: comments.contacts.last_messageId,
+            chat_type: contentType
         };
         setMessages([
             ...messages,
             newMsg
         ]);
+        // console.log(comments);
         // console.log('calling endpoint: ', CHAT_ENDPOINT);
-        const newChatJson = await fetch(CHAT_ENDPOINT,{
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(newMsg)
-        });
-        const newChat = await newChatJson.json();
+        // const newChatJson = await fetch(CHAT_ENDPOINT,{
+        //   method: 'POST',
+        //   headers: {
+        //     'Accept': 'application/json',
+        //     'Content-Type': 'application/json'
+        //   },
+        //   body: JSON.stringify(newMsg)
+        // });
+        await replyChat(newMsg);
+        // console.log(newChatJson);
+        // const newChat = await newChatJson.json();
         // console.log(newChat);
         // messagesEndRef
         //         .current?.scrollIntoView({behaviour: 'smooth'})
@@ -89,47 +104,76 @@ export const ChatWindow = (comments : any) => {
         // sent: true,   timestamp: new Date().toLocaleTimeString([], { hour: "2-digit",
         // minute: "2-digit" }), }; setNewMessage("");
     };
-    
 
+    let inboundChat:any[] = [];
+    
     const handleNewMessage = (data:any) => {
-      console.log(data);
-        // setMessages(comments.comments);
-        // const newChat = JSON.parse(data);
-        // console.log(newChat.message);
-        if (data.user_id.toString() == comments.contacts.omnichat_user.origin_id) {
-          const newMsg = {
-              id: Math.floor(Math.random() * 90000) + 10000,
-              line_text: data.message,
-              author: 'end-user',
-              timestamp: new Date().toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit"
-              })
-          };
+      // console.log(data);
+      let bubble = JSON.parse(data);
+      // console.log(bubble);
+      if (!bubble.user_id) {
+        return;
+      }
+      // console.log(bubble);
+      if (bubble.user_id.toString() == comments.contacts.omnichat_user.origin_id) {
+        const newMsg = {
+            id: bubble.message_id,
+            line_text: bubble.message.txt,
+            author: 'end-user',
+            createdAt: new Date().toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit"
+            })
+        };
+        let goPush = true;
+        inboundChat.forEach((message:any) => {
+          // console.log(message.id);
+          // console.log(bubble.message_id);
+          if (message.id == bubble.message_id) {
+            goPush = false;
+          }
+        });
+        console.log('gopush', goPush);
+        if (goPush) {
+          inboundChat.push(newMsg);
           setMessages((messages:any) => [
               ...messages,
               newMsg
           ]);
-        } else {
-          console.log(data.user_id.toString());
         }
+        // console.log(inboundChat);
+        // console.log(messages);
+      } else {
+        // CHAT FROM SOMEONE
+        console.log(bubble.user_id.toString());
+      }
     }
 
     useEffect(() => {
-      const socket = io('http://localhost:3000');
+     /*  const socket = io('http://localhost:3000');
       // messagesEndRef.current?.scrollIntoView({behaviour: 'smooth'});
       socket.on('chatTokopedia', handleNewMessage);
       // socket.on('chatTokopedia', (data:any) => {
       //   console.log(data);
       // })
       socket.disconnect();
-      // return() => socket.disconnect();
+      // return() => socket.disconnect(); */
+
+      const events = new EventSource('http://localhost:3002/api/v1/lazada/chat/events');
+      events.onmessage = (event) => {
+        // console.log('get events');
+        console.log(event);
+        handleNewMessage(event.data);
+        // const parsedData = JSON.parse(event.data);
+        // setFacts((facts) => facts.concat(parsedData));
+      };
+
     }, []);
 
     if (comments.loading) {
       // console.log('loading');
       return (
-        <Card className="col-span-3">
+        <Card className="col-span-4">
             <CardHeader className="justify-between">
                 <div className="flex gap-5">
                   <Skeleton className="rounded-lg">
@@ -154,7 +198,7 @@ export const ChatWindow = (comments : any) => {
       )
     }
     return (
-        <Card className="col-span-3">
+        <Card className="col-span-4 h-fit">
             <CardHeader className="justify-between">
                 <div className="flex gap-5">
                   {comments.sample ? 
@@ -191,7 +235,7 @@ export const ChatWindow = (comments : any) => {
             <Divider className="mb-4"/>
             <CardBody
                 id="commentSection"
-                className="max-h-[380px] min-h-[380px] px-3 py-0 text-small text-default-400">
+                className="max-h-[480px] min-h-[380px] px-3 py-0 text-small text-default-400">
                   {comments.sample ?
                     <div
                     // id={messages[0].id}
@@ -211,19 +255,43 @@ export const ChatWindow = (comments : any) => {
                   (
                     <>
                     {
-                      messages.map((message : any) => (
-                      <div
-                      id={message.id}
-                      key={message.id}
-                      className={`mb-1 flex ${message.author != 'end-user'
+                      messages.map((message : any) => {
+                        let bubble = (<p>{message.line_text}</p>);
+                        let chatType  = message.chat_type.toString().toLowerCase();
+                        if (chatType == marinaChatContent.PRODUCT) {
+                          let product = JSON.parse(message.line_text).product;
+                          bubble = (
+                            <Card className="py-4">
+                              <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
+                                <p className="text-tiny uppercase font-bold">{product.name}</p>
+                                <small className="text-default-500">{product.price}</small>
+                                {/* <h4 className="font-bold text-large">Frontend Radio</h4> */}
+                              </CardHeader>
+                              <CardBody className="overflow-visible py-2">
+                                <Image
+                                  alt="Card background"
+                                  className="object-cover rounded-xl"
+                                  src={product.image_url}
+                                  width={170}
+                                />
+                              </CardBody>
+                            </Card>
+                          )
+                        } else if (chatType == marinaChatContent.INVOICE) {
+
+                        }
+                        // console.log(message)
+                        return (
+                      <div id={message.id} key={message.id}
+                      className={`mb-1 flex ${message.author == 'agent'
                           ? "justify-end"
                           : "justify-start"}`}>
-                        <div className={`max-w-xs lg:max-w-md xl:max-w-lg px-4 py-2 rounded-lg  ${message.author != 'end-user' ? 'bg-zinc-600' : 'bg-blue-500'} text-white`}>
-                          <p>{message.line_text}</p>
-                          <p className="text-xs mt-1 text-stone-300">{message.createdAt}</p>
-                        </div>
+                            <div className={`max-w-xs lg:max-w-md xl:max-w-lg px-4 py-2 rounded-lg  ${message.author == 'agent' ? 'bg-zinc-600' : 'bg-blue-500'} text-white`}>
+                              {bubble}
+                              <p className="text-xs mt-1 text-stone-300">{message.createdAt}</p>
+                            </div>
                       </div>
-                          ))
+                          )})
                     }
                     <div style={{marginBottom: 50 }} ref={messagesEndRef}/>
                     </>

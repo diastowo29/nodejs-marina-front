@@ -2,8 +2,8 @@ import { withMiddlewareAuthRequired } from '@auth0/nextjs-auth0/edge';
 import { NextResponse } from 'next/server';
 
 export default withMiddlewareAuthRequired(async function middleware(req) {
-    console.log(req.url);
-    console.log(req.headers.get('Authorization'));
+    // console.log(req.url);
+    // console.log(req.headers.get('Authorization'));
     const res = NextResponse.next();
     return res;
   });

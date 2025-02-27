@@ -4,9 +4,11 @@ import { Metadata } from "next";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import { INT_LIST_CHANNEL, INT_ORDER_BYCHANNEL } from "@/urls/internal";
 import { OrdersTab } from "@/components/Orders/OrdersTabs";
-import { Button, Card, CardBody, Listbox, ListboxItem } from "@nextui-org/react";
-import { getAccessToken, getSession } from "@auth0/nextjs-auth0";
+import { Button, Card, CardBody} from "@nextui-org/react";
+// import { getAccessToken, getSession } from "@auth0/nextjs-auth0";
 import Link from "next/link";
+import { marinaPageNames, marinaUrls } from "@/config/enum";
+// import { useRouter } from "next/router";
 
 export const metadata: Metadata = {
   title: "Orders | Marina Dashboard",
@@ -20,20 +22,20 @@ const TablesPage = async () => {
 
     // let {accessToken} = await getAccessToken();
     // console.log(accessToken);
-    console.log(process.env.BACKEND_HOST);
+    // console.log(process.env.BACKEND_HOST);
     // console.log('calling endpoint: ', INT_LIST_CHANNEL);
     let channelsRaw = await fetch(INT_LIST_CHANNEL);
     let channels = await channelsRaw.json();
-    console.log(channels);
+    // console.log(channels);
     if (channels.length == 0) {
         return (
           <DefaultLayout>
-            <Breadcrumb pageName="Orders" />
+            <Breadcrumb pageName={marinaPageNames.Orders} />
             <Card>
                 <CardBody>
                     <p>Please connect your marketplace to access this page</p>
                     <Button style={{"width": "fit-content"}} size="md">
-                        <Link href={'settings/marketplace'}>
+                        <Link href={marinaUrls.setting_marketplace}>
                         Connect now
                         </Link>
                     </Button>
@@ -46,7 +48,7 @@ const TablesPage = async () => {
     let firstOrder = await firstOrderRaw.json();
     return (
         <DefaultLayout>
-            <Breadcrumb pageName="Orders" />
+            <Breadcrumb pageName={marinaPageNames.Orders} />
             {/* <div className="w-full max-w-[260px] border-small px-1 py-2 rounded-small border-default-200 dark:border-default-100">
             <Listbox aria-label="Actions">
                 <ListboxItem key="new">New file</ListboxItem>

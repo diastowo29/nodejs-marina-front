@@ -25,20 +25,22 @@ import AddMarketplace from "@/components/Settings/AddMarketplace";
 //     "This is Next.js Settings page for TailAdmin - Next.js Tailwind CSS Admin Dashboard Template",
 // };
 
-const fetcher = (url:any) => fetch(url).then((r) => r.json())
+// const fetcher = (url:any) => fetch(url).then((r) => r.json())
 
 const Settings = async () => {
   // console.log(process.env.NEXT_PUBLIC_AUTH0_BASE_URL);
   // let host = process.env.NEXT_PUBLIC_AUTH0_BASE_URL;
   // let lazadaAuth = 'https://auth.lazada.com/oauth/authorize?response_type=code&force_auth=true';
   // let callbackEndpoint = `${host}/settings/marketplace`;
-  // let params = useSearchParams();
-  // let authCode:any = params.get('code');
-  // let appsNumber:any = params.get('app');
-  // if (authCode) {
-  //   let isSuccess = generateToken(authCode, appsNumber);
-  //   console.log(isSuccess);
-  // }
+
+  /* NEED USECLIENT BUT NOT SUPPPORT ASYNC */
+  /* let params = useSearchParams();
+  let authCode:any = params.get('code');
+  let appsNumber:any = params.get('app');
+  if (authCode) {
+    let isSuccess = generateToken(authCode, appsNumber);
+    console.log(isSuccess);
+  } */
 
   let stores = await getListStores();
 

@@ -1,29 +1,29 @@
-import Link from "next/link";
-import {Tabs, Tab, Card, CardBody, Pagination} from "@nextui-org/react";
-import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button, useDisclosure} from "@nextui-org/react";
-import { useEffect, useMemo, useState } from "react";
-
-// import DataTable from 'datatables.net-react';
-// import 'datatables.net-buttons-dt';
-// import 'datatables.net-responsive-dt';
-
-// import DT from 'datatables.net-dt';
-// import DT from 'datatables.net-bs5';
+import {Tabs, Tab, Chip } from "@nextui-org/react";
+import { useEffect, useState } from "react";
 
 import DataTable from 'react-data-table-component';
-import { redirect, useRouter } from "next/navigation";
-// import { useRouter } from "next/router";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { marinaChannel, marinaStatusColor } from "@/config/enum";
+import { tokoStatus } from "@/config/tokopedia";
 
-export const OrdersStatusTabs = (currentData:any) => {
-    const [tableData, setTableData] = useState(currentData.currentData);
+export const OrdersStatusTabs = (data:any) => {
+    const [tableData, setTableData] = useState(data.currentData);
     const [activeStatusTab, setActiveStatusTab] : any = useState();
-    const [rowsPerPage, setRowsPerPage] = useState(3);
-    const [page, setPage] = useState(1);
 
     const router = useRouter();
-    const ExpandedComponent = ({ data }:any) => <pre>{JSON.stringify(data, null, 2)}</pre>;
-    
-    // DataTable.use(DT);
+    const pathname = usePathname();
+    const params = useSearchParams();
+
+    const ExpandedComponent = ({ data }:any) => {
+        return (
+            <div>
+                {data.order_items.map((order:any) => {
+                    return (<label>{order.id}</label>)
+                })}
+            </div>
+        )
+    }
+
     let greyStyle = { 
         color: 'grey', 
         overflow: 'hidden', 
@@ -49,6 +49,45 @@ export const OrdersStatusTabs = (currentData:any) => {
             </div>
         </div>
     );
+    const IdCell = ({ row }:any) => (
+        <div>
+            <div>
+                <label data-tag="allowRowEvents" style={productStyle}>
+                    {row.id}
+
+                </label>
+                <div data-tag="allowRowEvents" style={greyStyle}>
+                    Source ID: {row.origin_id}
+                </div>
+            </div>
+        </div>
+    );
+    
+      const statusColor = (status:any) => {
+        switch (status) {
+          case 'pending':
+            return marinaStatusColor.BLUE;
+          case 'completed':
+            return marinaStatusColor.GREEN;
+          case 'confirmed':
+            return marinaStatusColor.GREEN;
+          case 'cancelled':
+            return marinaStatusColor.YELLOW;
+          default:
+            return 'default';
+        }
+      }
+    const StatusCell = ({ row }:any) => {
+        if (!isNaN(row.status)) {
+            row['status'] = tokoStatus(Number.parseInt(row.status))
+        }
+        return (
+        <div>
+            <div>
+                <Chip color={statusColor(row.status)}>{row.status}</Chip>
+            </div>
+        </div>
+    )};
 
     const ProductCell = ({ row }:any) => (
         <div>
@@ -56,9 +95,6 @@ export const OrdersStatusTabs = (currentData:any) => {
                 <label data-tag="allowRowEvents" style={productStyle}>
                     {row.order_items[0].products.name}
                 </label>
-                <div data-tag="allowRowEvents" style={greyStyle}>
-                    Original ID: {row.origin_id}
-                </div>
                 <div data-tag="allowRowEvents" style={greyStyle}>
                     SKU: {row.order_items[0].products.sku}
                 </div>
@@ -69,9 +105,9 @@ export const OrdersStatusTabs = (currentData:any) => {
     const dtTable_columns = [
         {
             name: 'ID',
-            maxWidth: '75px',
-            sortable: true,
-            selector: (row:any) => row.id,
+            maxwidth: '75px',
+            // sortable: true,
+            cell: (row:any) => <IdCell row={row}/>,
         },{
             name: 'Product(s)',
             maxwidth: '100%',
@@ -89,7 +125,8 @@ export const OrdersStatusTabs = (currentData:any) => {
             selector: (row:any) => row.store.name,
         },{
             name: 'Status',
-            selector: (row:any) => row.status,
+            cell: (row:any) => <StatusCell row={row}/>
+            // selector: (row:any) => row.status,
         },{
             name: 'Order Amount',
             selector: (row:any) => row.total_amount,
@@ -110,27 +147,42 @@ export const OrdersStatusTabs = (currentData:any) => {
     ];
 
     useEffect(() => {
-        let filteredOrderes = currentData.currentData;
+        let filteredOrderes = data.currentData;
+        // router.push(`${pathname}?${params}&s=${activeStatusTab}`);
         if (activeStatusTab) {
             if (activeStatusTab == 'all') {
-                filteredOrderes = currentData.currentData;
+                filteredOrderes = data.currentData;
             } else {
-                filteredOrderes = filteredOrderes.filter((orders:any) => 
-                    orders.status.toString().toLowerCase().includes(activeStatusTab.toLowerCase())
-                );
+                filteredOrderes = filteredOrderes.filter((orders:any) => {
+                    if (data.channel.toString().toLowerCase() == marinaChannel.Lazada.toString().toLowerCase()) {
+                        if (activeStatusTab == 'new') {
+                            return orders.status.toString().toLowerCase().includes('pending');
+                        } else if (activeStatusTab == 'process') {
+                            const condition = ['ready_to_ship', 'ready_to_ship_pending', 'packed', 'repacked'];
+                            return condition.some((el) => orders.status.toString().toLowerCase().includes(el));
+                        } else if (activeStatusTab == 'delivery') {
+                            return orders.status.toString().toLowerCase().includes('shipped');
+                        } else if (activeStatusTab == 'completed') {
+                            const condition = ['delivered', 'completed', 'confirmed'];
+                            return condition.some((el) => orders.status.toString().toLowerCase().includes(el));
+                        } else if (activeStatusTab == 'canceled') {
+                            return orders.status.toString().toLowerCase().includes('canceled');
+                        } else if (activeStatusTab == 'failed') {
+                            const condition = ['failed_delivery', 'failed', 'lost_by_3pl', 'damaged_by_3pl'];
+                            return condition.some((el) => orders.status.toString().toLowerCase().includes(el));
+                        }
+                    }
+                });
             }
-            // const start = (page - 1) * rowsPerPage;
-            // const end = start + rowsPerPage;
-            
             setTableData(filteredOrderes);
         }
-    }, [activeStatusTab, currentData.currentData]);
+    }, [activeStatusTab, data.currentData]);
 
-    useEffect(() => {
-        console.log(page);
-    }, [page])
+    // useEffect(() => {
+    //     console.log(page);
+    // }, [page])
 
-    const pages = Math.ceil(tableData.length / rowsPerPage);
+    /* const pages = Math.ceil(tableData.length / rowsPerPage);
     const bottonContent = useMemo(() => {
         return (
             <div className="py-2 px-2 flex justify-between items-center">
@@ -145,8 +197,8 @@ export const OrdersStatusTabs = (currentData:any) => {
                 />
             </div>
         )
-    }, [page, pages])
-
+    }, [page, pages]) 
+    
     const renderTable = (data:any) => {
         return data.map((item:any) => (
             <TableRow key={item.invoice}>
@@ -183,11 +235,9 @@ export const OrdersStatusTabs = (currentData:any) => {
                 </TableCell>
             </TableRow>
         ))
-    }
+    } */
 
     const orderSelected = (row:any) => {
-        console.log(row.id);
-        // redirect(`/orders/${row.id}`)
         router.push(`/orders/${row.id}`);
     }
 
@@ -198,23 +248,12 @@ export const OrdersStatusTabs = (currentData:any) => {
                 <DataTable
                     columns={dtTable_columns}
                     data={tableData}
-                    // expandableRows
+                    pointerOnHover
                     pagination
                     onRowClicked={orderSelected}
+                    // expandableRows
                     // expandableRowsComponent={ExpandedComponent}
                 />
-                {/* <DataTable data={tableData} className="display table" columns={columns}>
-                    <thead>
-                        <tr>
-                            <th>Product(s)</th>
-                            <th>Order Date</th>
-                            <th>Store</th>
-                            <th>Status</th>
-                            <th>Total Amount</th>
-                            <th>Courier</th>
-                        </tr>
-                    </thead>
-                </DataTable> */}
                     {/* <Table id="tablexxx" aria-label="Example empty table" 
                     bottomContent={bottonContent}
                     bottomContentPlacement="outside">

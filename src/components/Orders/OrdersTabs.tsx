@@ -1,31 +1,40 @@
 
 'use client';
 import {Tabs, Tab, Card, CardBody} from "@nextui-org/react";
-
 import { useState, useEffect } from "react";
 import { OrdersStatusTabs } from "./OrdersStatusTabs";
-import { INT_ORDER_BYCHANNEL } from "@/urls/internal";
 import { getOrdersCnl } from "@/app/actions/order/actions";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { marinaChannel } from "@/config/enum";
+// import { useRouter } from "next/router";
 
 export const OrdersTab = (tabsData : any) => {
-    const [channelTab, setChannelTab] : any = useState(null);
+    const searchParams = useSearchParams();
+    const router  = useRouter();
+    const pathname = usePathname();
+
+    const [channelTab, setChannelTab] : any = useState(searchParams.get('c') || null);
     const [tableData, setTableData] = useState(tabsData.initTableData);
     const [loading, setLoading] = useState(false);
     // console.log(tabsData);
-    const channels = [
-        { id:'Tokopedia', name:'Tokopedia'}, 
-        { id:'Shopee', name:'Shopee'}, 
-        { id:'Tiktok', name:'Tiktok'}, 
-        { id:'BliBli', name:'BliBli'}, 
-        { id:'Lazada', name:'Lazada'}, 
-        {id: 'Bukalapak', name: 'Bukalapak'}]
 
+    const channels = [
+        { id: marinaChannel.Tokopedia.toLowerCase(), name: marinaChannel.Tokopedia}, 
+        { id: marinaChannel.Shopee.toLowerCase(), name: marinaChannel.Shopee}, 
+        { id: marinaChannel.Tiktok.toLowerCase(), name: marinaChannel.Tiktok}, 
+        { id: marinaChannel.BliBli.toLowerCase(), name: marinaChannel.BliBli}, 
+        { id: marinaChannel.Lazada.toLowerCase(), name: marinaChannel.Lazada}
+    ];
+
+    // console.log(channelTab);
+    // console.log(searchParams.toString());
     useEffect(() => {
         const fetchData = async () => {
             let data:any[] = [];
             try {
+                router.push(`${pathname}?c=${channelTab.toLowerCase()}`);
                 const ordersData = await getOrdersCnl(channelTab.toLowerCase());
-                console.log(ordersData);
+                // console.log(ordersData);
                 data = ordersData;
             } catch (err) {
                 console.log(err);
@@ -42,12 +51,12 @@ export const OrdersTab = (tabsData : any) => {
     channels.forEach(channel => {
         let isExist = false;
         tabsData.tabsData.forEach((activeTabs:any) => {
-            if (channel.name.toLocaleLowerCase().includes(activeTabs.name.toLowerCase())) {
+            if (channel.name.toLowerCase().includes(activeTabs.name.toLowerCase())) {
                 isExist = true;
             }
         });
         if (!isExist) {
-            inactiveChannel.push(channel.name);
+            inactiveChannel.push(channel.id);
         }
     });
 
@@ -59,13 +68,13 @@ export const OrdersTab = (tabsData : any) => {
                 <div className="flex w-full flex-col">
                     <Tabs aria-label="Dynamic tabs" 
                         disabledKeys={inactiveChannel} 
-                        // selectedKey={selected}
+                        defaultSelectedKey={channelTab}
                         onSelectionChange={(tabKey) => setChannelTab(tabKey)}
                         fullWidth={true} 
                         items={channels} >
                         {(item:any) => (
                         <Tab key={item.id} title={item.name}>
-                            <OrdersStatusTabs currentData={tableData}></OrdersStatusTabs>
+                            <OrdersStatusTabs currentData={tableData} channel={channelTab}></OrdersStatusTabs>
                         </Tab>
                         )}
                     </Tabs>

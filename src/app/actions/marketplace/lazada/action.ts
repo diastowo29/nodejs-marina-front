@@ -13,6 +13,7 @@ export async function updateOrder (orderId:string) {
             process: 'pack'
         })
     });
+    return authResponse;
 }
 
 export async function generateToken (code:string, apps:string) {

@@ -5,6 +5,7 @@ import { INT_GET_ORDER } from "@/urls/internal";
 import OrderButton from "@/components/Buttons/ButtonOrder";
 import { Metadata } from "next";
 import { getOrders } from "@/app/actions/order/actions";
+import { marinaChannel, marinaStatusColor } from "@/config/enum";
 
 export const metadata: Metadata = {
   title: "Next.js Tables | TailAdmin - Next.js Dashboard Template",
@@ -14,6 +15,39 @@ export const metadata: Metadata = {
 
 const TablesPage = async ({ params }: { params: { order: string } }) => {
   let data  = await getOrders(params.order);
+
+  // console.log(data.store);
+  // console.log(data.store.channel.name.toString().toLowerCase() == marinaChannel.Lazada.toLowerCase())
+  let itemOrdered:any[] = [];
+
+  if (data.store.channel.name.toString().toLowerCase() == marinaChannel.Lazada.toLowerCase()) {
+    data.order_items.forEach((item:any) => {
+      let indexFound = itemOrdered.findIndex(i => i.productsId == item.productsId)
+      if (indexFound >= 0) {
+        itemOrdered[indexFound]['qty'] = (itemOrdered[indexFound]['qty'])+1;
+      } else {
+        itemOrdered.push(item);
+      }
+    });
+    console.log(itemOrdered);
+  } else {
+    itemOrdered = data.order_items;
+  }
+
+  const statusColor = (status:any) => {
+    switch (status) {
+      case 'pending':
+        return marinaStatusColor.BLUE;
+      case 'completed':
+        return marinaStatusColor.GREEN;
+      case 'confirmed':
+        return marinaStatusColor.GREEN;
+      case 'cancelled':
+        return marinaStatusColor.YELLOW;
+      default:
+        return 'default';
+    }
+  }
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Order" />
@@ -27,7 +61,7 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
                   </h3>
                 </div>
                 <div className="flex justify-end">
-                  <Chip color="primary">New</Chip>
+                  <Chip color={statusColor(data.status)} variant="solid">{data.status}</Chip>
                 </div>
               </div>
               <div className="p-7">
@@ -36,7 +70,7 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
                     className="mb-3 block text-sm font-medium text-black dark:text-white"
                     htmlFor="emailAddress">Product(s)</label>
                   <div className="relative">
-                    {data.order_items.map((product:any) => (
+                    {itemOrdered.map((product:any) => (
                       <Card key={product.productsId} className="mb-3">
                         <CardBody>
                           <Link isExternal showAnchorIcon href="https://github.com/nextui-org/nextui">{product.products.name}</Link>
@@ -181,7 +215,7 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
                     </div>
                     <div className="w-full sm:w-1/2">
                       <div className="relative">
-                        Rp {data.shipping_price}
+                        Rp {data.shipping_price.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
                       </div>
                     </div>
                   </div>
@@ -217,12 +251,12 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
                     </div>
                     <div className="w-full sm:w-1/2">
                       <div className="relative">
-                        Rp {data.total_amount}
+                        Rp {data.total_amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
                       </div>
                     </div>
                   </div>
                   <div className="flex justify-center gap-4.5">
-                    <OrderButton orderId={data.id}></OrderButton>
+                    <OrderButton status={data.status} orderId={data.id}></OrderButton>
                   </div>
 
                 {/* </form> */}
