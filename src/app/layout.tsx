@@ -5,6 +5,7 @@ import "@/css/style.css";
 import React, { useEffect, useState } from "react";
 import Loader from "@/components/common/Loader";
 import { UserProvider } from '@auth0/nextjs-auth0/client';
+import { ToastContainer } from "react-toastify";
 
 
 export default function RootLayout({
@@ -23,11 +24,12 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <UserProvider>
+      <UserProvider loginUrl="/api/auth/login?audience=http://localhost:3002/">
         <body suppressHydrationWarning={true}>
-          <div className="dark:bg-boxdark-2 dark:text-bodydark">
-            {loading ? <Loader /> : children}
-          </div>
+          <ToastContainer/>
+            <div className="dark:bg-boxdark-2 dark:text-bodydark">
+              {loading ? <Loader /> : children}
+            </div>
         </body>
       </UserProvider>
     </html>

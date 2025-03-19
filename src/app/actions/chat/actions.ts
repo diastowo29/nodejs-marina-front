@@ -11,7 +11,6 @@ export async function listChats () {
 
 export async function listChatComments (chatId:string) {
     const chatsRaw = await fetch(INT_CHAT_COMMENTS(chatId), { cache: 'no-store' });
-    // console.log(chatsRaw);
     const chat = await chatsRaw.json();
     return chat;
 }

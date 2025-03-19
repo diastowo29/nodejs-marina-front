@@ -1,23 +1,19 @@
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import {Card, CardHeader, CardBody, Button, CardFooter, Divider, Link, Chip, Image, useDisclosure} from "@nextui-org/react";
-import { INT_GET_ORDER } from "@/urls/internal";
+import {Card, CardBody, Link, Chip} from "@nextui-org/react";
 import OrderButton from "@/components/Buttons/ButtonOrder";
 import { Metadata } from "next";
 import { getOrders } from "@/app/actions/order/actions";
 import { marinaChannel, marinaStatusColor } from "@/config/enum";
 
-export const metadata: Metadata = {
-  title: "Next.js Tables | TailAdmin - Next.js Dashboard Template",
-  description:
-    "This is Next.js Tables page for TailAdmin - Next.js Tailwind CSS Admin Dashboard Template",
-};
+// export const metadata: Metadata = {
+//   title: "Next.js Tables | TailAdmin - Next.js Dashboard Template",
+//   description:
+//     "This is Next.js Tables page for TailAdmin - Next.js Tailwind CSS Admin Dashboard Template",
+// };
 
 const TablesPage = async ({ params }: { params: { order: string } }) => {
   let data  = await getOrders(params.order);
-
-  // console.log(data.store);
-  // console.log(data.store.channel.name.toString().toLowerCase() == marinaChannel.Lazada.toLowerCase())
   let itemOrdered:any[] = [];
 
   if (data.store.channel.name.toString().toLowerCase() == marinaChannel.Lazada.toLowerCase()) {
@@ -73,7 +69,11 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
                     {itemOrdered.map((product:any) => (
                       <Card key={product.productsId} className="mb-3">
                         <CardBody>
-                          <Link isExternal showAnchorIcon href="https://github.com/nextui-org/nextui">{product.products.name}</Link>
+                          <Link 
+                          isExternal 
+                          showAnchorIcon 
+                          href={`/products/${product.products.id}`}>
+                            {product.products.name}</Link>
                           <p>Qty: {product.qty} | Stock: {product.products.stock}</p>
                           <p>SKU: {product.products.sku}</p>
                         </CardBody>
