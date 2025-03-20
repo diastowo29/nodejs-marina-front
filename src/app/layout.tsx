@@ -24,7 +24,7 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <UserProvider loginUrl="/api/auth/login?audience=http://localhost:3002/">
+      <UserProvider>
         <body suppressHydrationWarning={true}>
           <ToastContainer/>
             <div className="dark:bg-boxdark-2 dark:text-bodydark">
