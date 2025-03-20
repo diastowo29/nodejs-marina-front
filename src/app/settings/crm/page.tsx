@@ -9,6 +9,7 @@ import { TokoIcon } from "../assets/Tokopedia";
 import { useState } from "react";
 import { SalesforceIcon, ZendeskIcon } from "../assets/CRM";
 import { createCrm, handshakeCrm, handshakeSunco } from "@/app/actions/crm/actions";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 // export const metadata: Metadata = {
 //   title: "Next.js Settings | TailAdmin - Next.js Dashboard Template",
@@ -32,6 +33,9 @@ const Settings = () => {
   const [resources, setResources] = useState(['chat', 'return']);
   const [isLoading, setLoading] = useState(false);
   const [marketSelectName, setMarketSelectName] = useState('');
+
+  const { user } = useUser();
+  console.log(user);
   // let channelClicked:string;
 
   const modalMarketplace = (btn:any, newModal:boolean) => {

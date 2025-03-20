@@ -1,0 +1,9 @@
+import { toast, TypeOptions } from "react-toastify";
+
+export const popToast = (message:string, type:TypeOptions) => {
+    return toast(message, {
+        position: "bottom-right",
+        type: type,
+        autoClose: 6000
+    })
+}

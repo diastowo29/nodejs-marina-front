@@ -1,5 +1,5 @@
 "use client";
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { popToast } from "@/app/actions/toast/pop";
 import {Input, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
 import { useState } from "react";
 
@@ -32,13 +32,15 @@ const OrderButton = (props: orderBtnProps) => {
 
     const chatCustomer = (orderId:string) => {
         console.log('update: ', orderId);
-
+        popToast('Chat customer', 'success');
     }
+
     return (
-        <>
+        <>      
+            {/* <ToastProvider placement="top-right" toastOffset={160} /> */}
             <Button className="flex justify-center rounded bg-info px-6 py-2 font-medium text-black hover:bg-opacity-90" type="submit" 
-            onClick={() => chatCustomer(props.orderId)} 
-            disabled={true}>
+            onClick={() => chatCustomer(props.orderId)}
+            >
                 Chat Customer
             </Button>
             

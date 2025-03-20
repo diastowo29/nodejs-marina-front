@@ -1,12 +1,12 @@
 
 'use client';
-import {Tabs, Tab, Card, CardBody} from "@nextui-org/react";
+import {Tabs, Tab, Card, CardBody, Skeleton, Progress} from "@nextui-org/react";
 import { useState, useEffect } from "react";
 import { OrdersStatusTabs } from "./OrdersStatusTabs";
 import { getOrdersCnl } from "@/app/actions/order/actions";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { marinaChannel } from "@/config/enum";
-// import { useRouter } from "next/router";
+import { ToastContainer, toast } from 'react-toastify';
 
 export const OrdersTab = (tabsData : any) => {
     const searchParams = useSearchParams();
@@ -25,20 +25,21 @@ export const OrdersTab = (tabsData : any) => {
         { id: marinaChannel.BliBli.toLowerCase(), name: marinaChannel.BliBli}, 
         { id: marinaChannel.Lazada.toLowerCase(), name: marinaChannel.Lazada}
     ];
-
-    // console.log(channelTab);
-    // console.log(searchParams.toString());
     useEffect(() => {
+        setLoading(true);
         const fetchData = async () => {
             let data:any[] = [];
             try {
                 router.push(`${pathname}?c=${channelTab.toLowerCase()}`);
                 const ordersData = await getOrdersCnl(channelTab.toLowerCase());
-                // console.log(ordersData);
+                setLoading(false);
                 data = ordersData;
             } catch (err) {
+                toast('Connection error.. ', {
+                    type: 'error'
+                });
+                setLoading(false);
                 console.log(err);
-                console.log('Error getting orders data: ', err);
             }
             setTableData(data);
         };
@@ -60,12 +61,13 @@ export const OrdersTab = (tabsData : any) => {
         }
     });
 
-    // console.log(inactiveChannel)
     return (
         <Card>
             <CardBody>
-                {/* <p>Make beautiful websites regardless of your design experience.</p> */}
                 <div className="flex w-full flex-col">
+                    <ToastContainer
+                    position="bottom-right"
+                    autoClose={3000}/>
                     <Tabs aria-label="Dynamic tabs" 
                         disabledKeys={inactiveChannel} 
                         defaultSelectedKey={channelTab}
@@ -74,11 +76,17 @@ export const OrdersTab = (tabsData : any) => {
                         items={channels} >
                         {(item:any) => (
                         <Tab key={item.id} title={item.name}>
+                            {loading ? 
+                            <div className="flex justify-center items-center h-[300px]">
+                                <Progress isIndeterminate aria-label="Loading..." className="max-w-md" size="sm" />
+                            </div>
+                            : 
                             <OrdersStatusTabs currentData={tableData} channel={channelTab}></OrdersStatusTabs>
+                            }
                         </Tab>
                         )}
                     </Tabs>
-                </div>  
+                </div>
             </CardBody>
         </Card>
     )

@@ -1,4 +1,4 @@
-import { Worker, Queue } from 'bullmq';
+/* import { Worker, Queue } from 'bullmq';
 import Redis from 'ioredis';
 import io from 'socket.io-client';
 import { PrismaClient } from '@prisma/client'
@@ -95,3 +95,4 @@ async function processChat (chatData:any) {
 }
 
 export default worker;
+ */

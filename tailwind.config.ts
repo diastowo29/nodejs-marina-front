@@ -1,8 +1,6 @@
 import type { Config } from "tailwindcss";
 import defaultTheme from "tailwindcss/defaultTheme";
-// const flowbite = require("flowbite-react/tailwind");
 const {nextui} = require("@nextui-org/react");
-// const flowbite = require("flowbite-react/tailwind");
 
 
 const config: Config = {

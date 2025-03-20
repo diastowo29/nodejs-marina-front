@@ -1,8 +1,6 @@
 "use client";
 import { Package } from "@/types/package";
 import { Orders } from "@/types/orders";
-import { Button } from "flowbite-react";
-import { Dropdown, Modal } from "flowbite-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -97,7 +95,7 @@ const TableThree = ({channelName}: tableProps) => {
   }
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-      <div className="max-w-full overflow-x-auto">
+      {/* <div className="max-w-full overflow-x-auto">
         <table className="w-full table-auto">
         <Modal show={openModal} size='4xl' onClose={() => setOpenModal(false)}>
               <Modal.Header>Terms of Service</Modal.Header>
@@ -150,7 +148,6 @@ const TableThree = ({channelName}: tableProps) => {
                   <h5 className="font-medium text-black dark:text-white">
                     {ordersItem.name}
                   </h5>
-                  {/* <p className="text-sm">Rp {ordersItem.price}</p> */}
                   <p className="text-sm">SKU: ${ordersItem.sku}  x 1</p>
                   <p className="text-sm">Invoice: ${ordersItem.inv}</p>
                 </td>
@@ -197,7 +194,7 @@ const TableThree = ({channelName}: tableProps) => {
             ))}
           </tbody>
         </table>
-      </div>
+      </div> */}
     </div>
     
   );
