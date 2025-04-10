@@ -1,7 +1,7 @@
 // import { PrismaClient } from '@prisma/client'
 import { NextRequest } from 'next/server';
 import { createToko } from '@/data/products/productsPayload';
-import { TOKO_GETTOKEN, TOKO_PRODUCTLIST } from '@/urls/tokopedia';
+// import { TOKO_GETTOKEN, TOKO_PRODUCTLIST } from '@/urls/tokopedia';
 // const prisma = new PrismaClient()
 
 let sampleFsId = '18229';

@@ -10,7 +10,6 @@ export async function getOrders (orderId:string) {
     } catch (err) {
         console.log(err)
     }
-
     const orderRaw = await fetch(INT_GET_ORDER(orderId), {cache: 'no-store'});
     const order = await orderRaw.json();
     return order;
@@ -23,7 +22,7 @@ export async function getOrdersByUser (userId:string) {
 }
 
 export async function getOrdersCnl (channel:string) {
-    const orderRaw = await fetch(INT_ORDER_BYCHANNEL(channel));
+    const orderRaw = await fetch(INT_ORDER_BYCHANNEL(channel), {cache: 'no-store'});
     const order = await orderRaw.json();
     return order;
 }

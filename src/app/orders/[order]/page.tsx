@@ -83,10 +83,7 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
                 </div>
                 <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                   <div className="w-full">
-                    <label
-                      className="mb-3 block text-sm font-medium text-black dark:text-white"
-                      htmlFor="fullName"
-                    >
+                    <label className="mb-3 block text-sm font-medium text-black dark:text-white" htmlFor="fullName">
                       Shipping Address
                     </label>
                     <div className="relative">

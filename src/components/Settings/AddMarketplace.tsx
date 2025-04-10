@@ -4,11 +4,21 @@ import { BliBliIcon } from "@/app/settings/assets/BliBli";
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
 import Link from "next/link";
 import { useState } from "react";
+import CryptoJS from "crypto-js";
 
 export default function AddMarketplace() {
   let host = process.env.NEXT_PUBLIC_AUTH0_BASE_URL;
   let lazadaAuth = 'https://auth.lazada.com/oauth/authorize?response_type=code&force_auth=true';
+  let shopeeAuth = `https://partner.test-stable.shopeemobile.com`;
+  let shopeeAuthPath = '/api/v2/shop/auth_partner';
   let callbackEndpoint = `${host}/settings/marketplace`;
+  let ts = Math.floor(Date.now() / 1000);
+  
+  const partnerId = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_ID;
+  const partnerKey = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_KEY;
+  const shopeeSignString = `${partnerId}${shopeeAuthPath}${ts}`;
+
+  let sign = CryptoJS.HmacSHA256(shopeeSignString, (partnerKey) as string).toString(CryptoJS.enc.Hex);
   const [marketName, setMarketName] = useState('');
   const [isNew, setNew] = useState(true);
   const [marketUrl, setMarketUrl] = useState('');
@@ -59,8 +69,10 @@ export default function AddMarketplace() {
         <Button onClick={() => modalMarketplace('tokopedia', true)} className="bg-gradient-to-tr from-lime-600 to-green-400 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
             Add Tokopedia Store
         </Button>
-        <Button disabled className="bg-gradient-to-tr from-orange-500 to-orange-300 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
+        <Button className="bg-gradient-to-tr from-orange-500 to-orange-300 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
+          <Link href={`${shopeeAuth}${shopeeAuthPath}?partner_id=${partnerId}&redirect=${process.env.NEXT_PUBLIC_SHOPEE_REDIRECT_URL}&timestamp=${ts}&sign=${sign}`}>
             Add Shopee Store
+          </Link>
         </Button>
         <Button disabled className="bg-gradient-to-tr from-blue-800 to-red-500 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
             <Link href={`${lazadaAuth}&redirect_uri=${callbackEndpoint}?app=chat&client_id=${process.env.NEXT_PUBLIC_LAZ_APP_CHAT_KEY_ID}`}>
