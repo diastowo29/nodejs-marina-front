@@ -3,12 +3,8 @@ import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import { Metadata } from "next";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import { Card, CardHeader, Divider, CardBody } from "@nextui-org/react";
-import { useSearchParams } from "next/navigation";
-import { generateToken } from "@/app/actions/marketplace/lazada/action";
 import { getListStores } from "@/app/actions/store/actions";
 import MarketplaceList from "@/components/Settings/MarketplaceList";
-import { Suspense } from "react";
-import { initScriptLoader } from "next/script";
 import SidebarSetting from "@/components/Settings/SidebarSettings";
 import AddMarketplace from "@/components/Settings/AddMarketplace";
 

@@ -13,7 +13,7 @@ export async function generateShopeeToken (code:string, shopId:string) {
         },
         body: JSON.stringify({
             code: code,
-            shopId: shopId
+            shop_id: shopId
         })
     });
 

@@ -9,7 +9,7 @@ import CryptoJS from "crypto-js";
 export default function AddMarketplace() {
   let host = process.env.NEXT_PUBLIC_AUTH0_BASE_URL;
   let lazadaAuth = 'https://auth.lazada.com/oauth/authorize?response_type=code&force_auth=true';
-  let shopeeAuth = `https://partner.test-stable.shopeemobile.com`;
+  let shopeeAuth = process.env.NEXT_PUBLIC_SHOPEE_HOST || `https://partner.test-stable.shopeemobile.com`;
   let shopeeAuthPath = '/api/v2/shop/auth_partner';
   let callbackEndpoint = `${host}/settings/marketplace`;
   let ts = Math.floor(Date.now() / 1000);
