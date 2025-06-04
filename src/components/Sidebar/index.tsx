@@ -92,10 +92,10 @@ const menuGroups = [
         children: [
           { label: "List Products", route: "/products" },
           { label: "New Product", route: "/products/new" },
-          { label: "Scrape", route: "/scrape" }
+          // { label: "Scrape", route: "/scrape" }
         ],
       },
-      {
+      /* {
         icon: (
           <svg
             className="fill-current"
@@ -125,8 +125,8 @@ const menuGroups = [
         ),
         label: "Dashboard",
         route: "#",
-        children: [{ label: "eCommerce", route: "/" }],
-      },
+        children: [{ label: "eCommerce", route: '# }],
+      }, */
       
       /* {
         icon: (
@@ -408,7 +408,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   return (
     <ClickOutside onClick={() => setSidebarOpen(false)}>
       <aside
-        className={`fixed left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:translate-x-0 ${
+      style={{backgroundColor: '#2F3E39'}}
+      // style={{background-color: ''}}
+        className={`fixed left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden duration-300 ease-linear dark:bg-boxdark lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -418,7 +420,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
             <Image
               width={176}
               height={32}
-              src={"/images/logo/MARINA.png"}
+              src={"/images/logo/Marina Logo-19.svg"}
               alt="Logo"
               priority
             />
@@ -448,7 +450,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
         <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
           {/* <!-- Sidebar Menu --> */}
-          <nav className="mt-5 px-4 py-4 lg:mt-9 lg:px-6">
+          <nav className="mt-2 px-4 py-4 lg:mt-2 lg:px-6">
             {menuGroups.map((group, groupIndex) => (
               <div key={groupIndex}>
                 <h3 className="mb-4 ml-4 text-sm font-semibold text-bodydark2">

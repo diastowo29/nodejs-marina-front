@@ -2,11 +2,11 @@ import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 
 import { Metadata } from "next";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import { INT_LIST_CHANNEL, INT_ORDER_BYCHANNEL } from "@/urls/internal";
 import { OrdersTab } from "@/components/Orders/OrdersTabs";
 import { Button, Card, CardBody} from "@nextui-org/react";
 import Link from "next/link";
 import { marinaPageNames, marinaUrls } from "@/config/enum";
+import { listChannel } from "../actions/channel/actions";
 
 export const metadata: Metadata = {
   title: "Orders | Marina Dashboard",
@@ -15,8 +15,7 @@ export const metadata: Metadata = {
 };
 
 const TablesPage = async () => {
-    let channelsRaw = await fetch(INT_LIST_CHANNEL);
-    let channels = await channelsRaw.json();
+    let channels = await listChannel();
     if (channels.length == 0) {
         return (
           <DefaultLayout>

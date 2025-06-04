@@ -16,7 +16,6 @@ export const OrdersTab = (tabsData : any) => {
     const [channelTab, setChannelTab] : any = useState(searchParams.get('c') || null);
     const [tableData, setTableData] = useState(tabsData.initTableData);
     const [loading, setLoading] = useState(false);
-    // console.log(tabsData);
 
     const channels = [
         { id: marinaChannel.Tokopedia.toLowerCase(), name: marinaChannel.Tokopedia}, 
@@ -47,7 +46,6 @@ export const OrdersTab = (tabsData : any) => {
             fetchData();
         }
     }, [channelTab]);
-    
     const inactiveChannel:any[] = [];
     channels.forEach(channel => {
         let isExist = false;

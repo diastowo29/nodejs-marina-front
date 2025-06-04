@@ -1,9 +1,9 @@
 'use server'
 
-let backendHost = process.env.BACKEND_HOST;
+import { HOST } from "@/urls/internal";
 
 export async function updateOrder (orderId:string) {
-    let authResponse = await fetch(`${backendHost}/api/v1/lazada/order/${orderId}`, {
+    let authResponse = await fetch(`${HOST}/api/v1/lazada/order/${orderId}`, {
         method: 'PUT',
         headers: {
           'Accept': 'application/json',
@@ -16,9 +16,9 @@ export async function updateOrder (orderId:string) {
     return authResponse;
 }
 
-export async function generateToken (code:string, apps:string) {
+export async function generateLazToken (code:string, apps:string) {
 
-    let authResponse = await fetch(`${backendHost}/api/v1/lazada/authorize`, {
+    let authResponse = await fetch(`${HOST}/api/v1/lazada/authorize`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -31,43 +31,7 @@ export async function generateToken (code:string, apps:string) {
     });
 
     let auth = await authResponse.json();
-    // console.log(auth);
     return auth;
-    /* let keyId = test.parsed.LAZ_APP_KEY_ID || 'abc';
-    // let keyId = process.env.LAZ_APP_KEY_ID || 'abc';
-    let keySecret = test.parsed.LAZ_APP_KEY_SECRET || 'abc';
-    // let keySecret = process.env.LAZ_APP_KEY_SECRET || 'abc';
-    let ts = Date.now();
-    let params = lazParamz(keyId, keySecret, code, ts, lazTokenApi)
-    // console.log(params);
-    let tokenRaw = await fetch(`${lazAuthHost}${lazTokenApi}?${params.params}&sign=${params.signed}`);
-    let token = await tokenRaw.json();
-    
-    console.log(token);
-    let updateStore = {}
-    if (token.code == '0') {
-        // client.connect();
-        // client.hSet('lazClient', {
-        //     accToken: token.access_token,
-        //     refToken: token.refresh_token
-        // })
-        updateStore = {
-            name: token.country_user_info[0].short_code,
-            identifier: token.country_user_info[0].seller_id,
-            channel: 'lazada',
-            status: 'connect',
-            token: token.access_token,
-            refToken: token.refresh_token
-        }
-    } else {
-        updateStore = {
-            name: '',
-            identifier: '',
-            channel: 'lazada',
-            status: 'failed'
-        }
-    }
-    return token; */
 }
 
 // function lazParamz (key:string, secret:string, code:string, ts:Number, endpoint:string) {

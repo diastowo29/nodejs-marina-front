@@ -95,7 +95,7 @@ export const ChatListTable = (chat:any) => {
       // console.log(chat);
 
       let chatData = await Promise.all([
-        listChatComments(contact.id),
+        listChatComments(contact.id), // need to change API for better sorting
         getOrdersByUser(contact.omnichat_user.origin_id),
         // getListProductsbyStore(contact.storeId)
       ])
