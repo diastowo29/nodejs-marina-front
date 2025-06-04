@@ -73,7 +73,8 @@ export const ChatWindow = (comments : any) => {
       ...messages,
       newMsg
     ]);
-    await replyChat(newMsg);
+    const chatReply = await replyChat(newMsg);
+    console.log(chatReply);
     setNewMessage('');
   };
   

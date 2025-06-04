@@ -166,6 +166,9 @@ export const OrdersStatusTabs = (data:any) => {
                         } else if (data.channel.toString().toLowerCase() == marinaChannel.Tokopedia.toString().toLowerCase()) {
                             const condition = ['New', 'Created'];
                             return condition.some((el) => orders.status.toString().includes(el));
+                        } else if (data.channel.toString().toLowerCase() == marinaChannel.Tiktok.toString().toLowerCase()) {
+                            const condition = ['AWAITING_SHIPMENT', 'UNPAID', 'ON_HOLD'];
+                            return condition.some((el) => orders.status.toString().includes(el));
                         }
                     } else if (activeStatusTab == 'process') {
                         if (data.channel.toString().toLowerCase() == marinaChannel.Lazada.toString().toLowerCase())  {
@@ -174,12 +177,18 @@ export const OrdersStatusTabs = (data:any) => {
                         } else if (data.channel.toString().toLowerCase() == marinaChannel.Tokopedia.toString().toLowerCase()) {
                             const condition = ['Accepted'];
                             return condition.some((el) => orders.status.toString().includes(el));
+                        } else if (data.channel.toString().toLowerCase() == marinaChannel.Tiktok.toString().toLowerCase()) {
+                            const condition = ['PARTIALLY_SHIPPING', 'AWAITING_COLLECTION'];
+                            return condition.some((el) => orders.status.toString().includes(el));
                         }
                     } else if (activeStatusTab == 'delivery') {
                         if (data.channel.toString().toLowerCase() == marinaChannel.Lazada.toString().toLowerCase()) {
                             return orders.status.toString().toLowerCase().includes('shipped');
                         } else if (data.channel.toString().toLowerCase() == marinaChannel.Tokopedia.toString().toLowerCase()) {
                             const condition = ['Wait for pickup', 'Shipped', 'Shipped - No AWB', 'Invalid AWB', 'AWB need correection'];
+                            return condition.some((el) => orders.status.toString().includes(el));
+                        } else if (data.channel.toString().toLowerCase() == marinaChannel.Tiktok.toString().toLowerCase()) {
+                            const condition = ['IN_TRANSIT'];
                             return condition.some((el) => orders.status.toString().includes(el));
                         }
                     } else if (activeStatusTab == 'completed') {
@@ -189,12 +198,18 @@ export const OrdersStatusTabs = (data:any) => {
                         } else if (data.channel.toString().toLowerCase() == marinaChannel.Tokopedia.toString().toLowerCase()) {
                             const condition = ['Delivered to Pickup point', 'Delivered', 'Open Case to Finish Order', 'Order Finished'];
                             return condition.some((el) => orders.status.toString().includes(el));
+                        } else if (data.channel.toString().toLowerCase() == marinaChannel.Tiktok.toString().toLowerCase()) {
+                            const condition = ['DELIVERED', 'COMPLETED'];
+                            return condition.some((el) => orders.status.toString().includes(el));
                         }
                     } else if (activeStatusTab == 'canceled') {
                         if (data.channel.toString().toLowerCase() == marinaChannel.Lazada.toString().toLowerCase()) {
                             return orders.status.toString().toLowerCase().includes('canceled');
                         } else if (data.channel.toString().toLowerCase() == marinaChannel.Tokopedia.toString().toLowerCase()) {
                             const condition = ['Cancelled', 'Rejected - OOS', 'Cancelled - Fraud', 'Rejected'];
+                            return condition.some((el) => orders.status.toString().includes(el));
+                        } else if (data.channel.toString().toLowerCase() == marinaChannel.Tiktok.toString().toLowerCase()) {
+                            const condition = ['CANCELLED', 'CANCEL'];
                             return condition.some((el) => orders.status.toString().includes(el));
                         }
                     } else if (activeStatusTab == 'failed') {

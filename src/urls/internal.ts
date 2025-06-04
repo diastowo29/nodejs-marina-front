@@ -49,3 +49,6 @@ export const INT_CHAT_COMMENTS = (chatId:string) => {
 export const INT_SEARCH_PRODUCT = (query:string, storeId: number) => {
     return `${PRODUCT_ENDPOINT}/find?skuname=${query}&storeId=${storeId}`
 }
+export const INT_UPDATE_ORDER = (channel:string, orderId:string) => {
+    return `${HOST}/api/v1/${channel}/order/${orderId}`;
+}

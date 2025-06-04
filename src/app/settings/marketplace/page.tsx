@@ -7,6 +7,7 @@ import { getListStores } from "@/app/actions/store/actions";
 import MarketplaceList from "@/components/Settings/MarketplaceList";
 import SidebarSetting from "@/components/Settings/SidebarSettings";
 import AddMarketplace from "@/components/Settings/AddMarketplace";
+import { popToast } from "@/app/actions/toast/pop";
 
 // export const metadata: Metadata = {
 //   title: "Next.js Settings | TailAdmin - Next.js Dashboard Template",
@@ -34,7 +35,6 @@ const Settings = async () => {
   } */
 
   let stores = await getListStores();
-
   return (
     <DefaultLayout>
       {/* <div className="mx-auto max-w-270"> */}

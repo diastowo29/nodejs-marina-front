@@ -1,10 +1,12 @@
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import {Card, CardBody, Link, Chip} from "@nextui-org/react";
+import {Button, ButtonGroup, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from "@nextui-org/react";
 import OrderButton from "@/components/Buttons/ButtonOrder";
-import { Metadata } from "next";
+// import { Metadata } from "next";
 import { getOrders } from "@/app/actions/order/actions";
 import { marinaChannel, marinaStatusColor } from "@/config/enum";
+import { OrderedItems } from "@/components/Tables/OrderedItems";
+import { ChevronDownIcon } from "@/components/Icons/dotsaction";
 
 // export const metadata: Metadata = {
 //   title: "Next.js Tables | TailAdmin - Next.js Dashboard Template",
@@ -16,6 +18,16 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
   let data  = await getOrders(params.order);
   let itemOrdered:any[] = [];
 
+  if (data.error) {
+    return (
+      <DefaultLayout>
+        <div className="flex h-full w-full items-center justify-center">
+          <h1 className="text-2xl font-bold text-red-500">Order not found</h1>
+        </div>
+      </DefaultLayout>
+    )
+  }
+
   if (data.store.channel.name.toString().toLowerCase() == marinaChannel.Lazada.toLowerCase()) {
     data.order_items.forEach((item:any) => {
       let indexFound = itemOrdered.findIndex(i => i.productsId == item.productsId)
@@ -25,11 +37,12 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
         itemOrdered.push(item);
       }
     });
-    console.log(itemOrdered);
+    // console.log(itemOrdered);
   } else {
     itemOrdered = data.order_items;
   }
 
+  // console.log(itemOrdered);
   const statusColor = (status:any) => {
     switch (status) {
       case 'pending':
@@ -44,6 +57,49 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
         return 'default';
     }
   }
+
+  const descriptionsMap = {
+    merge:
+      "All commits from the source branch are added to the destination branch via a merge commit.",
+    squash:
+      "All commits from the source branch are added to the destination branch as a single commit.",
+    rebase: "All commits from the source branch are added to the destination branch individually.",
+  };
+
+  const labelsMap = {
+    merge: "Create a merge commit",
+    squash: "Squash and merge",
+    rebase: "Rebase and merge",
+  };
+
+  const items = [
+    {
+      key: "chat",
+      label: "Chat Buyer",
+    },
+    {
+      key: "reject",
+      label: "Reject Order",
+    },
+    {
+      key: "process",
+      label: "Process Order",
+    }
+  ];
+
+  // const currency = item.products.price.toLocaleString('id-ID', { style: 'currency',  currency:(item.products.currency) ? item.products.currency : 'USD'})
+  let totalPrice:number = 0;
+  let productCurrency:string = "IDR"
+  if (!data.total_product_price) {
+    totalPrice = data.total_amount-data.shipping_price
+  } else {
+    totalPrice = data.total_product_price;
+  }
+  itemOrdered.forEach(item => {
+    if (item.products.currency) {
+      productCurrency = item.products.currency;
+    }
+  });  
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Order" />
@@ -65,7 +121,10 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
                   <label
                     className="mb-3 block text-sm font-medium text-black dark:text-white"
                     htmlFor="emailAddress">Product(s)</label>
-                  <div className="relative">
+                  <p>{`Recipient address: ${data.recp_addr_full}, ${data.recp_addr_city}, ${data.recp_addr_country}`}</p>
+                  <p className="mb-3">{`Contact: ${data.recp_name} - ${data.recp_phone}`}</p>
+                  <OrderedItems items={itemOrdered} />
+                  {/* <div className="relative">
                     {itemOrdered.map((product:any) => (
                       <Card key={product.productsId} className="mb-3">
                         <CardBody>
@@ -79,9 +138,9 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
                         </CardBody>
                       </Card>
                     ))}
-                  </div>
+                  </div> */}
                 </div>
-                <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+                {/* <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                   <div className="w-full">
                     <label className="mb-3 block text-sm font-medium text-black dark:text-white" htmlFor="fullName">
                       Shipping Address
@@ -90,8 +149,8 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
                       {data.recp_addr_full}, {data.recp_addr_district}, {data.recp_addr_city}
                     </div>
                   </div>
-                </div>
-                <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+                </div> */}
+                {/* <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                   <div className="w-full sm:w-1/3">
                     <label
                       className="mb-3 block text-sm font-medium text-black dark:text-white"
@@ -129,7 +188,7 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
                       {data.recp_phone}
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -141,7 +200,6 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
                 </h3>
               </div>
               <div className="p-7">
-                {/* <form action="#"> */}
                   <div className="mb-4 flex items-center gap-3">
                     <div className="w-full sm:w-1/2">
                       <div className="relative">
@@ -150,7 +208,7 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
                     </div>
                     <div className="w-full sm:w-1/2">
                       <div className="relative">
-                        Rp {data.total_product_price}
+                        {totalPrice.toLocaleString('id-ID', { style: 'currency',  currency:(productCurrency) ? productCurrency : 'USD'})}
                       </div>
                     </div>
                   </div>
@@ -162,7 +220,8 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
                     </div>
                     <div className="w-full sm:w-1/2">
                       <div className="relative">
-                        Rp {data.shipping_price.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
+                        {data.shipping_price.toLocaleString('id-ID', { style: 'currency',  currency:(productCurrency) ? productCurrency : 'USD'})}
+                        {/* Rp {data.shipping_price.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} */}
                       </div>
                     </div>
                   </div>
@@ -198,15 +257,44 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
                     </div>
                     <div className="w-full sm:w-1/2">
                       <div className="relative">
-                        Rp {data.total_amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
+                        {data.total_amount.toLocaleString('id-ID', { style: 'currency',  currency:(productCurrency) ? productCurrency : 'USD'})}
+                        {/* Rp {data.total_amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} */}
                       </div>
                     </div>
                   </div>
                   <div className="flex justify-center gap-4.5">
-                    <OrderButton status={data.status} orderId={data.id}></OrderButton>
+                    <Button color="primary">Print label</Button>
+                    <OrderButton channel={data.store.channel.name} status={data.status} orderId={data.id}></OrderButton>
+                    {/* <ButtonGroup variant="flat">
+                      <Button>{(labelsMap['merge'])}</Button>
+                      <Dropdown placement="bottom-end">
+                        <DropdownTrigger>
+                          <Button isIconOnly>
+                            <ChevronDownIcon />
+                          </Button>
+                        </DropdownTrigger>
+                        <DropdownMenu
+                          disallowEmptySelection
+                          aria-label="Merge options"
+                          className="max-w-[300px]"
+                          // selectedKeys={selectedOption}
+                          selectionMode="single"
+                          // onSelectionChange={setSelectedOption}
+                        >
+                          <DropdownItem key="merge" description={descriptionsMap["merge"]}>
+                            {labelsMap["merge"]}
+                          </DropdownItem>
+                          <DropdownItem key="squash" description={descriptionsMap["squash"]}>
+                            {labelsMap["squash"]}
+                          </DropdownItem>
+                          <DropdownItem key="rebase" description={descriptionsMap["rebase"]}>
+                            {labelsMap["rebase"]}
+                          </DropdownItem>
+                        </DropdownMenu>
+                      </Dropdown>
+                    </ButtonGroup> */}
+                    
                   </div>
-
-                {/* </form> */}
               </div>
             </div>
           </div>

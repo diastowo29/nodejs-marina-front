@@ -8,6 +8,8 @@ import { useState } from "react";
 import { CheckIcon, DotsIcon } from "../Icons/dotsaction";
 import CryptoJS from "crypto-js";
 import Link from "next/link";
+import { generateTiktokToken } from "@/app/actions/marketplace/tiktok/action";
+import { popToast } from "@/app/actions/toast/pop";
 
 export default function MarketplaceList(channels:any) {
     // ?code=4857676a6b4b656f6548584d76727154&shop_id=138335
@@ -22,17 +24,49 @@ export default function MarketplaceList(channels:any) {
     const shopeeSignString = `${partnerId}${shopeeAuthPath}${ts}`;
     let sign = CryptoJS.HmacSHA256(shopeeSignString, (partnerKey) as string).toString(CryptoJS.enc.Hex);
 
+    if (channels.stores.error) {
+        popToast("Could not connect to server, please contact admin", "error");
+        return (
+            <div className="text-center">
+                <p className="text-danger">Could not connect to server, please contact admin</p>
+            </div>
+        )
+    }
+
     let [listChannels, setListChannels] = useState(channels.stores)
     let params = useSearchParams();
     let authCode:string = params.get('code') || '';
     let appsNumber:string = params.get('app') || '';
     let shopId:string = params.get('shop_id') || '';
+    let appKey:string = params.get('app_key') || '' ;
+    let shopRegion:string = params.get('shop_region') || '';
     if (appsNumber && authCode) {
         /* LAZADA */
-        generateLazToken(authCode, appsNumber);
+        generateLazToken(authCode, appsNumber).then((res) => {
+            if (!res.error) {
+                popToast("Connected to Lazada", "success");
+            } else {
+                popToast("Failed to connect to Lazada", "error");
+            }
+        });
     } else if (shopId && authCode) {
         /* SHOPEE */
-        generateShopeeToken(authCode, shopId);
+        generateShopeeToken(authCode, shopId).then((res) => {
+            if (!res.error) {
+                popToast("Connected to Shopee", "success");
+            } else {
+                popToast("Failed to connect to Shopee", "error");
+            }
+        });
+    } else if (appKey && shopRegion) {
+        /* TIKTOK */
+        generateTiktokToken(authCode).then((res) => {
+            if (!res.error) {
+                popToast("Connected to Tiktok", "success");
+            } else {
+                popToast("Failed to connect to Tiktok", "error");
+            }
+        })
     }
 
     const ReAuthItem = (channel:Record<string, string>) => {

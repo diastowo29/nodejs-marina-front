@@ -7,6 +7,8 @@ import { useState } from "react";
 import CryptoJS from "crypto-js";
 
 export default function AddMarketplace() {
+
+  let tiktokAuth = `https://services.tiktokshop.com/open/authorize?service_id=7449020282483050246`
   let host = process.env.NEXT_PUBLIC_AUTH0_BASE_URL;
   let lazadaAuth = 'https://auth.lazada.com/oauth/authorize?response_type=code&force_auth=true';
   let shopeeAuth = process.env.NEXT_PUBLIC_SHOPEE_HOST || `https://partner.test-stable.shopeemobile.com`;
@@ -74,18 +76,20 @@ export default function AddMarketplace() {
             Add Shopee Store
           </Link>
         </Button>
-        <Button disabled className="bg-gradient-to-tr from-blue-800 to-red-500 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
+        <Button className="bg-gradient-to-tr from-blue-800 to-red-500 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
             <Link href={`${lazadaAuth}&redirect_uri=${callbackEndpoint}?app=chat&client_id=${process.env.NEXT_PUBLIC_LAZ_APP_CHAT_KEY_ID}`}>
             Add Lazada Store (Chat)
             </Link>
         </Button>
-        <Button disabled className="bg-gradient-to-tr from-blue-800 to-red-500 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
+        <Button className="bg-gradient-to-tr from-blue-800 to-red-500 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
             <Link href={`${lazadaAuth}&redirect_uri=${callbackEndpoint}?app=oms&client_id=${process.env.NEXT_PUBLIC_LAZ_APP_OMS_KEY_ID}`}>
             Add Lazada Store (Order)
             </Link>
         </Button>
-        <Button disabled className="bg-gradient-to-tr from-black to-white text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
-            Add TikTok Store
+        <Button className="bg-gradient-to-tr from-black to-white text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
+          <Link href={tiktokAuth}>
+              Add TikTok Store
+          </Link>
         </Button>
         <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
               <ModalContent>
