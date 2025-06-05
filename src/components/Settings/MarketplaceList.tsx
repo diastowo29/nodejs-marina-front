@@ -22,7 +22,7 @@ export default function MarketplaceList(channels:any) {
     const partnerId = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_ID;
     const partnerKey = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_KEY;
     const shopeeSignString = `${partnerId}${shopeeAuthPath}${ts}`;
-    let sign = CryptoJS.HmacSHA256(shopeeSignString, (partnerKey) as string).toString(CryptoJS.enc.Hex);
+    // let sign = CryptoJS.HmacSHA256(shopeeSignString, (partnerKey) as string).toString(CryptoJS.enc.Hex);
 
     if (channels.stores.error) {
         popToast("Could not connect to server, please contact admin", "error");
@@ -71,10 +71,10 @@ export default function MarketplaceList(channels:any) {
 
     const ReAuthItem = (channel:Record<string, string>) => {
         if (channel.channel == 'shopee') {
-            return (
-                <Link href={`${shopeeAuth}${shopeeAuthPath}?partner_id=${partnerId}&redirect=${process.env.NEXT_PUBLIC_SHOPEE_REDIRECT_URL}&timestamp=${ts}&sign=${sign}`}>
-                    Re-Authorize
-                </Link>
+            return (<></>
+                // <Link href={`${shopeeAuth}${shopeeAuthPath}?partner_id=${partnerId}&redirect=${process.env.NEXT_PUBLIC_SHOPEE_REDIRECT_URL}&timestamp=${ts}&sign=${sign}`}>
+                //     Re-Authorize
+                // </Link>
             )
         } else {
             return (
