@@ -6,8 +6,8 @@ import { Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Li
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { CheckIcon, DotsIcon } from "../Icons/dotsaction";
-import CryptoJS from "crypto-js";
-import Link from "next/link";
+// import CryptoJS from "crypto-js";
+// import Link from "next/link";
 import { generateTiktokToken } from "@/app/actions/marketplace/tiktok/action";
 import { popToast } from "@/app/actions/toast/pop";
 
