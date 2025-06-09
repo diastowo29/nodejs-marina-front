@@ -1,10 +1,9 @@
 "use client";
 import { createStore } from "@/app/actions/marketplace/actions";
+import { generateHmac } from "@/app/actions/sign/actions";
 import { BliBliIcon } from "@/app/settings/assets/BliBli";
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
-import { createHmac } from "crypto";
 import Link from "next/link";
-// import { createHmac } from "node:crypto";
 import { useState } from "react";
 // import CryptoJS from "crypto-js";
 
@@ -22,7 +21,6 @@ export default function AddMarketplace() {
   const partnerKey = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_KEY;
   const shopeeSignString = `${partnerId}${shopeeAuthPath}${ts}`;
 
-  // let sign = CryptoJS.HmacSHA256(shopeeSignString, (partnerKey) as string).toString(CryptoJS.enc.Hex);
   const [marketName, setMarketName] = useState('');
   const [isNew, setNew] = useState(true);
   const [marketUrl, setMarketUrl] = useState('');
@@ -31,11 +29,7 @@ export default function AddMarketplace() {
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const [name, setName] = useState('');
   
-  // const generateHmac = (message:string, secret:string) => {
-  //   return createHmac('sha256', secret).update(message).digest('hex');
-  // }
-  
-  // let sign = generateHmac(shopeeSignString, partnerKey as string);
+  let shopeeSign = generateHmac(shopeeSignString, partnerKey as string);
   const modalMarketplace = (btn:any, newModal:boolean) => {
     if (newModal) {
         setNew(true);
@@ -79,9 +73,9 @@ export default function AddMarketplace() {
             Add Tokopedia Store
         </Button>
         <Button className="bg-gradient-to-tr from-orange-500 to-orange-300 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
-          {/* <Link href={`${shopeeAuth}${shopeeAuthPath}?partner_id=${partnerId}&redirect=${process.env.NEXT_PUBLIC_SHOPEE_REDIRECT_URL}&timestamp=${ts}&sign=${sign}`}> */}
+          <Link href={`${shopeeAuth}${shopeeAuthPath}?partner_id=${partnerId}&redirect=${process.env.NEXT_PUBLIC_SHOPEE_REDIRECT_URL}&timestamp=${ts}&sign=${shopeeSign}`}>
             Add Shopee Store
-          {/* </Link> */}
+          </Link>
         </Button>
         <Button className="bg-gradient-to-tr from-blue-800 to-red-500 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
             <Link href={`${lazadaAuth}&redirect_uri=${callbackEndpoint}?app=chat&client_id=${process.env.NEXT_PUBLIC_LAZ_APP_CHAT_KEY_ID}`}>
