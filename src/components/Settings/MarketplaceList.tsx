@@ -10,6 +10,7 @@ import { CheckIcon, DotsIcon } from "../Icons/dotsaction";
 // import Link from "next/link";
 import { generateTiktokToken } from "@/app/actions/marketplace/tiktok/action";
 import { popToast } from "@/app/actions/toast/pop";
+import { generateHmac } from "@/app/actions/sign/actions";
 
 export default function MarketplaceList(channels:any) {
     // ?code=4857676a6b4b656f6548584d76727154&shop_id=138335
@@ -22,7 +23,7 @@ export default function MarketplaceList(channels:any) {
     const partnerId = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_ID;
     const partnerKey = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_KEY;
     const shopeeSignString = `${partnerId}${shopeeAuthPath}${ts}`;
-    // let sign = CryptoJS.HmacSHA256(shopeeSignString, (partnerKey) as string).toString(CryptoJS.enc.Hex);
+    let sign = generateHmac(shopeeSignString, partnerKey as string);
 
     if (channels.stores.error) {
         popToast("Could not connect to server, please contact admin", "error");
