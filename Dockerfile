@@ -14,6 +14,8 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV BACKEND_HOST marina-apps.et.r.appspot.com
+ENV NEXT_PUBLIC_SHOPEE_HOST https://partner.shopeemobile.com
+ENV NEXT_PUBLIC_SHOPEE_PARTNER_ID 2010813
 
 RUN npm run build
 
@@ -22,8 +24,6 @@ WORKDIR /app
 
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
-ENV NEXT_PUBLIC_SHOPEE_HOST https://partner.shopeemobile.com
-ENV NEXT_PUBLIC_SHOPEE_PARTNER_ID 2010813
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
