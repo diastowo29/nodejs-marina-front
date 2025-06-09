@@ -29,13 +29,10 @@ export default function AddMarketplace() {
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const [name, setName] = useState('');
 
-  console.log(process.env);
-  for (const key in process.env) {
-      console.log(`${key}: ${process.env[key]}`);
-    }
-
-  
-  let shopeeSign = generateHmac(shopeeSignString, partnerKey as string);
+  let shopeeSign:string = '';
+  generateHmac(shopeeSignString, partnerKey as string).then((res) => {
+    shopeeSign = res;
+  })
   const modalMarketplace = (btn:any, newModal:boolean) => {
     if (newModal) {
         setNew(true);
