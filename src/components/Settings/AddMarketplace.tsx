@@ -27,11 +27,12 @@ export default function AddMarketplace() {
   const [invalidUrl, setInvalidUrl] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const [shopeeSign, setShopeeSign] = useState('');
   const [name, setName] = useState('');
 
-  let shopeeSign:string = '';
+  // let shopeeSign:string = '';
   generateHmac(shopeeSignString, partnerKey as string).then((res) => {
-    shopeeSign = res;
+    setShopeeSign(res);
   })
   const modalMarketplace = (btn:any, newModal:boolean) => {
     if (newModal) {
