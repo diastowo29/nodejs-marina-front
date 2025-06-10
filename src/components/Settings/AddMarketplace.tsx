@@ -77,7 +77,7 @@ export default function AddMarketplace() {
             Add Tokopedia Store
         </Button>
         <Button className="bg-gradient-to-tr from-orange-500 to-orange-300 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
-          <Link href={`${shopeeAuth}${shopeeAuthPath}?partner_id=${partnerId}&redirect=${process.env.NEXT_PUBLIC_SHOPEE_REDIRECT_URL}&timestamp=${ts}&sign=${shopeeSign}`}>
+          <Link href={`${shopeeAuth}${shopeeAuthPath}?partner_id=${partnerId}&redirect=${process.env.NEXT_PUBLIC_SHOPEE_REDIRECT_URL}settings/marketplace&timestamp=${ts}&sign=${shopeeSign}`}>
             Add Shopee Store
           </Link>
         </Button>
