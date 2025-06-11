@@ -53,12 +53,11 @@ export const OrdersStatusTabs = (data:any) => {
     const IdCell = ({ row }:any) => (
         <div>
             <div>
-                <label data-tag="allowRowEvents" style={productStyle}>
+                {/* <label data-tag="allowRowEvents" style={productStyle}>
                     {row.id}
-
-                </label>
+                </label> */}
                 <div data-tag="allowRowEvents" style={greyStyle}>
-                    Source ID: {row.origin_id}
+                    {row.origin_id}
                 </div>
             </div>
         </div>
@@ -91,7 +90,7 @@ export const OrdersStatusTabs = (data:any) => {
     )};
 
     const ProductCell = ({ row }:any) => (
-        <div>
+        <div style={{width: '-webkit-fill-available'}}>
             <div>
                 <label data-tag="allowRowEvents" style={productStyle}>
                     {row.order_items[0].products.name}
@@ -113,7 +112,6 @@ export const OrdersStatusTabs = (data:any) => {
         },{
             name: 'Product(s)',
             // sortable: true,
-            maxwidth: '100%',
             cell: (row:any) => <ProductCell row={row} />,
         },{
             name: 'Order Time',
