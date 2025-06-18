@@ -1,21 +1,44 @@
-import { withMiddlewareAuthRequired } from '@auth0/nextjs-auth0/edge';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { auth0 } from './lib/auth0';
+import { cookies } from 'next/headers';
+// import { setCookie } from './app/actions/cookies/actions';
+export async function middleware(request: NextRequest) {
+  const authRes = await auth0.middleware(request); // Returns a NextResponse object
 
-export default withMiddlewareAuthRequired(async function middleware(req) {
-    // console.log(req.url);
-    // console.log(req.headers.get('Authorization'));
-    const res = NextResponse.next();
-    return res;
-  });
-export const config = {
-matcher: [
-    /*
-    * Match all request paths except for the ones starting with:
-    * - api (API routes)
-    * - static (static files)
-    * - favicon.ico (favicon file)
-    */
-    '/((?!api|static|favicon.ico).*)',
-],
+  if (request.nextUrl.pathname.startsWith("/auth")) {
+    return authRes;
+  }
+
+  // Allow access to public routes without requiring a session
+  // if (request.nextUrl.pathname === ("/")) {
+  //   return authRes;
+  // }
+
+  const { origin } = new URL(request.url);
+  const cookiesStore = cookies();
+  const session = await auth0.getSession();
+  if (!session) {
+    return NextResponse.redirect(`${origin}/auth/login`)
+  }
+  if (!cookiesStore.has('org_id')) {
+    authRes.cookies.set('user_id', session.user.sub || '');
+    authRes.cookies.set('org_id', session.user.org_id || '');
+  }
+  // If a valid session exists, continue with the response from Auth0 middleware
+  // You can also add custom logic here...
+  return authRes
+
+  // return await auth0.middleware(request) // Returns a NextResponse object
 }
-  
+
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico, sitemap.xml, robots.txt (metadata files)
+     */
+    "/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
+  ],
+}

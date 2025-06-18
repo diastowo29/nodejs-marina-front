@@ -4,8 +4,9 @@ import "@/css/satoshi.css";
 import "@/css/style.css";
 import React, { useEffect, useState } from "react";
 import Loader from "@/components/common/Loader";
-import { UserProvider } from '@auth0/nextjs-auth0/client';
+// import { UserProvider } from '@auth0/nextjs-auth0/client';
 import { ToastContainer } from "react-toastify";
+import { Auth0Provider } from "@auth0/nextjs-auth0";
 
 
 export default function RootLayout({
@@ -17,21 +18,20 @@ export default function RootLayout({
   const [loading, setLoading] = useState<boolean>(true);
 
   // const pathname = usePathname();
-
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);
   }, []);
 
   return (
     <html lang="en">
-      <UserProvider>
+      <Auth0Provider>
         <body suppressHydrationWarning={true}>
           <ToastContainer/>
             <div className="dark:bg-boxdark-2 dark:text-bodydark">
               {loading ? <Loader /> : children}
             </div>
         </body>
-      </UserProvider>
+      </Auth0Provider>
     </html>
   );
 }

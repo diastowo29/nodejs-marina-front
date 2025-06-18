@@ -16,6 +16,7 @@ export const metadata: Metadata = {
 
 const TablesPage = async () => {
     let channels = await listChannel();
+    console.log(process.env.SOME_KEY);
     if (channels.length == 0) {
         return (
           <DefaultLayout>

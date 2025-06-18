@@ -41,13 +41,13 @@ export const INT_GET_ORDER = (orderId:string) => {
     return `${ORDER_ENDPOINT}/${orderId}`;
 };
 export const INT_GET_ORDER_ByU = (userId:string) => {
-    return `${ORDER_ENDPOINT}?u=${userId}`;
+    return `${ORDER_ENDPOINT}?user_id=${userId}`;
 };
 export const INT_CHAT_COMMENTS = (chatId:string) => {
     return `${CHAT_ENDPOINT}/${chatId}/comments`;
 };
 export const INT_SEARCH_PRODUCT = (query:string, storeId: number) => {
-    return `${PRODUCT_ENDPOINT}/find?skuname=${query}&storeId=${storeId}`
+    return `${PRODUCT_ENDPOINT}/find?skuname=${query}&m_store_id=${storeId}`
 }
 export const INT_UPDATE_ORDER = (channel:string, orderId:string) => {
     return `${HOST}/api/v1/${channel}/order/${orderId}`;
