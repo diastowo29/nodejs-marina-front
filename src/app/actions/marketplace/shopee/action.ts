@@ -1,7 +1,7 @@
 "use server";
 
 import { HOST } from "@/urls/internal";
-
+import { generateJwt } from "../../sign/actions";
 
 export async function generateShopeeToken (code:string, shopId:string) {
 
@@ -9,7 +9,8 @@ export async function generateShopeeToken (code:string, shopId:string) {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + await generateJwt()
         },
         body: JSON.stringify({
             code: code,

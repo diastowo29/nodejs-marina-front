@@ -100,8 +100,13 @@ export const ChatSidebarV2 = (sidebarParams:any) => {
 
   const searchProduct = async (product:string) => {
     if (product.length > 3) {
-      let productFound = await searchProducts(product, sidebarParams.storeId);
-      setProductResults(productFound.result);
+      try {
+        let productFound = await searchProducts(product, sidebarParams.storeId);
+        setProductResults(productFound.result);
+      } catch (err) {
+        console.error("Error searching products:", err);
+        setProductResults([]);
+      }
     }
   }
 

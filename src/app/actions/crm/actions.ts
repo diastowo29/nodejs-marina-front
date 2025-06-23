@@ -1,12 +1,14 @@
 'use server'
 import { CRM_ENDPOINT, HANDSHAKE_SUNCO, HANDSHAKE_ZD, INT_STORES } from "@/urls/internal";
+import { generateJwt } from "../sign/actions";
 // import * as crypto from "crypto";
 
 export async function createCrm (payload:{}) {
     // console.log(payload)
     const crmRaw = await fetch(CRM_ENDPOINT, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 
+            'Authorization': 'Bearer ' + await generateJwt() },
         body: JSON.stringify(payload)
     });
     const crm = await crmRaw.json();
@@ -15,7 +17,8 @@ export async function createCrm (payload:{}) {
 
 export async function getCrm () {
     const storesRaw = await fetch(INT_STORES, {
-        method: 'GET'
+        method: 'GET',
+        headers: { 'Authorization': 'Bearer ' + await generateJwt() }
     });
     const stores = await storesRaw.json();
     return stores;
