@@ -1,7 +1,7 @@
 "use client";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import Image from "next/image";
-import { Metadata } from "next";
+// import Image from "next/image";
+// import { Metadata } from "next";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import { Listbox, ListboxItem, ListboxSection, Card, CardHeader, Divider, CardBody, CardFooter, Link, Button, CheckboxGroup, Checkbox } from "@nextui-org/react";
 import {Input, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
@@ -9,7 +9,7 @@ import { TokoIcon } from "../assets/Tokopedia";
 import { useState } from "react";
 import { SalesforceIcon, ZendeskIcon } from "../assets/CRM";
 import { createCrm, handshakeCrm, handshakeSunco } from "@/app/actions/crm/actions";
-import { useUser } from "@auth0/nextjs-auth0/client";
+// import { useUser } from "@auth0/nextjs-auth0/client";
 
 // export const metadata: Metadata = {
 //   title: "Next.js Settings | TailAdmin - Next.js Dashboard Template",
@@ -34,8 +34,8 @@ const Settings = () => {
   const [isLoading, setLoading] = useState(false);
   const [marketSelectName, setMarketSelectName] = useState('');
 
-  const { user } = useUser();
-  console.log(user);
+  // const { user } = useUser();
+  // console.log(user);
   // let channelClicked:string;
 
   const modalMarketplace = (btn:any, newModal:boolean) => {
