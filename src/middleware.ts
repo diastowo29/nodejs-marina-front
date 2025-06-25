@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth0 } from './lib/auth0';
-import { cookies } from 'next/headers';
-// import { setCookie } from './app/actions/cookies/actions';
 export async function middleware(request: NextRequest) {
   const authRes = await auth0.middleware(request); // Returns a NextResponse object
 
@@ -15,14 +13,9 @@ export async function middleware(request: NextRequest) {
   // }
 
   const { origin } = new URL(request.url);
-  const cookiesStore = cookies();
   const session = await auth0.getSession();
   if (!session) {
     return NextResponse.redirect(`${origin}/auth/login`)
-  }
-  if (!cookiesStore.has('org_id')) {
-    authRes.cookies.set('user_id', session.user.sub || '');
-    authRes.cookies.set('org_id', session.user.org_id || '');
   }
   // If a valid session exists, continue with the response from Auth0 middleware
   // You can also add custom logic here...

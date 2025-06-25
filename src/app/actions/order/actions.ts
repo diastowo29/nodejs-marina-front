@@ -6,12 +6,6 @@ import { INT_GET_ORDER, INT_GET_ORDER_ByU, INT_ORDER_BYCHANNEL, INT_UPDATE_ORDER
 import { generateJwt } from "../sign/actions";
 
 export async function getOrders (orderId:string) {
-    // try {
-    //     let token = await getAccessToken();
-    //     console.log(token)
-    // } catch (err) {
-    //     console.log(err)
-    // }
     const orderRaw = await fetch(INT_GET_ORDER(orderId), {
         cache: 'no-store',
         headers: {

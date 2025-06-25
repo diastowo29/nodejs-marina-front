@@ -7,7 +7,7 @@ import { Button, Card, CardBody} from "@nextui-org/react";
 import Link from "next/link";
 import { marinaPageNames, marinaUrls } from "@/config/enum";
 import { listChannel } from "../actions/channel/actions";
-import { popToast } from "../actions/toast/pop";
+// import { popToast } from "../actions/toast/pop";
 
 export const metadata: Metadata = {
   title: "Orders | Marina Dashboard",
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 const TablesPage = async () => {
     let channels = await listChannel();
     // console.log(channels);
-    console.log(process.env.SOME_KEY);
+    console.log('SOME_KEY: ', process.env.SOME_KEY);
     if (channels.error || channels.length == 0) {
         // console.log("No channels found or error fetching channels");
         if (channels.error) {
