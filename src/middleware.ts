@@ -21,6 +21,7 @@ export async function middleware(request: NextRequest) {
   // You can also add custom logic here...
   return authRes
 
+  
   // return await auth0.middleware(request) // Returns a NextResponse object
 }
 
