@@ -1,6 +1,5 @@
 import useSWR from 'swr'
  
-// const fetcher = (...args:any[]) => fetch(...args).then((res) => res.json())
 const fetcher = async (...args:any[]) => {
   const res = await fetch(args[0]);
   return res.json();
