@@ -38,6 +38,19 @@ export enum marinaChatContent {
     INVOICE = 'invoice'
 }
 
+// export enum marinaEnv {
+//     SHOPEE_REDIRECT_URL = ''
+// }
+
+export async function marinaEnv () {
+    'use server'
+    return {
+        SHOPEE_REDIRECT_URL: process.env.NEXT_PUBLIC_SHOPEE_REDIRECT_URL || '',
+        // LAZADA_REDIRECT_URL: process.env.NEXT_PUBLIC_LAZADA_REDIRECT_URL || '',
+        // TIKTOK_REDIRECT_URL: process.env.NEXT_PUBLIC_TIKTOK_REDIRECT_URL || ''
+    };
+}
+
 export function cancelReasons (channel:string, status:string) {
     switch (channel) {
         case marinaChannel.Shopee.toLowerCase():
