@@ -6,14 +6,14 @@ import { Button } from "@nextui-org/react";
 import Link from "next/link";
 let shopeeAuth = process.env.NEXT_PUBLIC_SHOPEE_HOST || `https://partner.test-stable.shopeemobile.com`;
 let shopeeAuthPath = '/api/v2/shop/auth_partner';
-  let ts = Math.floor(Date.now() / 1000);
+let ts = Math.floor(Date.now() / 1000);
 
 const partnerId = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_ID;
 const partnerKey = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_KEY;
 const shopeeSignString = `${partnerId}${shopeeAuthPath}${ts}`;
 const shopeeSign = generateHmac(shopeeSignString, partnerKey as string);
 
-export function ButtonGroup () {
+export async function ButtonGroup () {
     return (
         <>
         <Button className="bg-gradient-to-tr from-orange-500 to-orange-300 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
