@@ -20,8 +20,6 @@ export async function middleware(request: NextRequest) {
   // If a valid session exists, continue with the response from Auth0 middleware
   // You can also add custom logic here...
   return authRes
-
-  
   // return await auth0.middleware(request) // Returns a NextResponse object
 }
 
