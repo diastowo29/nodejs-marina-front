@@ -5,6 +5,7 @@ import { BliBliIcon } from "@/app/settings/assets/BliBli";
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
 import Link from "next/link";
 import { useState } from "react";
+import { ButtonGroup } from "./ButtonGroup";
 // import CryptoJS from "crypto-js";
 
 export default function AddMarketplace() {
@@ -72,6 +73,7 @@ export default function AddMarketplace() {
     <div className="flex flex-wrap gap-4 items-center">
 
       {/* make all button SSR to load ENV VARIABLE */}
+        <ButtonGroup />
         <Button disabled onClick={() => modalMarketplace('blibli', true)} className="bg-gradient-to-tr from-blue-400 to-sky-400 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
             Add BliBli Store
         </Button>
