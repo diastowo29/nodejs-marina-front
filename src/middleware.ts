@@ -7,11 +7,6 @@ export async function middleware(request: NextRequest) {
     return authRes;
   }
 
-  // Allow access to public routes without requiring a session
-  // if (request.nextUrl.pathname === ("/")) {
-  //   return authRes;
-  // }
-
   const { origin } = new URL(request.url);
   const session = await auth0.getSession();
   if (!session) {
