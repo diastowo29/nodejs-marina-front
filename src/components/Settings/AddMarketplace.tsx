@@ -79,7 +79,7 @@ export default function AddMarketplace(props:any) {
             Add Tokopedia Store
         </Button>
         <Button className="bg-gradient-to-tr from-orange-500 to-orange-300 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
-          <Link href={`${props.shopeeHost}${shopeeAuthPath}?partner_id=${partnerId}&redirect=${process.env.NEXT_PUBLIC_SHOPEE_REDIRECT_URL}settings/marketplace&timestamp=${ts}&sign=${props.shopeeString}`}>
+          <Link href={`${props.shopeeHost}${shopeeAuthPath}?partner_id=${partnerId}&redirect=${props.marinaHost}settings/marketplace&timestamp=${ts}&sign=${props.shopeeString}`}>
             Add Shopee Store
           </Link>
         </Button>

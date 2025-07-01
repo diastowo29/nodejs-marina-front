@@ -45,7 +45,7 @@ const Settings = async () => {
   // console.log(shopeeSignedString)
   let lazadaChatKeyId = process.env.NEXT_PUBLIC_LAZ_APP_CHAT_KEY_ID;
   let lazadaOmsKeyId = process.env.NEXT_PUBLIC_LAZ_APP_OMS_KEY_ID;
-  let host = process.env.NEXT_PUBLIC_AUTH0_BASE_URL;
+  let host = process.env.APP_BASE_URL;
 
   let stores = await getListStores();
   return (
