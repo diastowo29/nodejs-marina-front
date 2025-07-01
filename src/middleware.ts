@@ -1,21 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth0 } from './lib/auth0';
 export async function middleware(request: NextRequest) {
-  const authRes = await auth0.middleware(request); // Returns a NextResponse object
-
-  if (request.nextUrl.pathname.startsWith("/auth")) {
-    return authRes;
-  }
-
   const { origin } = new URL(request.url);
-  const session = await auth0.getSession();
-  if (!session) {
+  try {
+    const authRes = await auth0.middleware(request); // Returns a NextResponse object
+  
+    if (request.nextUrl.pathname.startsWith("/auth")) {
+      return authRes;
+    }
+  
+    const session = await auth0.getSession();
+    if (!session) {
+      return NextResponse.redirect(`${origin}/auth/login`)
+    }
+    // If a valid session exists, continue with the response from Auth0 middleware
+    // You can also add custom logic here...
+    return authRes
+    // return await auth0.middleware(request) // Returns a NextResponse object
+  } catch (err) {
+    console.error('Auth0 middleware error:', err);
     return NextResponse.redirect(`${origin}/auth/login`)
   }
-  // If a valid session exists, continue with the response from Auth0 middleware
-  // You can also add custom logic here...
-  return authRes
-  // return await auth0.middleware(request) // Returns a NextResponse object
 }
 
 export const config = {

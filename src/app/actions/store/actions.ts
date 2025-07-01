@@ -10,7 +10,6 @@ export async function getListStores () {
                 'Authorization': 'Bearer ' + await generateJwt()
             }
         })
-        let error = false;
         const store = await storeRaw.json();
         return store;
     } catch (err) {

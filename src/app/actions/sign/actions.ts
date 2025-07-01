@@ -1,13 +1,17 @@
 "use server";
 import { createHmac } from "crypto";
-import { cookies } from "next/headers";
-import * as jwt from 'jsonwebtoken';
-import * as fs from 'fs';
 import { auth0 } from "@/lib/auth0";
 
-export const generateHmac = async (message:string, secret:string) => {
-    let signString = await createHmac('sha256', secret).update(message).digest('hex');
-    return signString;
+export async function generateHmac(message:string, secret:string) {
+    try {
+        const hmac = createHmac('sha256', secret);
+        hmac.update(message);
+        const signString = hmac.digest('hex');
+        return signString;
+    } catch (error) {
+        console.error('Error generating HMAC:', error);
+        return '';
+    }
 }
 
 export const generateJwt = async () => {

@@ -10,7 +10,8 @@ import { CheckIcon, DotsIcon } from "../Icons/dotsaction";
 // import Link from "next/link";
 import { generateTiktokToken } from "@/app/actions/marketplace/tiktok/action";
 import { popToast } from "@/app/actions/toast/pop";
-import { generateHmac } from "@/app/actions/sign/actions";
+import Link from "next/link";
+// import { generateHmac } from "@/app/actions/sign/actions";
 
 export default function MarketplaceList(channels:any) {
     // ?code=4857676a6b4b656f6548584d76727154&shop_id=138335
@@ -21,9 +22,9 @@ export default function MarketplaceList(channels:any) {
     let ts = Math.floor(Date.now() / 1000);
 
     const partnerId = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_ID;
-    const partnerKey = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_KEY;
-    const shopeeSignString = `${partnerId}${shopeeAuthPath}${ts}`;
-    let sign = generateHmac(shopeeSignString, partnerKey as string);
+    // const partnerKey = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_KEY;
+    // const shopeeSignString = `${partnerId}${shopeeAuthPath}${ts}`;
+    // let sign = generateHmac(shopeeSignString, partnerKey as string);
 
     if (channels.stores.error) {
         popToast("Could not connect to server, please contact admin", "error");
@@ -72,10 +73,10 @@ export default function MarketplaceList(channels:any) {
 
     const ReAuthItem = (channel:Record<string, string>) => {
         if (channel.channel == 'shopee') {
-            return (<></>
-                // <Link href={`${shopeeAuth}${shopeeAuthPath}?partner_id=${partnerId}&redirect=${process.env.NEXT_PUBLIC_SHOPEE_REDIRECT_URL}&timestamp=${ts}&sign=${sign}`}>
-                //     Re-Authorize
-                // </Link>
+            return (
+                <Link href={`${shopeeAuth}${shopeeAuthPath}?partner_id=${partnerId}&redirect=${process.env.NEXT_PUBLIC_SHOPEE_REDIRECT_URL}&timestamp=${ts}&sign=${channels.shopeeString}`}>
+                    Re-Authorize
+                </Link>
             )
         } else {
             return (

@@ -8,6 +8,7 @@ import MarketplaceList from "@/components/Settings/MarketplaceList";
 import SidebarSetting from "@/components/Settings/SidebarSettings";
 import AddMarketplace from "@/components/Settings/AddMarketplace";
 import { popToast } from "@/app/actions/toast/pop";
+import { generateHmac } from "@/app/actions/sign/actions";
 
 // export const metadata: Metadata = {
 //   title: "Next.js Settings | TailAdmin - Next.js Dashboard Template",
@@ -33,6 +34,18 @@ const Settings = async () => {
     let isSuccess = generateToken(authCode, appsNumber);
     console.log(isSuccess);
   } */
+  let shopeeAuthPath = '/api/v2/shop/auth_partner';
+  let ts = Math.floor(Date.now() / 1000);
+
+  const partnerId = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_ID;
+  const partnerKey = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_KEY;
+  const shopeeString = `${partnerId}${shopeeAuthPath}${ts}`;
+  let shopeeAuthHost = process.env.NEXT_PUBLIC_SHOPEE_HOST || `https://partner.test-stable.shopeemobile.com`;
+  let shopeeSignedString = await generateHmac(shopeeString, partnerKey as string);
+  // console.log(shopeeSignedString)
+  let lazadaChatKeyId = process.env.NEXT_PUBLIC_LAZ_APP_CHAT_KEY_ID;
+  let lazadaOmsKeyId = process.env.NEXT_PUBLIC_LAZ_APP_OMS_KEY_ID;
+  let host = process.env.NEXT_PUBLIC_AUTH0_BASE_URL;
 
   let stores = await getListStores();
   return (
@@ -52,8 +65,8 @@ const Settings = async () => {
             <Divider/>
             <CardBody>
               <p>Connect your stores to Marina.</p>
-              <AddMarketplace/>
-              <MarketplaceList stores={stores}></MarketplaceList>
+              <AddMarketplace marinaHost={host} shopeeHost={shopeeAuthHost} shopeeString={shopeeSignedString} lazadaChatKey={lazadaChatKeyId} lazadaOmsKey={lazadaOmsKeyId}/>
+              <MarketplaceList stores={stores} shopeeString={shopeeSignedString}></MarketplaceList>
             </CardBody>
             <Divider/>
           </Card>
