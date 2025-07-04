@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     "This is Next.js Tables page for TailAdmin - Next.js Tailwind CSS Admin Dashboard Template",
 };
 
-const TablesPage = async () => {
+const OrdersPage = async () => {
     let channels = await listChannel();
     // console.log(channels);
     console.log('SOME_KEY: ', process.env.SOME_KEY);
@@ -52,4 +52,4 @@ const TablesPage = async () => {
     );
 };
 
-export default TablesPage;
+export default OrdersPage;

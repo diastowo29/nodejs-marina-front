@@ -13,8 +13,22 @@ export async function middleware(request: NextRequest) {
     if (!session) {
       return NextResponse.redirect(`${origin}/auth/login`)
     }
+
+    // check url params
+    /* const urlParams = request.nextUrl.searchParams;
+    if (urlParams.has('code') || urlParams.has('shop_id') || urlParams.has('app_key') || urlParams.has('shop_region')) {
+      authRes.headers.set('channel', `tiktok`);
+      authRes.headers.set('code', urlParams.get('code') || '');
+    } */
+
     // If a valid session exists, continue with the response from Auth0 middleware
     // You can also add custom logic here...
+
+    // redirect '/' route
+    if (request.nextUrl.pathname === '/') {
+      return NextResponse.redirect(`${origin}/orders`)
+    }
+
     return authRes
     // return await auth0.middleware(request) // Returns a NextResponse object
   } catch (err) {

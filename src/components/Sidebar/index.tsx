@@ -7,6 +7,7 @@ import Image from "next/image";
 import SidebarItem from "@/components/Sidebar/SidebarItem";
 import ClickOutside from "@/components/ClickOutside";
 import useLocalStorage from "@/hooks/useLocalStorage";
+import { marinaUrls } from "@/config/enum";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -70,7 +71,7 @@ const menuGroups = [
             className="rounded-full"/>
         ),
         label: "Settings",
-        route: "/settings/marketplace",
+        route: marinaUrls.setting_marketplace,
       },
     ],
   },

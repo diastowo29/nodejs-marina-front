@@ -16,13 +16,12 @@ export async function generateTiktokToken (code:string) {
                 auth_code: code
             })
         });
-    
         let auth = await authResponse.json();
         return auth;
     } catch (err) {
         return {
             error: true,
-            message: 'Error fetching store list'
+            message: 'Error authorizing Tiktok'
         };
     }
 }
