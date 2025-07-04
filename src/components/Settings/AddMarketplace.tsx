@@ -4,11 +4,8 @@ import { BliBliIcon } from "@/app/settings/assets/BliBli";
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
 import Link from "next/link";
 import { useState } from "react";
-// import { ButtonGroup } from "./ButtonGroup";
-// import CryptoJS from "crypto-js";
 
 export default function AddMarketplace(props:any) {
-
   let tiktokAuth = `https://services.tiktokshop.com/open/authorize?service_id=7449020282483050246`
   let lazadaAuth = 'https://auth.lazada.com/oauth/authorize?response_type=code&force_auth=true';
   let shopeeAuthPath = '/api/v2/shop/auth_partner';
@@ -16,23 +13,13 @@ export default function AddMarketplace(props:any) {
   let ts = Math.floor(Date.now() / 1000);
   
   const partnerId = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_ID;
-  // const partnerKey = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_KEY;
-  // const shopeeSignString = `${partnerId}${shopeeAuthPath}${ts}`;
-
   const [marketName, setMarketName] = useState('');
   const [isNew, setNew] = useState(true);
   const [marketUrl, setMarketUrl] = useState('');
   const [invalidUrl, setInvalidUrl] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
-  // const [shopeeSign, setShopeeSign] = useState('');
   const [name, setName] = useState('');
-
-  // let shopeeSign:string = '';
-  // let shopeeSignedString = generateHmac(shopeeSignString, partnerKey as string);
-  // generateHmac(shopeeSignString, partnerKey as string).then((res) => {
-  //   setShopeeSign(res);
-  // })
   const modalMarketplace = (btn:any, newModal:boolean) => {
     if (newModal) {
         setNew(true);
@@ -69,9 +56,6 @@ export default function AddMarketplace(props:any) {
 
   return (
     <div className="flex flex-wrap gap-4 items-center">
-
-      {/* make all button SSR to load ENV VARIABLE */}
-        {/* <ButtonGroup /> */}
         <Button disabled onClick={() => modalMarketplace('blibli', true)} className="bg-gradient-to-tr from-blue-400 to-sky-400 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
             Add BliBli Store
         </Button>
@@ -116,7 +100,6 @@ export default function AddMarketplace(props:any) {
                     onValueChange={setName} />
                     <Input
                         isClearable
-                        // autoFocus
                         isInvalid={invalidUrl}
                         errorMessage="Please enter a valid URL"
                         label="Enter your Tokopedia marketplace URL"

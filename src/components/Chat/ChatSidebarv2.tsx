@@ -94,10 +94,6 @@ export const ChatSidebarV2 = (sidebarParams:any) => {
     </div>
   )}
 
-  // console.log(sidebarParams.orderList);
-  // let isLoading = (sidebarParams.orderList.length > 0) ? false : true;
-  // console.log(isLoading);
-
   const searchProduct = async (product:string) => {
     if (product.length > 3) {
       try {
@@ -121,7 +117,6 @@ export const ChatSidebarV2 = (sidebarParams:any) => {
   }
 
   const showProduct = async (productId:Number) => {
-    // console.log(productId);
     let productPicked = productResults.find((o:{id:number}) => o.id === productId);
     console.log(productPicked);
     setIsProduct(true);

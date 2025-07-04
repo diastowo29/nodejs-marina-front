@@ -24,7 +24,6 @@ export async function middleware(request: NextRequest) {
     // If a valid session exists, continue with the response from Auth0 middleware
     // You can also add custom logic here...
 
-    // redirect '/' route
     if (request.nextUrl.pathname === '/') {
       return NextResponse.redirect(`${origin}/orders`)
     }

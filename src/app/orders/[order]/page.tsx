@@ -1,18 +1,10 @@
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import {Button, ButtonGroup, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from "@nextui-org/react";
+import {Button, Chip} from "@nextui-org/react";
 import OrderButton from "@/components/Buttons/ButtonOrder";
-// import { Metadata } from "next";
 import { getOrders } from "@/app/actions/order/actions";
 import { marinaChannel, marinaStatusColor } from "@/config/enum";
 import { OrderedItems } from "@/components/Tables/OrderedItems";
-import { ChevronDownIcon } from "@/components/Icons/dotsaction";
-
-// export const metadata: Metadata = {
-//   title: "Next.js Tables | TailAdmin - Next.js Dashboard Template",
-//   description:
-//     "This is Next.js Tables page for TailAdmin - Next.js Tailwind CSS Admin Dashboard Template",
-// };
 
 const TablesPage = async ({ params }: { params: { order: string } }) => {
   let data  = await getOrders(params.order);
@@ -124,71 +116,7 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
                   <p>{`Recipient address: ${data.recp_addr_full}, ${data.recp_addr_city}, ${data.recp_addr_country}`}</p>
                   <p className="mb-3">{`Contact: ${data.recp_name} - ${data.recp_phone}`}</p>
                   <OrderedItems items={itemOrdered} />
-                  {/* <div className="relative">
-                    {itemOrdered.map((product:any) => (
-                      <Card key={product.productsId} className="mb-3">
-                        <CardBody>
-                          <Link 
-                          isExternal 
-                          showAnchorIcon 
-                          href={`/products/${product.products.id}`}>
-                            {product.products.name}</Link>
-                          <p>Qty: {product.qty} | Stock: {product.products.stock}</p>
-                          <p>SKU: {product.products.sku}</p>
-                        </CardBody>
-                      </Card>
-                    ))}
-                  </div> */}
                 </div>
-                {/* <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
-                  <div className="w-full">
-                    <label className="mb-3 block text-sm font-medium text-black dark:text-white" htmlFor="fullName">
-                      Shipping Address
-                    </label>
-                    <div className="relative">
-                      {data.recp_addr_full}, {data.recp_addr_district}, {data.recp_addr_city}
-                    </div>
-                  </div>
-                </div> */}
-                {/* <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
-                  <div className="w-full sm:w-1/3">
-                    <label
-                      className="mb-3 block text-sm font-medium text-black dark:text-white"
-                      htmlFor="phoneNumber"
-                    >
-                      District
-                    </label>
-                    <div className="relative">
-                      {data.recp_addr_district}
-                    </div>
-                  </div>
-                  <div className="w-full sm:w-1/3">
-                    <label
-                      className="mb-3 block text-sm font-medium text-black dark:text-white"
-                      htmlFor="fullName"
-                    >
-                      City
-                    </label>
-                    <div className="relative">
-                      {data.recp_addr_city}
-                    </div>
-                  </div>
-
-                  <div className="w-full sm:w-1/3">
-                    <label
-                      className="mb-3 block text-sm font-medium text-black dark:text-white"
-                      htmlFor="phoneNumber"
-                    >
-                      Recipient Name
-                    </label>
-                    <div className="relative">
-                      {data.recp_name}
-                    </div>
-                    <div className="relative">
-                      {data.recp_phone}
-                    </div>
-                  </div>
-                </div> */}
               </div>
             </div>
           </div>
@@ -265,35 +193,6 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
                   <div className="flex justify-center gap-4.5">
                     <Button color="primary">Print label</Button>
                     <OrderButton channel={data.store.channel.name} status={data.status} orderId={data.id}></OrderButton>
-                    {/* <ButtonGroup variant="flat">
-                      <Button>{(labelsMap['merge'])}</Button>
-                      <Dropdown placement="bottom-end">
-                        <DropdownTrigger>
-                          <Button isIconOnly>
-                            <ChevronDownIcon />
-                          </Button>
-                        </DropdownTrigger>
-                        <DropdownMenu
-                          disallowEmptySelection
-                          aria-label="Merge options"
-                          className="max-w-[300px]"
-                          // selectedKeys={selectedOption}
-                          selectionMode="single"
-                          // onSelectionChange={setSelectedOption}
-                        >
-                          <DropdownItem key="merge" description={descriptionsMap["merge"]}>
-                            {labelsMap["merge"]}
-                          </DropdownItem>
-                          <DropdownItem key="squash" description={descriptionsMap["squash"]}>
-                            {labelsMap["squash"]}
-                          </DropdownItem>
-                          <DropdownItem key="rebase" description={descriptionsMap["rebase"]}>
-                            {labelsMap["rebase"]}
-                          </DropdownItem>
-                        </DropdownMenu>
-                      </Dropdown>
-                    </ButtonGroup> */}
-                    
                   </div>
               </div>
             </div>

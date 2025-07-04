@@ -10,7 +10,6 @@ export default function MarketplaceList(channels:any) {
     let shopeeAuth = process.env.NEXT_PUBLIC_SHOPEE_HOST || `https://partner.test-stable.shopeemobile.com`;
     let shopeeAuthPath = '/api/v2/shop/auth_partner';
     let ts = Math.floor(Date.now() / 1000);
-
     const partnerId = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_ID;
 
     if (channels.stores.error) {
@@ -23,7 +22,6 @@ export default function MarketplaceList(channels:any) {
     }
 
     let [listChannels, setListChannels] = useState(channels.stores)
-    console.log(channels);
     if (channels.channel) {
         if (!channels.isConnected) {
             popToast(`Connection failed for ${channels.channel}`, "error");

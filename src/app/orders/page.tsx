@@ -17,13 +17,7 @@ export const metadata: Metadata = {
 
 const OrdersPage = async () => {
     let channels = await listChannel();
-    // console.log(channels);
-    console.log('SOME_KEY: ', process.env.SOME_KEY);
     if (channels.error || channels.length == 0) {
-        // console.log("No channels found or error fetching channels");
-        if (channels.error) {
-            // popToast('Error fetching channels, contact system administrator', 'error');
-        }
         return (
           <DefaultLayout>
             <Breadcrumb pageName={marinaPageNames.Orders} />
@@ -40,9 +34,6 @@ const OrdersPage = async () => {
           </DefaultLayout>  
         );
     }
-    // console.log(channels.length)
-    // let firstOrderRaw = await fetch(INT_ORDER_BYCHANNEL(channels[0].name));
-    // let firstOrder = await firstOrderRaw.json();
     let firstOrder:any[] = [];
     return (
         <DefaultLayout>

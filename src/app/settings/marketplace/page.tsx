@@ -42,7 +42,6 @@ const Settings = async ({searchParams} : {
             }
         }
     }
-    console.log(urlParams);
     let shopeeAuthPath = '/api/v2/shop/auth_partner';
     let ts = Math.floor(Date.now() / 1000);
 
