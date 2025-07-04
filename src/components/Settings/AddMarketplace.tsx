@@ -8,11 +8,8 @@ import { useState } from "react";
 export default function AddMarketplace(props:any) {
   let tiktokAuth = `https://services.tiktokshop.com/open/authorize?service_id=7449020282483050246`
   let lazadaAuth = 'https://auth.lazada.com/oauth/authorize?response_type=code&force_auth=true';
-  let shopeeAuthPath = '/api/v2/shop/auth_partner';
   let callbackEndpoint = `${props.marinaHost}/settings/marketplace`;
-  let ts = Math.floor(Date.now() / 1000);
   
-  const partnerId = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_ID;
   const [marketName, setMarketName] = useState('');
   const [isNew, setNew] = useState(true);
   const [marketUrl, setMarketUrl] = useState('');
@@ -63,7 +60,7 @@ export default function AddMarketplace(props:any) {
             Add Tokopedia Store
         </Button>
         <Button className="bg-gradient-to-tr from-orange-500 to-orange-300 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
-          <Link href={`${props.shopeeHost}${shopeeAuthPath}?partner_id=${partnerId}&redirect=${props.marinaHost}/settings/marketplace&timestamp=${ts}&sign=${props.shopeeString}`}>
+          <Link href={props.shopeeFinalAuthUrl}>
             Add Shopee Store
           </Link>
         </Button>

@@ -53,6 +53,7 @@ const Settings = async ({searchParams} : {
     let lazadaChatKeyId = process.env.NEXT_PUBLIC_LAZ_APP_CHAT_KEY_ID;
     let lazadaOmsKeyId = process.env.NEXT_PUBLIC_LAZ_APP_OMS_KEY_ID;
     let host = process.env.APP_BASE_URL;
+    let shopeeFinalAuthUrl = `${shopeeAuthHost}${shopeeAuthPath}?partner_id=${partnerId}&redirect=${host}/settings/marketplace&timestamp=${ts}&sign=${shopeeSignedString}`;
     let stores = await getListStores();
     return (
         <DefaultLayout>
@@ -74,15 +75,14 @@ const Settings = async ({searchParams} : {
                         <p>Connect your stores to Marina.</p>
                         <AddMarketplace
                             marinaHost={host}
-                            shopeeHost={shopeeAuthHost}
-                            shopeeString={shopeeSignedString}
+                            shopeeFinalAuthUrl={shopeeFinalAuthUrl}
                             lazadaChatKey={lazadaChatKeyId}
                             lazadaOmsKey={lazadaOmsKeyId}/>
                         <MarketplaceList
                             channel={channel}
                             isConnected={isConnected}
                             stores={stores}
-                            shopeeString={shopeeSignedString}></MarketplaceList>
+                            shopeeFinalAuthUrl={shopeeFinalAuthUrl}></MarketplaceList>
                     </CardBody>
                     <Divider/>
                 </Card>

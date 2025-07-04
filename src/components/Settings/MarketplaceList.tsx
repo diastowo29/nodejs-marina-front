@@ -7,11 +7,6 @@ import { popToast } from "@/app/actions/toast/pop";
 import Link from "next/link";
 
 export default function MarketplaceList(channels:any) {
-    let shopeeAuth = process.env.NEXT_PUBLIC_SHOPEE_HOST || `https://partner.test-stable.shopeemobile.com`;
-    let shopeeAuthPath = '/api/v2/shop/auth_partner';
-    let ts = Math.floor(Date.now() / 1000);
-    const partnerId = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_ID;
-
     if (channels.stores.error) {
         popToast("Could not connect to server, please contact admin", "error");
         return (
@@ -32,7 +27,7 @@ export default function MarketplaceList(channels:any) {
     const ReAuthItem = (channel:Record<string, string>) => {
         if (channel.channel == 'shopee') {
             return (
-                <Link href={`${shopeeAuth}${shopeeAuthPath}?partner_id=${partnerId}&redirect=${process.env.NEXT_PUBLIC_SHOPEE_REDIRECT_URL}&timestamp=${ts}&sign=${channels.shopeeString}`}>
+                <Link href={channels.shopeeFinalAuthUrl}>
                     Re-Authorize
                 </Link>
             )
