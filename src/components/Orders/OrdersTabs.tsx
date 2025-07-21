@@ -1,4 +1,3 @@
-
 'use client';
 import {Tabs, Tab, Card, CardBody, Skeleton, Progress} from "@nextui-org/react";
 import { useState, useEffect } from "react";
@@ -6,7 +5,7 @@ import { OrdersStatusTabs } from "./OrdersStatusTabs";
 import { getOrdersCnl } from "@/app/actions/order/actions";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { marinaChannel } from "@/config/enum";
-import { ToastContainer, toast } from 'react-toastify';
+import { popToast } from "@/app/actions/toast/pop";
 
 export const OrdersTab = (tabsData : any) => {
     const searchParams = useSearchParams();
@@ -34,9 +33,7 @@ export const OrdersTab = (tabsData : any) => {
                 setLoading(false);
                 data = ordersData;
             } catch (err) {
-                toast('Connection error.. ', {
-                    type: 'error'
-                });
+                popToast('Connection error..', "error");
                 setLoading(false);
                 console.log(err);
             }
@@ -63,9 +60,6 @@ export const OrdersTab = (tabsData : any) => {
         <Card>
             <CardBody>
                 <div className="flex w-full flex-col">
-                    <ToastContainer
-                    position="bottom-right"
-                    autoClose={3000}/>
                     <Tabs aria-label="Dynamic tabs" 
                         disabledKeys={inactiveChannel} 
                         defaultSelectedKey={channelTab}
