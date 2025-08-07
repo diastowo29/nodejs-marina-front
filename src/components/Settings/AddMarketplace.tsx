@@ -6,7 +6,8 @@ import Link from "next/link";
 import { useState } from "react";
 
 export default function AddMarketplace(props:any) {
-  let tiktokAuth = `https://services.tiktokshop.com/open/authorize?service_id=7449020282483050246`
+  // let tiktokAuth = `https://services.tiktokshop.com/open/authorize?service_id=7449020282483050246`
+  let tiktokAuth = 'https://services.tiktokshop.com/open/authorize?service_id=7523274804246841144'
   let lazadaAuth = 'https://auth.lazada.com/oauth/authorize?response_type=code&force_auth=true';
   let callbackEndpoint = `${props.marinaHost}/settings/marketplace`;
   
@@ -53,7 +54,7 @@ export default function AddMarketplace(props:any) {
 
   return (
     <div className="flex flex-wrap gap-4 items-center">
-        <Button disabled onClick={() => modalMarketplace('blibli', true)} className="bg-gradient-to-tr from-blue-400 to-sky-400 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
+        <Button isDisabled onClick={() => modalMarketplace('blibli', true)} className="bg-gradient-to-tr from-blue-400 to-sky-400 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
             Add BliBli Store
         </Button>
         <Button onClick={() => modalMarketplace('tokopedia', true)} className="bg-gradient-to-tr from-lime-600 to-green-400 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
