@@ -15,6 +15,18 @@ export async function createCrm (payload:{}) {
     return crm;
 }
 
+export async function updateCrm (payload:{}, id:string) {
+    // console.log(payload)
+    const crmRaw = await fetch(`${CRM_ENDPOINT}/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 
+            'Authorization': 'Bearer ' + await generateJwt() },
+        body: JSON.stringify(payload)
+    });
+    const crm = await crmRaw.json();
+    return crm;
+}
+
 export async function deleteCrm (id:string) {
     try {
         const crmRaw = await fetch(`${CRM_ENDPOINT}/${id}`, {

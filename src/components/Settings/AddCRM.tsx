@@ -1,5 +1,5 @@
 'use client'
-import { createCrm, deleteCrm, handshakeCrm, handshakeSunco } from "@/app/actions/crm/actions";
+import { createCrm, deleteCrm, handshakeCrm, handshakeSunco, updateCrm } from "@/app/actions/crm/actions";
 import { SalesforceIcon, ZendeskIcon } from "@/app/settings/assets/CRM";
 import { TokoIcon } from "@/app/settings/assets/Tokopedia";
 import { Button, Card, CardBody, CardHeader, Checkbox, CheckboxGroup, Divider, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Link, Listbox, ListboxItem, ListboxSection, Popover, PopoverContent, PopoverTrigger, Skeleton, useDisclosure } from "@nextui-org/react";
@@ -28,6 +28,7 @@ export default function AddCrm (props:any) {
   const [isLoading, setLoading] = useState(false);
   const [marketSelectName, setMarketSelectName] = useState('');
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [id, setId] = useState<string>();
   let defaultSelected:string[] = [];
   
   if (props.crm.error) {
@@ -40,6 +41,7 @@ export default function AddCrm (props:any) {
   }
   
   const modalMarketplace = (crm:any, newModal:boolean) => {
+    console.log(crm);
     setInvalidName(false);
     setInvalidUrl(false);
     if (newModal) {
@@ -53,6 +55,7 @@ export default function AddCrm (props:any) {
       setLoading(true);
       setNew(false);
       const crmIntegration = props.crm.find((c: any) => c.id == crm);
+      setId(crm);
       setMarketUrl(crmIntegration.baseUrl);
       Promise.all([
         decryptHash(crmIntegration.credent.find((cr: any) => cr.key == 'ZD_API_TOKEN').value),
@@ -84,6 +87,26 @@ export default function AddCrm (props:any) {
     if (isNew) {
       setMarketUrl('');
       setInvalidUrl(false);
+    }
+  }
+
+  const updateDelete = async (id: any, isDelete: boolean) => {
+    console.log(`id: ${id} is delete ${isDelete}`);
+    if (isDelete) {
+      setDeleteOpen(true);
+    } else {
+      popToast('Feature are not ready', "info");
+      /* let payload = {
+        suncoAppKey: appKey,
+        suncoAppSecret: appSecret,
+        apiToken: apiToken,
+        resource: resources.toString()
+      }
+      upsertCrm(payload, id).then(() => {
+        popToast("Integration created!", "success");
+      }).catch((err) => {
+        popToast("Integration error!", "error");
+      }) */
     }
   }
  
@@ -118,7 +141,7 @@ export default function AddCrm (props:any) {
         isUrlValid = false;
     }
     
-    let handshake = await Promise.all([
+    /* let handshake = await Promise.all([
         handshakeCrm(marketUrl, apiToken),
         handshakeSunco(appId, encode(`${appKey}:${appSecret}`))
     ]);
@@ -129,7 +152,7 @@ export default function AddCrm (props:any) {
     } else if (handshake[0].user.role == 'end-user') {
       console.log('handshake error');
       popToast("Connection failed - Zendesk Token must be admin token", "error");
-    } else {
+    } else { */
       let payload = {
         host: marketUrl,
         name: 'ZENDESK',
@@ -140,20 +163,25 @@ export default function AddCrm (props:any) {
         resource: resources.toString(),
         crm: crm
       }
+      upsertCrm(payload).then(() => {
+        popToast("Integration created!", "success");
+      }).catch((err) => {
+        popToast("Integration error!", "error");
+      })
 
-      createCrm(payload).then(() => {
+      /* createCrm(payload).then(() => {
         popToast("Integration created!", "success");
       }).catch((err) => {
         console.log(err);
         popToast("Integration error!", "error");
-      })
-    }
+      }) */
+    /* } */
     onOpenChange();
     setLoading(false);
   }
 
   const DescToken = () => {
-    return (<Link className="text-sm" isExternal href="https://support.zendesk.com/hc/en-us/articles/4576088682266-Using-the-Conversations-API-keys">Click here to know where to get yours!</Link>)
+    return (<Link className="text-sm text-blue-600/100 dark:text-sky-400/100" isExternal href="https://support.zendesk.com/hc/en-us/articles/4576088682266-Using-the-Conversations-API-keys">Click here to know where to get yours!</Link>)
   }
 
   return (
@@ -335,17 +363,16 @@ export default function AddCrm (props:any) {
                       <Button color="danger" variant="light" onPress={onClose}>
                           Close
                       </Button>
-                      <Button color="primary" onClick={() => saveCrm(marketSelectName)} isLoading={isLoading} /* onPressStart={() => submitReject(reason, orderId)} */>
+                      <Button className="bg-sky-600" color="primary" onClick={() => saveCrm(marketSelectName)} isLoading={isLoading}>
                           Submit
                       </Button>
                   </ModalFooter>
                 ) : (
-                  
                   <ModalFooter>
-                      <Button color="danger" variant="light" onPress={onClose}>
+                      <Button color="danger" variant="light" onClick={() => updateDelete(id, true)} onPress={onClose}>
                           Delete
                       </Button>
-                      <Button color="primary" /* onPressStart={() => submitReject(reason, orderId)} */ onPress={onClose}>
+                      <Button className="bg-sky-600" color="primary" onClick={() => updateDelete(id, false)} onPress={onClose}>
                           Save
                       </Button>
                   </ModalFooter>
@@ -356,4 +383,23 @@ export default function AddCrm (props:any) {
         </Modal>
         </>
     )
+}
+
+async function upsertCrm (payload:any, id?: string) {
+  let handshake = await Promise.all([
+      handshakeCrm(payload.marketUrl, payload.apiToken),
+      handshakeSunco(payload.suncoAppId, encode(`${payload.suncoAppKey}:${payload.suncoAppSecret}`))
+  ]);
+
+  if (handshake[1].error || handshake[0].error) {
+    throw new Error();
+  } else if (handshake[0].user.role == 'end-user') {
+    throw new Error();
+  } else {
+    if (!id) {
+      return createCrm(payload);
+    } else {
+      return updateCrm(payload, id);
+    }
+  }
 }
