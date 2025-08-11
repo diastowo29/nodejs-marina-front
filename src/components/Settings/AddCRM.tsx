@@ -2,11 +2,14 @@
 import { createCrm, deleteCrm, handshakeCrm, handshakeSunco } from "@/app/actions/crm/actions";
 import { SalesforceIcon, ZendeskIcon } from "@/app/settings/assets/CRM";
 import { TokoIcon } from "@/app/settings/assets/Tokopedia";
-import { Button, Card, CardBody, CardHeader, Checkbox, CheckboxGroup, Divider, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Link, Listbox, ListboxItem, ListboxSection, Popover, PopoverContent, PopoverTrigger, useDisclosure } from "@nextui-org/react";
+import { Button, Card, CardBody, CardHeader, Checkbox, CheckboxGroup, Divider, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Link, Listbox, ListboxItem, ListboxSection, Popover, PopoverContent, PopoverTrigger, Skeleton, useDisclosure } from "@nextui-org/react";
 import {Input, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter} from "@nextui-org/react";
 import { useState } from "react";
 import { DotsIcon } from "../Icons/dotsaction";
 import { popToast } from "@/app/actions/toast/pop";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
+import { Loader2Icon } from "lucide-react"
+import { decryptAes } from "@/app/actions/sign/actions";
 
 const encode = (str: string):string => Buffer.from(str, 'binary').toString('base64');
 
@@ -24,7 +27,9 @@ export default function AddCrm (props:any) {
   const [resources, setResources] = useState<string[]>([]);
   const [isLoading, setLoading] = useState(false);
   const [marketSelectName, setMarketSelectName] = useState('');
+  const [deleteOpen, setDeleteOpen] = useState(false);
   let defaultSelected:string[] = [];
+  
   if (props.crm.error) {
     popToast("Could not connect to server, please contact admin", "error");
     return (
@@ -39,14 +44,27 @@ export default function AddCrm (props:any) {
     setInvalidUrl(false);
     if (newModal) {
       setNew(true);
+      setMarketUrl('');
+      setappSecret('');
+      setappId('');
+      setappKey('');
+      setapiToken('');
     } else {
+      setLoading(true);
       setNew(false);
       const crmIntegration = props.crm.find((c: any) => c.id == crm);
       setMarketUrl(crmIntegration.baseUrl);
-      setappSecret(crmIntegration.credent.find((cr: any) => cr.key == 'SUNCO_APP_SECRET').value);
+      Promise.all([
+        decryptAes(crmIntegration.credent.find((cr: any) => cr.key == 'ZD_API_TOKEN').value),
+        decryptAes(crmIntegration.credent.find((cr: any) => cr.key == 'SUNCO_APP_KEY').value),
+        decryptAes(crmIntegration.credent.find((cr: any) => cr.key == 'SUNCO_APP_SECRET').value)
+      ]).then((decrypted) => {
+        setLoading(false);
+        setapiToken(decrypted[0]);
+        setappKey(decrypted[1]);
+        setappSecret(decrypted[2]);
+      })
       setappId(crmIntegration.credent.find((cr: any) => cr.key == 'SUNCO_APP_ID').value);
-      setappKey(crmIntegration.credent.find((cr: any) => cr.key == 'SUNCO_APP_KEY').value);
-      setapiToken(crmIntegration.credent.find((cr: any) => cr.key == 'ZD_API_TOKEN').value);
       if (crmIntegration.f_chat) {
         defaultSelected.push('chat');
       }
@@ -65,20 +83,19 @@ export default function AddCrm (props:any) {
       setInvalidUrl(false);
     }
   }
-
-  const handleDelete = async (id:string) => {
-    console.log('delete', id);
+ 
+  const confirmDelete = (id: string, e:any) => {
     setLoading(true);
-    let deletedCrm = await deleteCrm(id);
-    console.log(deletedCrm);
-    if (deletedCrm.success) {
-      popToast("Integration deleted", "success");
-      // Refresh the CRM list
-      props.crm = props.crm.filter((item:any) => item.id !== id);
-    } else {
-      popToast("Failed to delete integration", "error");
-    }
-    setLoading(false);
+    deleteCrm(id).then((deleted) => {
+      setDeleteOpen(false);
+      setLoading(false);
+      if (deleted.success) {
+        popToast("Integration deleted", "success");
+      } else {
+        popToast("Failed to delete integration", "error");
+      }
+    })
+    e.preventDefault();
   }
 
   const saveCrm = async (crm:string) => {
@@ -164,7 +181,7 @@ export default function AddCrm (props:any) {
             <Listbox aria-label="Actions" onAction={(key) => modalMarketplace(key, false)} >
               <ListboxSection title="Zendesk" showDivider>
                 {props.crm.map((item:any) => (
-                    <ListboxItem startContent={<TokoIcon/>} textValue={item.name} key={item.id}>
+                    <ListboxItem startContent={(item.name == 'ZENDESK') ? <ZendeskIcon/> : <TokoIcon/>} textValue="" key={item.id}>
                         <div className="flex" style={{alignItems: "center"}}>
                             <div className="flex-1">
                                 <label>{item.name} : </label>
@@ -173,25 +190,39 @@ export default function AddCrm (props:any) {
                             <div className="flex-row-reverse gap-4 ..." style={{alignItems: "center"}}>
                                 <Dropdown>
                                     <DropdownTrigger>
-                                        <Button variant="light" isIconOnly><DotsIcon/></Button>
+                                      <Button variant="light" isIconOnly><DotsIcon/></Button>
                                     </DropdownTrigger>
                                     <DropdownMenu aria-label="Static Actions">
-                                        <DropdownItem onClick={() => handleDelete(item.id)} key="delete" className="text-danger" color="danger">
-                                            Delete
-                                        </DropdownItem>
-                                        {/* <Popover placement="bottom" showArrow={true}>
-                                          <PopoverTrigger>
-                                            <Button>Open Popover</Button>
-                                          </PopoverTrigger>
-                                          <PopoverContent>
-                                            <div className="px-1 py-2">
-                                              <div className="text-small font-bold">Popover Content</div>
-                                              <div className="text-tiny">This is the popover content</div>
-                                            </div>
-                                          </PopoverContent>
-                                        </Popover> */}
+                                      <DropdownItem onClick={() => setDeleteOpen(true)} key="delete" className="text-danger" color="danger">
+                                        Delete
+                                      </DropdownItem>
                                     </DropdownMenu>
                                 </Dropdown>
+                                <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+                                  <AlertDialogTrigger asChild>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        This action cannot be undone. This will permanently delete your
+                                        integration and remove your data from our servers.
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel>Oops, cancel</AlertDialogCancel>
+                                        {(isLoading) ? (
+                                          <AlertDialogAction disabled>
+                                            <Loader2Icon className="animate-spin" />Please wait
+                                          </AlertDialogAction>
+                                          ) : (
+                                          <AlertDialogAction asChild onClick={(e) => confirmDelete(item.id, e)}>
+                                            <Button>Yes please</Button>
+                                          </AlertDialogAction>
+                                        )}
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
                             </div>
                         </div>
                     </ListboxItem>
@@ -231,15 +262,19 @@ export default function AddCrm (props:any) {
                   onClear={() => onMarketUrlClear()}
                   // value={marketUrl}
                   onChange={(e) => setMarketUrl(e.target.value)} />
-                  <Input
-                  isClearable
-                  autoFocus
-                  label="Zendesk API Token"
-                  isInvalid={invalidName}
-                  errorMessage="Token cannot be empty"
-                  placeholder="eXVsaXVzLmFndW5nQHaxawgRyZWVzc29sdXRpb;lplped25zLmNvbS90b2tlbjp1b3Y2UlpRQU1qc3JaYUhoRVdzYk1TcGVDcUw3WGt3eEpNRXJpWkdm"
-                  defaultValue={apiToken}
-                  onValueChange={setapiToken} />
+                  {(isLoading) ? (
+                    <Skeleton className="h-12 rounded-lg" />
+                  ) : (
+                    <Input
+                    isClearable
+                    autoFocus
+                    label="Zendesk API Token"
+                    isInvalid={invalidName}
+                    errorMessage="Token cannot be empty"
+                    placeholder="eXVsaXVzLmFndW5nQHaxawgRyZWVzc29sdXRpb;lplped25zLmNvbS90b2tlbjp1b3Y2UlpRQU1qc3JaYUhoRVdzYk1TcGVDcUw3WGt3eEpNRXJpWkdm"
+                    defaultValue={apiToken}
+                    onValueChange={setapiToken} />
+                  )}
                   <Input
                   isClearable={(isNew)}
                   autoFocus
@@ -251,26 +286,34 @@ export default function AddCrm (props:any) {
                   placeholder="5ea6f52b536exafesfcb000f732a35"
                   defaultValue={appId}
                   onValueChange={setappId} />
-                  <Input
-                  isClearable
-                  autoFocus
-                  label="Sunshine Conversation App Key"
-                  description={<DescToken/>}
-                  isInvalid={invalidToken}
-                  errorMessage="App Key cannot be empty"
-                  placeholder="app_6892d529c1be55bdaf85432e"
-                  defaultValue={appKey}
-                  onValueChange={setappKey} />
-                  <Input
-                  isClearable
-                  autoFocus
-                  label="Sunshine Conversation App Secret"
-                  description={<DescToken/>}
-                  isInvalid={invalidToken}
-                  errorMessage="App Secret cannot be empty"
-                  placeholder="Qu1qcAtdXtQJItEUgW9adj30923dlm0T3_QL-yyrdGbA2Lkgwt-xtUXV9q4jkh59VwlJy3w"
-                  defaultValue={appSecret}
-                  onValueChange={setappSecret} />
+                   {(isLoading) ? (
+                    <Skeleton className="h-12 rounded-lg" />
+                  ) : (
+                    <Input
+                    isClearable
+                    autoFocus
+                    label="Sunshine Conversation App Key"
+                    description={<DescToken/>}
+                    isInvalid={invalidToken}
+                    errorMessage="App Key cannot be empty"
+                    placeholder="app_6892d529c1be55bdaf85432e"
+                    defaultValue={appKey}
+                    onValueChange={setappKey} />
+                  )}
+                   {(isLoading) ? (
+                    <Skeleton className="h-12 rounded-lg" />
+                  ) : (
+                    <Input
+                    isClearable
+                    autoFocus
+                    label="Sunshine Conversation App Secret"
+                    description={<DescToken/>}
+                    isInvalid={invalidToken}
+                    errorMessage="App Secret cannot be empty"
+                    placeholder="Qu1qcAtdXtQJItEUgW9adj30923dlm0T3_QL-yyrdGbA2Lkgwt-xtUXV9q4jkh59VwlJy3w"
+                    defaultValue={appSecret}
+                    onValueChange={setappSecret} />
+                  )}
                   <CheckboxGroup
                     color="secondary"
                     label="Select resource to send"
