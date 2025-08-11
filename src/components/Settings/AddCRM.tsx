@@ -9,7 +9,7 @@ import { DotsIcon } from "../Icons/dotsaction";
 import { popToast } from "@/app/actions/toast/pop";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
 import { Loader2Icon } from "lucide-react"
-import { decryptAes } from "@/app/actions/sign/actions";
+import { decryptHash } from "@/app/actions/sign/actions";
 
 const encode = (str: string):string => Buffer.from(str, 'binary').toString('base64');
 
@@ -55,15 +55,18 @@ export default function AddCrm (props:any) {
       const crmIntegration = props.crm.find((c: any) => c.id == crm);
       setMarketUrl(crmIntegration.baseUrl);
       Promise.all([
-        decryptAes(crmIntegration.credent.find((cr: any) => cr.key == 'ZD_API_TOKEN').value),
-        decryptAes(crmIntegration.credent.find((cr: any) => cr.key == 'SUNCO_APP_KEY').value),
-        decryptAes(crmIntegration.credent.find((cr: any) => cr.key == 'SUNCO_APP_SECRET').value)
+        decryptHash(crmIntegration.credent.find((cr: any) => cr.key == 'ZD_API_TOKEN').value),
+        decryptHash(crmIntegration.credent.find((cr: any) => cr.key == 'SUNCO_APP_KEY').value),
+        decryptHash(crmIntegration.credent.find((cr: any) => cr.key == 'SUNCO_APP_SECRET').value)
       ]).then((decrypted) => {
         setLoading(false);
         setapiToken(decrypted[0]);
         setappKey(decrypted[1]);
         setappSecret(decrypted[2]);
-      })
+      }).catch(() => {
+        setLoading(false);
+        popToast('Error reading secret', 'error');
+      });
       setappId(crmIntegration.credent.find((cr: any) => cr.key == 'SUNCO_APP_ID').value);
       if (crmIntegration.f_chat) {
         defaultSelected.push('chat');

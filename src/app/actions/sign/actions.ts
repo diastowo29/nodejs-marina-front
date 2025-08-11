@@ -19,7 +19,7 @@ export async function generateHmac(message:string, secret:string) {
     }
 }
 
-export const decryptAes = (encryptedData:string) => {
+export const decryptHash = (encryptedData:string) => {
     const key = crypto
       .createHash('sha512')
       .update(secret_key)
