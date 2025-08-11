@@ -3,9 +3,9 @@ import { createHmac } from "crypto";
 import { auth0 } from "@/lib/auth0";
 import crypto from 'crypto'
 
-const secret_key = process.env.M_SECRET_KEY || "VWtCb1lYTnBZVEV5TTAwMGNqRnVZUT09"
-const secret_iv = process.env.M_SECRET_IV || "c2ec6253add99f0c63d5621ed8de1f3f"
-const encryption_method = process.env.ENCRYPTION_METHOD || "aes-256-cbc"
+const secret_key = process.env.M_SECRET_KEY || "xxx"
+const secret_iv = process.env.M_SECRET_IV || "xxx"
+const encryption_method = process.env.ENCRYPTION_METHOD || "xxx"
 
 export async function generateHmac(message:string, secret:string) {
     try {
