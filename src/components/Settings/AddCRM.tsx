@@ -21,6 +21,7 @@ export default function AddCrm (props:any) {
   const [appKey, setappKey] = useState('');
   const [appSecret, setappSecret] = useState('');
   const [marketUrl, setMarketUrl] = useState('');
+  const [username, setUsername] = useState('');
   const [invalidUrl, setInvalidUrl] = useState(false);
   const [invalidName, setInvalidName] = useState(false);
   const [invalidToken, setInvalidToken] = useState(false);
@@ -41,12 +42,12 @@ export default function AddCrm (props:any) {
   }
   
   const modalMarketplace = (crm:any, newModal:boolean) => {
-    console.log(crm);
     setInvalidName(false);
     setInvalidUrl(false);
     if (newModal) {
       setNew(true);
       setMarketUrl('');
+      setUsername('');
       setappSecret('');
       setappId('');
       setappKey('');
@@ -63,7 +64,8 @@ export default function AddCrm (props:any) {
         decryptHash(crmIntegration.credent.find((cr: any) => cr.key == 'SUNCO_APP_SECRET').value)
       ]).then((decrypted) => {
         setLoading(false);
-        setapiToken(decrypted[0]);
+        setUsername(atob(decrypted[0]).split('/token:')[0]);
+        setapiToken(atob(decrypted[0]).split('/token:')[1]);
         setappKey(decrypted[1]);
         setappSecret(decrypted[2]);
       }).catch(() => {
@@ -141,41 +143,22 @@ export default function AddCrm (props:any) {
         isUrlValid = false;
     }
     
-    /* let handshake = await Promise.all([
-        handshakeCrm(marketUrl, apiToken),
-        handshakeSunco(appId, encode(`${appKey}:${appSecret}`))
-    ]);
+    let payload = {
+      host: marketUrl,
+      name: 'ZENDESK',
+      suncoAppId: appId,
+      suncoAppKey: appKey,
+      suncoAppSecret: appSecret,
+      apiToken: btoa(`${username}/token:${apiToken}`),
+      resource: resources.toString(),
+      crm: crm
+    }
+    upsertCrm(payload).then(() => {
+      popToast("Integration created!", "success");
+    }).catch((err) => {
+      popToast("Integration error!", "error");
+    })
 
-    if (handshake[1].error || handshake[0].error) {
-      console.log('handshake error');
-      popToast("Connection failed", "error");
-    } else if (handshake[0].user.role == 'end-user') {
-      console.log('handshake error');
-      popToast("Connection failed - Zendesk Token must be admin token", "error");
-    } else { */
-      let payload = {
-        host: marketUrl,
-        name: 'ZENDESK',
-        suncoAppId: appId,
-        suncoAppKey: appKey,
-        suncoAppSecret: appSecret,
-        apiToken: apiToken,
-        resource: resources.toString(),
-        crm: crm
-      }
-      upsertCrm(payload).then(() => {
-        popToast("Integration created!", "success");
-      }).catch((err) => {
-        popToast("Integration error!", "error");
-      })
-
-      /* createCrm(payload).then(() => {
-        popToast("Integration created!", "success");
-      }).catch((err) => {
-        console.log(err);
-        popToast("Integration error!", "error");
-      }) */
-    /* } */
     onOpenChange();
     setLoading(false);
   }
@@ -296,13 +279,25 @@ export default function AddCrm (props:any) {
                   {(isLoading) ? (
                     <Skeleton className="h-12 rounded-lg" />
                   ) : (
+                    <Input 
+                    isClearable={(isNew)}
+                    isInvalid={invalidUrl}
+                    errorMessage="Please enter a valid email"
+                    label="Zendesk Username"
+                    placeholder="admin@example.com"
+                    defaultValue={username}
+                    onValueChange={setUsername} />
+                  )}
+                  {(isLoading) ? (
+                    <Skeleton className="h-12 rounded-lg" />
+                  ) : (
                     <Input
                     isClearable
                     autoFocus
                     label="Zendesk API Token"
                     isInvalid={invalidName}
                     errorMessage="Token cannot be empty"
-                    placeholder="eXVsaXVzLmFndW5nQHaxawgRyZWVzc29sdXRpb;lplped25zLmNvbS90b2tlbjp1b3Y2UlpRQU1qc3JaYUhoRVdzYk1TcGVDcUw3WGt3eEpNRXJpWkdm"
+                    placeholder="gkOumnbWluxmtBUPj3kQkwmzx2jc9bELMf3jKqYGhS"
                     defaultValue={apiToken}
                     onValueChange={setapiToken} />
                   )}
@@ -345,7 +340,7 @@ export default function AddCrm (props:any) {
                     defaultValue={appSecret}
                     onValueChange={setappSecret} />
                   )}
-                  <CheckboxGroup
+                  {/* <CheckboxGroup
                     color="secondary"
                     label="Select resource to send"
                     defaultValue={resources}
@@ -356,7 +351,7 @@ export default function AddCrm (props:any) {
                     <Checkbox value="return">Return Order</Checkbox>
                     <Checkbox value="refund">Refund Order</Checkbox>
                     <Checkbox value="cancel">Order Cancellation</Checkbox>
-                  </CheckboxGroup>
+                  </CheckboxGroup> */}
                 </ModalBody>
                 {(isNew) ? (
                   <ModalFooter>

@@ -191,7 +191,7 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
                     </div>
                   </div>
                   <div className="flex justify-center gap-4.5">
-                    <Button color="primary">Print label</Button>
+                    <Button color="primary" isDisabled>Print label</Button>
                     <OrderButton channel={data.store.channel.name} status={data.status} orderId={data.id}></OrderButton>
                   </div>
               </div>
