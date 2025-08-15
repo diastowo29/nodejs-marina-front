@@ -155,12 +155,15 @@ export default function AddCrm (props:any) {
     }
     upsertCrm(payload).then(() => {
       popToast("Integration created!", "success");
+      onOpenChange
     }).catch((err) => {
+      console.log(err);
       popToast("Integration error!", "error");
+    }).finally(() => {
+      onOpenChange();
+      setLoading(false);
     })
 
-    onOpenChange();
-    setLoading(false);
   }
 
   const DescToken = () => {
@@ -272,7 +275,8 @@ export default function AddCrm (props:any) {
                   label="Zendesk Domain"
                   placeholder="example.zendesk.com"
                   isDisabled={(isNew) ? false : true}
-                  defaultValue={marketUrl}
+                  // defaultValue={marketUrl}
+                  defaultValue="https://contreesdemo1701844059.zendesk.com"
                   onClear={() => onMarketUrlClear()}
                   // value={marketUrl}
                   onChange={(e) => setMarketUrl(e.target.value)} />
@@ -285,7 +289,8 @@ export default function AddCrm (props:any) {
                     errorMessage="Please enter a valid email"
                     label="Zendesk Username"
                     placeholder="admin@example.com"
-                    defaultValue={username}
+                    // defaultValue={username}
+                    defaultValue="yulius.agung@treessolutions.com"
                     onValueChange={setUsername} />
                   )}
                   {(isLoading) ? (
@@ -298,7 +303,8 @@ export default function AddCrm (props:any) {
                     isInvalid={invalidName}
                     errorMessage="Token cannot be empty"
                     placeholder="gkOumnbWluxmtBUPj3kQkwmzx2jc9bELMf3jKqYGhS"
-                    defaultValue={apiToken}
+                    // defaultValue={apiToken}
+                    defaultValue="SdAnhp3AQLSz9RAGr3nQz0zMdFy9iM1msW4EWYOL"
                     onValueChange={setapiToken} />
                   )}
                   <Input
@@ -310,7 +316,8 @@ export default function AddCrm (props:any) {
                   errorMessage="App ID cannot be empty"
                   isDisabled={(isNew) ? false : true}
                   placeholder="5ea6f52b536exafesfcb000f732a35"
-                  defaultValue={appId}
+                  // defaultValue={appId}
+                  defaultValue="6570148c052739183fe54940"
                   onValueChange={setappId} />
                    {(isLoading) ? (
                     <Skeleton className="h-12 rounded-lg" />
@@ -323,7 +330,8 @@ export default function AddCrm (props:any) {
                     isInvalid={invalidToken}
                     errorMessage="App Key cannot be empty"
                     placeholder="app_6892d529c1be55bdaf85432e"
-                    defaultValue={appKey}
+                    // defaultValue={appKey}
+                    defaultValue="app_6880586e1794bda2607a4e93"
                     onValueChange={setappKey} />
                   )}
                    {(isLoading) ? (
@@ -337,7 +345,8 @@ export default function AddCrm (props:any) {
                     isInvalid={invalidToken}
                     errorMessage="App Secret cannot be empty"
                     placeholder="Qu1qcAtdXtQJItEUgW9adj30923dlm0T3_QL-yyrdGbA2Lkgwt-xtUXV9q4jkh59VwlJy3w"
-                    defaultValue={appSecret}
+                    // defaultValue={appSecret}
+                    defaultValue="MMGjwHG0atYOH1OwebNyh-Fr_hu7pNzecUjJq89pPmHgoNtdpc31csvtTKEmZVuiBZsZyvhgw63AYVOFBCTn9Q"
                     onValueChange={setappSecret} />
                   )}
                   {/* <CheckboxGroup
@@ -382,7 +391,7 @@ export default function AddCrm (props:any) {
 
 async function upsertCrm (payload:any, id?: string) {
   let handshake = await Promise.all([
-      handshakeCrm(payload.marketUrl, payload.apiToken),
+      handshakeCrm(payload.host, payload.apiToken),
       handshakeSunco(payload.suncoAppId, encode(`${payload.suncoAppKey}:${payload.suncoAppSecret}`))
   ]);
 

@@ -63,9 +63,7 @@ export async function handshakeCrm (host:string, token:string) {
     try {
         const hsRaw = await fetch(HANDSHAKE_ZD(host), {
             method: 'GET',
-            headers: new Headers({
-                'Authorization': 'Basic ' + token, 
-            })    
+            headers: { 'Authorization': 'Basic ' + token }
         });
         const hs = await hsRaw.json();
         return hs;
@@ -82,9 +80,7 @@ export async function handshakeSunco (appsId:string, token:string) {
     try {
         const suncoRaw = await fetch(HANDSHAKE_SUNCO(appsId), {
             method: 'GET',
-            headers: new Headers({
-                'Authorization': 'Basic ' + token, 
-            })    
+            headers: { 'Authorization': 'Basic ' + token }
         });
         const sunco = await suncoRaw.json();
         return sunco;
