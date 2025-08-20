@@ -14,11 +14,11 @@ export async function generateShopeeAuthUrl() {
   const partnerId = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_ID;
   const partnerKey = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_KEY || 'xxx';
   const shopeeString = `${partnerId}${shopeeAuthPath}${ts}`;
-  let shopeeAuthHost = process.env.NEXT_PUBLIC_SHOPEE_HOST || `https://open.sandbox.test-stable.shopee.com`;
+  let shopeeAuthHost = (process.env.NEXT_PUBLIC_SHOPEE_HOST) ? `${process.env.NEXT_PUBLIC_SHOPEE_HOST}/api/v2/shop/auth_partner` :  `https://open.sandbox.test-stable.shopee.com/auth`;
   let host = process.env.APP_BASE_URL;
   try {
       const hmac = createHmac('sha256', partnerKey).update(shopeeString).digest('hex');
-      return `${shopeeAuthHost}${shopeeAuthPath}?auth_type=seller&partner_id=${partnerId}&redirect_uri=${host}/settings/marketplace&response_type=code`;
+      return `${shopeeAuthHost}?auth_type=seller&partner_id=${partnerId}&redirect_uri=${host}/settings/marketplace&response_type=code`;
   } catch (error) {
       console.error('Error generating HMAC:', error);
       return '';
