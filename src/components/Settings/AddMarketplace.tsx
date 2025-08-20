@@ -1,11 +1,15 @@
 "use client";
 import { createStore } from "@/app/actions/marketplace/actions";
+import { generateShopeeAuthUrl } from "@/app/actions/sign/actions";
+// import { generateHmac } from "@/app/actions/sign/actions";
 import { BliBliIcon } from "@/app/settings/assets/BliBli";
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function AddMarketplace(props:any) {
+    const router = useRouter();
   // let tiktokAuth = `https://services.tiktokshop.com/open/authorize?service_id=7449020282483050246`
   let tiktokAuth = 'https://services.tiktokshop.com/open/authorize?service_id=7523274804246841144'
   let lazadaAuth = 'https://auth.lazada.com/oauth/authorize?response_type=code&force_auth=true';
@@ -52,6 +56,16 @@ export default function AddMarketplace(props:any) {
     // console.log(marketUrl);
   }
 
+  const shopeeClick = (e:any) => {
+    setLoading(true);
+    e.preventDefault();
+    generateShopeeAuthUrl().then((result) => {
+      setLoading(false);
+      router.push(result);
+    })
+
+  }
+
   return (
     <div className="flex flex-wrap gap-4 items-center">
         <Button isDisabled onClick={() => modalMarketplace('blibli', true)} className="bg-gradient-to-tr from-blue-400 to-sky-400 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
@@ -60,10 +74,8 @@ export default function AddMarketplace(props:any) {
         <Button onClick={() => modalMarketplace('tokopedia', true)} className="bg-gradient-to-tr from-lime-600 to-green-400 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
             Add Tokopedia Store
         </Button>
-        <Button className="bg-gradient-to-tr from-orange-500 to-orange-300 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
-          <Link href={props.shopeeFinalAuthUrl}>
+        <Button isDisabled={isLoading} onClick={(e) => shopeeClick(e)} className="bg-gradient-to-tr from-orange-500 to-orange-300 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
             Add Shopee Store
-          </Link>
         </Button>
         <Button className="bg-gradient-to-tr from-blue-800 to-red-500 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
             <Link href={`${lazadaAuth}&redirect_uri=${callbackEndpoint}?app=chat&client_id=${props.lazadaChatKey}`}>
@@ -71,7 +83,7 @@ export default function AddMarketplace(props:any) {
             </Link>
         </Button>
         <Button className="bg-gradient-to-tr from-blue-800 to-red-500 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
-            <Link href={`${lazadaAuth}&redirect_uri=${callbackEndpoint}?app=oms&client_id=${props.lazadaOmsKey}`}>
+            <Link href={`${lazadaAuth}&redirect_uri=https://marina-apps-553781175495.asia-southeast2.run.app/settings/marketplace?app=oms&client_id=${props.lazadaOmsKey}`}>
             Add Lazada Store (Order)
             </Link>
         </Button>

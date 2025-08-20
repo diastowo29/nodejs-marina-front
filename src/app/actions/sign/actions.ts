@@ -7,16 +7,22 @@ const secret_key = process.env.M_SECRET_KEY || "xxx"
 const secret_iv = process.env.M_SECRET_IV || "xxx"
 const encryption_method = process.env.ENCRYPTION_METHOD || "xxx"
 
-export async function generateHmac(message:string, secret:string) {
-    try {
-        const hmac = createHmac('sha256', secret);
-        hmac.update(message);
-        const signString = hmac.digest('hex');
-        return signString;
-    } catch (error) {
-        console.error('Error generating HMAC:', error);
-        return '';
-    }
+export async function generateShopeeAuthUrl() {
+  let ts = Math.floor(Date.now() / 1000);
+  // let shopeeAuthPath = '/api/v2/shop/auth_partner';
+  let shopeeAuthPath = '/auth';
+  const partnerId = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_ID;
+  const partnerKey = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_KEY || 'xxx';
+  const shopeeString = `${partnerId}${shopeeAuthPath}${ts}`;
+  let shopeeAuthHost = process.env.NEXT_PUBLIC_SHOPEE_HOST || `https://open.sandbox.test-stable.shopee.com`;
+  let host = process.env.APP_BASE_URL;
+  try {
+      const hmac = createHmac('sha256', partnerKey).update(shopeeString).digest('hex');
+      return `${shopeeAuthHost}${shopeeAuthPath}?auth_type=seller&partner_id=${partnerId}&redirect_uri=${host}/settings/marketplace&response_type=code`;
+  } catch (error) {
+      console.error('Error generating HMAC:', error);
+      return '';
+  }
 }
 
 export const decryptHash = (encryptedData:string) => {

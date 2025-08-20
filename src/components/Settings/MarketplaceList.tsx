@@ -5,8 +5,11 @@ import { useState } from "react";
 import { CheckIcon, DotsIcon } from "../Icons/dotsaction";
 import { popToast } from "@/app/actions/toast/pop";
 import Link from "next/link";
+import { generateShopeeAuthUrl } from "@/app/actions/sign/actions";
+import { useRouter } from "next/navigation";
 
 export default function MarketplaceList(channels:any) {
+    const router = useRouter();
     if (channels.stores.error) {
         popToast("Could not connect to server, please contact admin", "error");
         return (
@@ -24,10 +27,18 @@ export default function MarketplaceList(channels:any) {
             popToast(`Connected to ${channels.channel}`, "success");
         }
     }
+
+    const shopeeClick = (e:any) => {
+        e.preventDefault();
+        generateShopeeAuthUrl().then((result) => {
+          router.push(result);
+        })
+    }
+    
     const ReAuthItem = (channel:Record<string, string>) => {
         if (channel.channel == 'shopee') {
             return (
-                <Link href={channels.shopeeFinalAuthUrl}>
+                <Link href='#' onClick={(e) => shopeeClick(e)}>
                     Re-Authorize
                 </Link>
             )

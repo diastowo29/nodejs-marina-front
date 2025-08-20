@@ -5,7 +5,6 @@ import {getListStores} from "@/app/actions/store/actions";
 import MarketplaceList from "@/components/Settings/MarketplaceList";
 import SidebarSetting from "@/components/Settings/SidebarSettings";
 import AddMarketplace from "@/components/Settings/AddMarketplace";
-import {generateHmac} from "@/app/actions/sign/actions";
 import {generateTiktokToken} from "@/app/actions/marketplace/tiktok/action";
 import {generateShopeeToken} from "@/app/actions/marketplace/shopee/action";
 import {generateLazToken} from "@/app/actions/marketplace/lazada/action";
@@ -42,18 +41,9 @@ const Settings = async ({searchParams} : {
             }
         }
     }
-    let shopeeAuthPath = '/api/v2/shop/auth_partner';
-    let ts = Math.floor(Date.now() / 1000);
-
-    const partnerId = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_ID;
-    const partnerKey = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_KEY;
-    const shopeeString = `${partnerId}${shopeeAuthPath}${ts}`;
-    let shopeeAuthHost = process.env.NEXT_PUBLIC_SHOPEE_HOST || `https://partner.test-stable.shopeemobile.com`;
-    let shopeeSignedString = await generateHmac(shopeeString, partnerKey as string);
     let lazadaChatKeyId = process.env.NEXT_PUBLIC_LAZ_APP_CHAT_KEY_ID;
     let lazadaOmsKeyId = process.env.NEXT_PUBLIC_LAZ_APP_OMS_KEY_ID;
     let host = process.env.APP_BASE_URL;
-    let shopeeFinalAuthUrl = `${shopeeAuthHost}${shopeeAuthPath}?partner_id=${partnerId}&redirect=${host}/settings/marketplace&timestamp=${ts}&sign=${shopeeSignedString}`;
     let stores = await getListStores();
     return (
         <DefaultLayout>
@@ -75,14 +65,12 @@ const Settings = async ({searchParams} : {
                         <p>Connect your stores to Marina.</p>
                         <AddMarketplace
                             marinaHost={host}
-                            shopeeFinalAuthUrl={shopeeFinalAuthUrl}
                             lazadaChatKey={lazadaChatKeyId}
                             lazadaOmsKey={lazadaOmsKeyId}/>
                         <MarketplaceList
                             channel={channel}
                             isConnected={isConnected}
-                            stores={stores}
-                            shopeeFinalAuthUrl={shopeeFinalAuthUrl}></MarketplaceList>
+                            stores={stores}></MarketplaceList>
                     </CardBody>
                     <Divider/>
                 </Card>
