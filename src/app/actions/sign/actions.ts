@@ -9,8 +9,8 @@ const encryption_method = process.env.ENCRYPTION_METHOD || "xxx"
 
 export async function generateShopeeAuthUrl() {
   let ts = Math.floor(Date.now() / 1000);
-  // let shopeeAuthPath = '/api/v2/shop/auth_partner';
-  let shopeeAuthPath = '/auth';
+  let shopeeAuthPath = '/api/v2/shop/auth_partner';
+  // let shopeeAuthPath = '/auth';
   const partnerId = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_ID;
   const partnerKey = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_KEY || 'xxx';
   const shopeeString = `${partnerId}${shopeeAuthPath}${ts}`;
