@@ -6,19 +6,24 @@ import crypto from 'crypto'
 const secret_key = process.env.M_SECRET_KEY || "xxx"
 const secret_iv = process.env.M_SECRET_IV || "xxx"
 const encryption_method = process.env.ENCRYPTION_METHOD || "xxx"
+const nodeEnv = process.env.NODE_ENV || "development";
 
 export async function generateShopeeAuthUrl() {
   let ts = Math.floor(Date.now() / 1000);
   let shopeeAuthPath = '/api/v2/shop/auth_partner';
-  // let shopeeAuthPath = '/auth';
   const partnerId = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_ID;
   const partnerKey = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_KEY || 'xxx';
-  const shopeeString = `${partnerId}${shopeeAuthPath}${ts}`;
   let shopeeAuthHost = (process.env.NEXT_PUBLIC_SHOPEE_HOST) ? `${process.env.NEXT_PUBLIC_SHOPEE_HOST}/api/v2/shop/auth_partner` :  `https://open.sandbox.test-stable.shopee.com/auth`;
   let host = process.env.APP_BASE_URL;
+  let redirectKey = 'redirect';
+  if (nodeEnv === 'development') {
+    shopeeAuthPath = '/auth';
+    redirectKey = 'redirect_uri';
+  }
+  const shopeeString = `${partnerId}${shopeeAuthPath}${ts}`;
   try {
       const hmac = createHmac('sha256', partnerKey).update(shopeeString).digest('hex');
-      return `${shopeeAuthHost}?auth_type=seller&partner_id=${partnerId}&redirect=${host}/settings/marketplace&response_type=code&timestamp=${ts}&sign=${hmac}`;
+      return `${shopeeAuthHost}?auth_type=seller&partner_id=${partnerId}&${redirectKey}=${host}/settings/marketplace&response_type=code&timestamp=${ts}&sign=${hmac}`;
   } catch (error) {
       console.error('Error generating HMAC:', error);
       return '';

@@ -157,65 +157,84 @@ export const OrdersStatusTabs = (data:any) => {
             if (activeStatusTab == 'all') {
                 filteredOrderes = data.currentData;
             } else {
+                let condition = [];
                 filteredOrderes = filteredOrderes.filter((orders:any) => {
                     if (activeStatusTab == 'new') {
                         if (data.channel.toString().toLowerCase() == marinaChannel.Lazada.toString().toLowerCase()) {
                             return orders.status.toString().toLowerCase().includes('pending');
                         } else if (data.channel.toString().toLowerCase() == marinaChannel.Tokopedia.toString().toLowerCase()) {
-                            const condition = ['New', 'Created'];
+                            condition = ['New', 'Created'];
                             return condition.some((el) => orders.status.toString().includes(el));
                         } else if (data.channel.toString().toLowerCase() == marinaChannel.Tiktok.toString().toLowerCase()) {
-                            const condition = ['AWAITING_SHIPMENT', 'UNPAID', 'ON_HOLD'];
+                            condition = ['AWAITING_SHIPMENT', 'UNPAID', 'ON_HOLD'];
+                            return condition.some((el) => orders.status.toString().includes(el));
+                        } else if (data.channel.toString().toLowerCase() == marinaChannel.Shopee.toString().toLowerCase()) {
+                            condition = ['UNPAID', 'READY_TO_SHIP'];
                             return condition.some((el) => orders.status.toString().includes(el));
                         }
                     } else if (activeStatusTab == 'process') {
                         if (data.channel.toString().toLowerCase() == marinaChannel.Lazada.toString().toLowerCase())  {
-                            const condition = ['ready_to_ship', 'ready_to_ship_pending', 'packed', 'repacked'];
+                            condition = ['ready_to_ship', 'ready_to_ship_pending', 'packed', 'repacked'];
                             return condition.some((el) => orders.status.toString().toLowerCase().includes(el));
                         } else if (data.channel.toString().toLowerCase() == marinaChannel.Tokopedia.toString().toLowerCase()) {
-                            const condition = ['Accepted'];
+                            condition = ['Accepted'];
                             return condition.some((el) => orders.status.toString().includes(el));
                         } else if (data.channel.toString().toLowerCase() == marinaChannel.Tiktok.toString().toLowerCase()) {
-                            const condition = ['PARTIALLY_SHIPPING', 'AWAITING_COLLECTION'];
+                            condition = ['PARTIALLY_SHIPPING', 'AWAITING_COLLECTION'];
+                            return condition.some((el) => orders.status.toString().includes(el));
+                        } else if (data.channel.toString().toLowerCase() == marinaChannel.Shopee.toString().toLowerCase()) {
+                            condition = ['PROCESSED'];
                             return condition.some((el) => orders.status.toString().includes(el));
                         }
                     } else if (activeStatusTab == 'delivery') {
                         if (data.channel.toString().toLowerCase() == marinaChannel.Lazada.toString().toLowerCase()) {
                             return orders.status.toString().toLowerCase().includes('shipped');
                         } else if (data.channel.toString().toLowerCase() == marinaChannel.Tokopedia.toString().toLowerCase()) {
-                            const condition = ['Wait for pickup', 'Shipped', 'Shipped - No AWB', 'Invalid AWB', 'AWB need correection'];
+                            condition = ['Wait for pickup', 'Shipped', 'Shipped - No AWB', 'Invalid AWB', 'AWB need correection'];
                             return condition.some((el) => orders.status.toString().includes(el));
                         } else if (data.channel.toString().toLowerCase() == marinaChannel.Tiktok.toString().toLowerCase()) {
-                            const condition = ['IN_TRANSIT'];
+                            condition = ['IN_TRANSIT'];
+                            return condition.some((el) => orders.status.toString().includes(el));
+                        } else if (data.channel.toString().toLowerCase() == marinaChannel.Shopee.toString().toLowerCase()) {
+                            condition = ['SHIPPED', 'TO_CONFIRM_RECEIVE'];
                             return condition.some((el) => orders.status.toString().includes(el));
                         }
                     } else if (activeStatusTab == 'completed') {
                         if (data.channel.toString().toLowerCase() == marinaChannel.Lazada.toString().toLowerCase()) {
-                            const condition = ['delivered', 'completed', 'confirmed'];
+                            condition = ['delivered', 'completed', 'confirmed'];
                             return condition.some((el) => orders.status.toString().toLowerCase().includes(el));
                         } else if (data.channel.toString().toLowerCase() == marinaChannel.Tokopedia.toString().toLowerCase()) {
-                            const condition = ['Delivered to Pickup point', 'Delivered', 'Open Case to Finish Order', 'Order Finished'];
+                            condition = ['Delivered to Pickup point', 'Delivered', 'Open Case to Finish Order', 'Order Finished'];
                             return condition.some((el) => orders.status.toString().includes(el));
                         } else if (data.channel.toString().toLowerCase() == marinaChannel.Tiktok.toString().toLowerCase()) {
-                            const condition = ['DELIVERED', 'COMPLETED'];
+                            condition = ['DELIVERED', 'COMPLETED'];
+                            return condition.some((el) => orders.status.toString().includes(el));
+                        } else if (data.channel.toString().toLowerCase() == marinaChannel.Shopee.toString().toLowerCase()) {
+                            condition = ['COMPLETED'];
                             return condition.some((el) => orders.status.toString().includes(el));
                         }
                     } else if (activeStatusTab == 'canceled') {
                         if (data.channel.toString().toLowerCase() == marinaChannel.Lazada.toString().toLowerCase()) {
                             return orders.status.toString().toLowerCase().includes('canceled');
                         } else if (data.channel.toString().toLowerCase() == marinaChannel.Tokopedia.toString().toLowerCase()) {
-                            const condition = ['Cancelled', 'Rejected - OOS', 'Cancelled - Fraud', 'Rejected'];
+                            condition = ['Cancelled', 'Rejected - OOS', 'Cancelled - Fraud', 'Rejected'];
                             return condition.some((el) => orders.status.toString().includes(el));
                         } else if (data.channel.toString().toLowerCase() == marinaChannel.Tiktok.toString().toLowerCase()) {
-                            const condition = ['CANCELLED', 'CANCEL'];
+                            condition = ['CANCELLED', 'CANCEL'];
+                            return condition.some((el) => orders.status.toString().includes(el));
+                        } else if (data.channel.toString().toLowerCase() == marinaChannel.Shopee.toString().toLowerCase()) {
+                            condition = ['IN_CANCEL', 'CANCELLED'];
                             return condition.some((el) => orders.status.toString().includes(el));
                         }
                     } else if (activeStatusTab == 'failed') {
                         if (data.channel.toString().toLowerCase() == marinaChannel.Lazada.toString().toLowerCase()) {
-                            const condition = ['failed_delivery', 'failed', 'lost_by_3pl', 'damaged_by_3pl'];
+                            condition = ['failed_delivery', 'failed', 'lost_by_3pl', 'damaged_by_3pl'];
                             return condition.some((el) => orders.status.toString().toLowerCase().includes(el));
                         } else if (data.channel.toString().toLowerCase() == marinaChannel.Tokopedia.toString().toLowerCase()) {
-                            const condition = ['Fraud Review'];
+                            condition = ['Fraud Review'];
+                            return condition.some((el) => orders.status.toString().includes(el));
+                        } else if (data.channel.toString().toLowerCase() == marinaChannel.Shopee.toString().toLowerCase()) {
+                            condition = ['CANCELLED'];
                             return condition.some((el) => orders.status.toString().includes(el));
                         }
                     }
