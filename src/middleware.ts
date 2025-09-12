@@ -11,7 +11,13 @@ export async function middleware(request: NextRequest) {
   
     const session = await auth0.getSession();
     if (!session) {
-      return NextResponse.redirect(`${origin}/auth/login`)
+      if (request.nextUrl.pathname.startsWith("/api")) {
+        return new NextResponse(
+          JSON.stringify({error: 'Unauthorized'}), 
+          {status: 401});
+      } else {
+        return NextResponse.redirect(`${origin}/auth/login`)
+      }
     }
 
     // check url params
