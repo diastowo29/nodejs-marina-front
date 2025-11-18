@@ -34,6 +34,26 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
     itemOrdered = data.order_items;
   }
 
+  const marinaStatus = (status:string) => {
+    let statusLabel = '';
+    let statusColor = marinaStatusColor.GREEN;
+    let statusUi = status;
+    switch (status) {
+      case 'ready_to_ship':
+        statusLabel = 'AWAITING_SHIPMENT';
+        statusUi = 'Ready to Ship'
+        break;
+      case 'pending':
+        statusLabel = 'AWAITING_SHIPMENT';
+        statusUi = 'Pending'
+        break;
+      default:
+        statusLabel = status;
+        break;
+    }
+    return {status: {label: statusLabel, color: statusColor, ui: statusUi}};
+  }
+
   // console.log(itemOrdered);
   const statusColor = (status:any) => {
     switch (status) {
@@ -105,7 +125,7 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
                   </h3>
                 </div>
                 <div className="flex justify-end">
-                  <Chip color={statusColor(data.status)} variant="solid">{data.status}</Chip>
+                  <Chip color={marinaStatus(data.status).status.color} variant="solid">{marinaStatus(data.status).status.ui}</Chip>
                 </div>
               </div>
               <div className="p-7">
@@ -192,7 +212,7 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
                   </div>
                   <div className="flex justify-center gap-4.5">
                     <Button color="primary" isDisabled>Print label</Button>
-                    <OrderButton channel={data.store.channel.name} status={data.status} orderId={data.id}></OrderButton>
+                    <OrderButton channel={data.store.channel.name} status={marinaStatus(data.status).status.label} orderId={data.id}></OrderButton>
                   </div>
               </div>
             </div>

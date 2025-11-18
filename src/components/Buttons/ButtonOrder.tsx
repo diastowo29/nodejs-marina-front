@@ -22,6 +22,7 @@ const OrderButton = (props: orderBtnProps) => {
     // }
     // console.log(props);
     const [selectedReason, setSelectedReason] = useState('');
+    console.log(props);
     const reasons = cancelReasons(props.channel, props.status);
     const submitReject = async (orderId:string) => {
         setOnCalling(true);
@@ -99,6 +100,7 @@ const OrderButton = (props: orderBtnProps) => {
         let disabled = false;
         let desc = '';
         let action = '';
+        // console.log(status);
         switch (status) {
             case 'AWAITING_SHIPMENT':
                 label =  localStrings.btn.order.label.process;
@@ -116,7 +118,7 @@ const OrderButton = (props: orderBtnProps) => {
                 label =  localStrings.btn.order.label.approve_cancel;
                 disabled = false;
                 desc = localStrings.btn.order.desc.approve_cancel;
-                action = 'approve_refund';
+                action = 'approve_rr';
                 break;
             case 'CANCEL':
                 label = localStrings.btn.order.label.process;
@@ -159,7 +161,7 @@ const OrderButton = (props: orderBtnProps) => {
                 label = localStrings.btn.order.label.reject_cancel;
                 disabled = false;
                 desc = localStrings.btn.order.desc.reject_cancel;
-                action = 'reject_refund';
+                action = 'reject_rr';
                 break;
             case 'CANCEL':
                 label = localStrings.btn.order.label.reject;
