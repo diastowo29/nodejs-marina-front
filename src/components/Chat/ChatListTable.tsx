@@ -17,6 +17,7 @@ export const ChatListTable = (chat:any) => {
       source: source
     });
   };
+  console.log(chat.chat)
   const sampleComments = [
     {
       "id": 1,
@@ -61,10 +62,10 @@ export const ChatListTable = (chat:any) => {
   const ChatCell = ({ row }:any) => (
     <div className="flex gap-5 p-3">
         <div>
-            <Avatar isBordered radius="full" size="md" src={row.omnichat_user.thumbnailUrl} />
+            <Avatar isBordered radius="full" size="md" src={row.customer.thumbnailUrl} />
         </div>
         <div className="flex flex-col gap-1 items-start justify-center">
-        <h4 className="text-small font-semibold leading-none text-default-600">{row.omnichat_user.username}</h4>
+        <h4 className="text-small font-semibold leading-none text-default-600">{row.customer.name}</h4>
         <h4 className="text-small leading-none text-default-600 truncate text-ellipsis overflow-hidden ...">{row.store.channel.name}</h4>
         </div>
     </div>
@@ -96,7 +97,7 @@ export const ChatListTable = (chat:any) => {
 
       let chatData = await Promise.all([
         listChatComments(contact.id), // need to change API for better sorting
-        getOrdersByUser(contact.omnichat_user.origin_id),
+        getOrdersByUser(contact.customer.origin_id),
         // getListProductsbyStore(contact.storeId)
       ])
 
