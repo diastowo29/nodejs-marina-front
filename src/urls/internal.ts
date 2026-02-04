@@ -3,6 +3,7 @@ export const HOST = (process.env.BACKEND_HOST) ? `https://${process.env.BACKEND_
 let CHANNEL_ENDPOINT = `${HOST}/api/v1/channels`;
 let PRODUCT_ENDPOINT = `${HOST}/api/v1/products`;
 let ORDER_ENDPOINT = `${HOST}/api/v1/orders`;
+let RRC_ENDPOINT = `${HOST}/api/v1/rrc`;
 export const CHAT_ENDPOINT = `${HOST}/api/v1/chats`;
 let STORE_ENDPOINT = `${HOST}/api/v1/stores`;
 export const CRM_ENDPOINT = `${HOST}/api/v1/crm`;
@@ -40,6 +41,9 @@ export const INT_ORDER_BYCHANNEL = (channel:string) => {
 export const INT_GET_ORDER = (orderId:string) => {
     return `${ORDER_ENDPOINT}/${orderId}`;
 };
+export const INT_GET_RRC = (rrcId:string) => {
+    return `${RRC_ENDPOINT}/${rrcId}`;
+}
 export const INT_GET_ORDER_ByU = (userId:string) => {
     return `${ORDER_ENDPOINT}?user_id=${userId}`;
 };

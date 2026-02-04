@@ -87,7 +87,7 @@ export const ChatWindow = (comments : any) => {
       return;
     }
     // console.log(bubble);
-    if (bubble.user_id.toString() == comments.contacts.omnichat_user.origin_id) {
+    if (bubble.user_id.toString() == comments.contacts.customer.origin_id) {
       const newMsg = {
           id: bubble.message_id,
           line_text: bubble.message.txt,
@@ -201,24 +201,24 @@ export const ChatWindow = (comments : any) => {
                       isBordered={true}
                       radius="full"
                       size="md"
-                      src={comments.contacts.omnichat_user.thumbnailUrl}/>
+                      src={comments.contacts.customer.thumbnailUrl}/>
                 </Skeleton> :
                 <Avatar
                     isBordered={true}
                     radius="full"
                     size="md"
-                    src={comments.contacts.omnichat_user.thumbnailUrl}/>
+                    src={comments.contacts.customer.thumbnailUrl}/>
                   }
                   
                     <div className="flex flex-col gap-1 items-start justify-center">
                       {comments.sample ? 
                       <Skeleton>
-                        <h4 className="text-small font-semibold leading-none text-default-600">{comments.contacts.omnichat_user.username}</h4>
+                        <h4 className="text-small font-semibold leading-none text-default-600">{comments.contacts.customer.name}</h4>
                         <h4 className="text-small font-semibold leading-none text-stone-400">{comments.contacts.store.channel.name}</h4>
                       </Skeleton> : 
                       (
                         <>
-                          <h4 className="text-small font-semibold leading-none text-default-600">{comments.contacts.omnichat_user.username}</h4>
+                          <h4 className="text-small font-semibold leading-none text-default-600">{comments.contacts.customer.name}</h4>
                           <h4 className="text-small font-semibold leading-none text-stone-400">{comments.contacts.store.channel.name}</h4>
                         </>
                       )
