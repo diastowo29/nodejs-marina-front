@@ -26,12 +26,28 @@ export const ChatWindow = (comments : any) => {
   }
   console.log(comments);
   let newMessages = [];
-  const isLazada = (comments.contacts.store.channel.name.toString().toLowerCase() == marinaChannel.Lazada.toString().toLowerCase()) ? true : false;
+  // const isLazada = (comments.contacts.store.channel.name.toString().toLowerCase() == marinaChannel.Lazada.toString().toLowerCase()) ? true : false;
+  const chatContentFormat = (channel: String, lineText: any) => {
+    let chatContent = '';
+    try {
+      switch (channel.toLowerCase()) {
+        case marinaChannel.Tiktok.toString().toLowerCase():
+          chatContent = JSON.parse(lineText).content;
+          break;
+        default:
+          chatContent = JSON.parse(lineText).txt;
+          break;
+      }
+    } catch (err) {
+      chatContent = lineText
+    }
+    return chatContent;
+  }
   newMessages = comments.comments.map((comment : any) => {
     return {
       id: comment.id,
       chat_type: comment.chat_type,
-      line_text: (comment.author === 'agent') ? comment.line_text: (isLazada) ? JSON.parse(comment.line_text).txt : comment.line_text,
+      line_text: chatContentFormat(comments.contacts.store.channel.name.toString(), comment.line_text),
       createdAt: new Date(comment.createdAt).toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit"
