@@ -32,7 +32,7 @@ export const ChatWindow = (comments : any) => {
     try {
       switch (channel.toLowerCase()) {
         case marinaChannel.Tiktok.toString().toLowerCase():
-          chatContent = JSON.parse(lineText).content;
+          chatContent = JSON.parse(lineText).content || `Product: ${JSON.parse(lineText).product_id}`;
           break;
         default:
           chatContent = JSON.parse(lineText).txt;
@@ -51,7 +51,7 @@ export const ChatWindow = (comments : any) => {
       createdAt: new Date(comment.createdAt).toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit"
-    }),
+      }),
       author: comment.author
     }
   });
@@ -165,20 +165,21 @@ export const ChatWindow = (comments : any) => {
       // send chat to BE and store it to DB
       // await replyChat(newMsg);
     }
-  }, [comments.attached])
+  }, [comments.attached]);
 
-  useEffect(() => {
+  /* useEffect(() => {
     const events = new EventSource(`${host}/api/v1/lazada/chat/events`);
     events.onmessage = (event) => {
       // console.log(event);
       handleNewMessage(event.data);
     };
 
-  }, []);
+  }, []); */
 
-  useEffect(() => {
+  // useEffect(() => {
+    // console.log(messages);
     // scrollToBottom();
-  }, [messages]);
+  // }, [messages]);
 
   if (comments.loading) {
     // console.log('loading');

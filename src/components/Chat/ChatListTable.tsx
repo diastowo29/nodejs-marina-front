@@ -1,13 +1,40 @@
 "use client";
 import { Avatar, Card, CardBody, CardFooter } from "@nextui-org/react"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChatWindow } from "./ChatWindow";
 import DataTable from 'react-data-table-component';
 import { listChatComments } from "@/app/actions/chat/actions";
 import { getOrdersByUser } from "@/app/actions/order/actions";
 import { ChatSidebarV2 } from "./ChatSidebarv2";
+import { io } from "socket.io-client";
+// import { createServer } from "http";
+// import { Server, Socket } from "socket.io";
+
 
 export const ChatListTable = (chat:any) => {
+  const [chatList, setChatList] = useState(chat.chat); 
+  const socket = io(process.env.WEBSOCKET_URL || 'http://localhost:5000');
+  socket.on(chat.tenantId, (message:any) => {
+    console.log(message);
+    const chatId = message.message || '7550636978061672712'
+    const indexed = chat.chat.findIndex((c:any) => c.origin_id == chatId);
+    if (indexed) {
+      chat.chat[indexed]['new'] = false;
+      const newChat = moveObjectPosition(chat.chat, indexed, 0);
+      setChatList([...newChat]);
+    }
+  });
+  
+  const moveObjectPosition = (array: [], fromIndex:number, toIndex:number) => {
+    if (fromIndex < 0 || fromIndex >= array.length || toIndex < 0 || toIndex >= array.length) {
+      console.error("Indices are out of bounds");
+      return array; 
+    }
+    const [movedObject] = array.splice(fromIndex, 1);
+    array.splice(toIndex, 0, movedObject);
+    return array;
+  };
+
   const [orderId, setOrderId]:any = useState();
   const changeOrderId = (id:any, status:string, value:number, source:string) => {
     setOrderId({
@@ -17,7 +44,7 @@ export const ChatListTable = (chat:any) => {
       source: source
     });
   };
-  console.log(chat.chat)
+  // console.log(chat.chat)
   const sampleComments = [
     {
       "id": 1,
@@ -70,7 +97,7 @@ export const ChatListTable = (chat:any) => {
         </div>
     </div>
   )
-
+  
   const chatCol = [
     {
       name: 'Recent Chats',
@@ -85,6 +112,7 @@ export const ChatListTable = (chat:any) => {
   const [orderList, setOrderList] = useState([]); 
   const [seed, setSeed] = useState(1);
   
+
   const handleContactClick = async (contact:any) => {
       setUseSample(true);
       setListComments([]);
@@ -119,7 +147,7 @@ export const ChatListTable = (chat:any) => {
               className="px-3 py-0 text-small text-default-400">
               <DataTable
                   columns={chatCol}
-                  data={chat.chat}
+                  data={chatList}
                   pagination
                   pointerOnHover
                   onRowClicked={(row:any) => handleContactClick(row)}

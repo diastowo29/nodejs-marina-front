@@ -14,12 +14,19 @@ export async function listChats () {
 }
 
 export async function listChatComments (chatId:string) {
-    const chatsRaw = await fetch(INT_CHAT_COMMENTS(chatId), { 
-        cache: 'no-store',
-        headers: { 'Authorization': 'Bearer ' + await generateJwt() }
-    });
-    const chat = await chatsRaw.json();
-    return chat;
+    try {
+        const chatsRaw = await fetch(INT_CHAT_COMMENTS(chatId), { 
+            cache: 'no-store',
+            headers: { 'Authorization': 'Bearer ' + await generateJwt() }
+        });
+        const chat = await chatsRaw.json();
+        return chat;
+    } catch (error) {
+        return {
+            error: true,
+            message: 'Error fetching chat list'
+        };
+    }
 }
 
 export async function updateChat (orderId:string) {
@@ -31,11 +38,12 @@ export async function updateChat (orderId:string) {
 }
 
 export async function replyChat (payload:{}) {
+    console.log(payload)
     const chatsRaw = await fetch(CHAT_ENDPOINT, {
         method: 'POST',
-        headers: { 
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + await generateJwt()
+        headers: {
+            'Authorization': 'Bearer ' + await generateJwt(),
+            "Content-Type":"application/json"
         },
         body: JSON.stringify(payload)
     });
