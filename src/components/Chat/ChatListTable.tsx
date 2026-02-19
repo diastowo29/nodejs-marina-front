@@ -12,15 +12,15 @@ import { io } from "socket.io-client";
 
 
 export const ChatListTable = (chat:any) => {
-  const [chatList, setChatList] = useState(chat.chat); 
+  const [chatList, setChatList] = useState(chat.chat.omnichat); 
   const socket = io(process.env.WEBSOCKET_URL || 'http://localhost:5000');
-  socket.on(chat.tenantId, (message:any) => {
+  socket.on(chat.chat.tenantId, (message:any) => {
     console.log(message);
     const chatId = message.message || '7550636978061672712'
-    const indexed = chat.chat.findIndex((c:any) => c.origin_id == chatId);
+    const indexed = chat.chat.omnichat.findIndex((c:any) => c.origin_id == chatId);
     if (indexed) {
-      chat.chat[indexed]['new'] = false;
-      const newChat = moveObjectPosition(chat.chat, indexed, 0);
+      chat.chat.omnichat[indexed]['new'] = false;
+      const newChat = moveObjectPosition(chat.chat.omnichat, indexed, 0);
       setChatList([...newChat]);
     }
   });
