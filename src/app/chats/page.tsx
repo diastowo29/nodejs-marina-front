@@ -24,7 +24,7 @@ const ChatPage = async () => {
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Chats" />
-      <ChatListTable chat={chat.omnichat} tenantId={chat.tenant_id}></ChatListTable>
+      <ChatListTable chat={chat.omnichat || []} tenantId={chat.tenant_id || ''}></ChatListTable>
     </DefaultLayout>
   );
 };
