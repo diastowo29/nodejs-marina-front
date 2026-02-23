@@ -14,7 +14,8 @@ import { HOST_WS } from "@/urls/internal";
 
 export const ChatListTable = (chat:any) => {
   const [chatList, setChatList] = useState(chat.chat.omnichat);
-  const socket = io('https://marina-apps.et.r.appspot.com/');
+  const socket = io('https://marina-apps.et.r.appspot.com');
+  console.log(chat.chat.tenantId);
   socket.on(chat.chat.tenantId, (message:any) => {
     console.log(message);
     const chatId = message.message || '7550636978061672712'
