@@ -7,13 +7,14 @@ import { listChatComments } from "@/app/actions/chat/actions";
 import { getOrdersByUser } from "@/app/actions/order/actions";
 import { ChatSidebarV2 } from "./ChatSidebarv2";
 import { io } from "socket.io-client";
+import { HOST_WS } from "@/urls/internal";
 // import { createServer } from "http";
 // import { Server, Socket } from "socket.io";
 
 
 export const ChatListTable = (chat:any) => {
   const [chatList, setChatList] = useState(chat.chat.omnichat); 
-  const socket = io(process.env.NEXT_PUBLIC_WEBSOCKET_URL || 'http://localhost:5000');
+  const socket = io(HOST_WS);
   socket.on(chat.chat.tenantId, (message:any) => {
     console.log(message);
     const chatId = message.message || '7550636978061672712'
