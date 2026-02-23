@@ -13,7 +13,8 @@ export async function generateShopeeAuthUrl() {
   let shopeeAuthPath = '/api/v2/shop/auth_partner';
   const partnerId = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_ID;
   const partnerKey = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_KEY || 'xxx';
-  let shopeeAuthHost = (process.env.NEXT_PUBLIC_SHOPEE_HOST) ? `${process.env.NEXT_PUBLIC_SHOPEE_HOST}/api/v2/shop/auth_partner` :  `https://open.sandbox.test-stable.shopee.com/auth`;
+  const shopeeHost = process.env.NEXT_PUBLIC_SHOPEE_HOST;
+  let shopeeAuthHost = (shopeeHost) ? `${shopeeHost}/api/v2/shop/auth_partner` :  `https://open.sandbox.test-stable.shopee.com/auth`;
   let host = process.env.APP_BASE_URL;
   let redirectKey = 'redirect';
   if (nodeEnv === 'development') {

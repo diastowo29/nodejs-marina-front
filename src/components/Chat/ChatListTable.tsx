@@ -13,7 +13,7 @@ import { io } from "socket.io-client";
 
 export const ChatListTable = (chat:any) => {
   const [chatList, setChatList] = useState(chat.chat.omnichat); 
-  const socket = io(process.env.WEBSOCKET_URL || 'http://localhost:5000');
+  const socket = io(process.env.NEXT_PUBLIC_WEBSOCKET_URL || 'http://localhost:5000');
   socket.on(chat.chat.tenantId, (message:any) => {
     console.log(message);
     const chatId = message.message || '7550636978061672712'
