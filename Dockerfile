@@ -15,6 +15,7 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV BACKEND_HOST marina-apps.et.r.appspot.com
+ENV WEBSOCKET_URL http://localhost/
 
 RUN npm run build
 
