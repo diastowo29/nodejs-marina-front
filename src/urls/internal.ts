@@ -1,5 +1,5 @@
 export const HOST = (process.env.BACKEND_HOST) ? `https://${process.env.BACKEND_HOST}` : `http://localhost:3002`;
-export const HOST_WS = process.env.WEBSOCKET_URL || 'http://localhost:5000';
+export const HOST_WS = process.env.NEXT_PUBLIC_WEBSOCKET_URL || 'http://localhost:5000';
 
 let CHANNEL_ENDPOINT = `${HOST}/api/v1/channels`;
 let PRODUCT_ENDPOINT = `${HOST}/api/v1/products`;
