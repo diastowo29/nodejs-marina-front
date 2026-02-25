@@ -8,11 +8,12 @@ const secret_iv = process.env.M_SECRET_IV || "xxx"
 const encryption_method = process.env.ENCRYPTION_METHOD || "xxx"
 const nodeEnv = process.env.NODE_ENV || "development";
 
-export async function generateShopeeAuthUrl() {
+export async function generateShopeeAuthUrl(payload:any) {
   let ts = Math.floor(Date.now() / 1000);
   let shopeeAuthPath = '/api/v2/shop/auth_partner';
-  const partnerId = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_ID;
-  const partnerKey = process.env.NEXT_PUBLIC_SHOPEE_PARTNER_KEY || 'xxx';
+  const identifier = (Object.keys(payload).length === 0) ? '' : payload.identifier;
+  const partnerId = (identifier == '') ? process.env.NEXT_PUBLIC_SHOPEE_PARTNER_ID : identifier.split(':')[0];
+  const partnerKey = (identifier == '') ? process.env.NEXT_PUBLIC_SHOPEE_PARTNER_KEY : identifier.split(':')[1];
   const shopeeHost = process.env.NEXT_PUBLIC_SHOPEE_HOST;
   let shopeeAuthHost = (shopeeHost) ? `${shopeeHost}/api/v2/shop/auth_partner` :  `https://open.sandbox.test-stable.shopee.com/auth`;
   let host = process.env.APP_BASE_URL;
