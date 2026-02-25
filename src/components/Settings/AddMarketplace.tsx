@@ -71,10 +71,10 @@ export default function AddMarketplace(props:any) {
         <Button isDisabled onClick={() => modalMarketplace('blibli', true)} className="bg-gradient-to-tr from-blue-400 to-sky-400 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
             Add BliBli Store
         </Button>
-        <Button onClick={() => modalMarketplace('tokopedia', true)} className="bg-gradient-to-tr from-lime-600 to-green-400 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
+        <Button isDisabled onClick={() => modalMarketplace('tokopedia', true)} className="bg-gradient-to-tr from-lime-600 to-green-400 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
             Add Tokopedia Store
         </Button>
-        <Button isDisabled onClick={(e) => shopeeClick(e)} className="bg-gradient-to-tr from-orange-500 to-orange-300 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
+        <Button onClick={() => modalMarketplace('shopee', true)} className="bg-gradient-to-tr from-orange-500 to-orange-300 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
             Add Shopee Store (Chat)
         </Button>
         <Button isDisabled={isLoading} onClick={(e) => shopeeClick(e)} className="bg-gradient-to-tr from-orange-500 to-orange-300 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
@@ -92,7 +92,7 @@ export default function AddMarketplace(props:any) {
         </Button>
         <Button className="bg-gradient-to-tr from-black to-white text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
           <Link href={tiktokAuth}>
-              Add TikTok Store
+              Add Tokopedia/TikTok Shop Store
           </Link>
         </Button>
         <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
@@ -111,15 +111,27 @@ export default function AddMarketplace(props:any) {
                     label="Store name"
                     placeholder="ABC Store"
                     onValueChange={setName} />
-                    <Input
+                    {(marketName == 'shopee') && (
+                        <Input
                         isClearable
                         isInvalid={invalidUrl}
-                        errorMessage="Please enter a valid URL"
-                        label="Enter your Tokopedia marketplace URL"
-                        placeholder="https://tokopedia.com/tokoabc"
+                        errorMessage="Please enter a valid Shopee App ID and Secret"
+                        label={`Shopee App ID and Secret (format: app_id:app_secret)`}
+                        placeholder="123456:xxabcde123s"
                         onClear={() => onMarketUrlClear()}
                         value={marketUrl}
                         onChange={(e) => setMarketUrl(e.target.value)} />
+                    )}
+                    {(marketName == 'tokopedia') && (
+                        <Input
+                            isClearable
+                            isInvalid={invalidUrl}
+                            errorMessage="Please enter a valid URL"
+                            label={`Enter your ${marketName} marketplace details`}
+                            onClear={() => onMarketUrlClear()}
+                            value={marketUrl}
+                            onChange={(e) => setMarketUrl(e.target.value)} />
+                    )}
                   </ModalBody>
                   {(isNew) ? (
                     <ModalFooter>
