@@ -30,7 +30,7 @@ export default function MarketplaceList(channels:any) {
 
     const shopeeClick = (e:any) => {
         e.preventDefault();
-        generateShopeeAuthUrl().then((result) => {
+        generateShopeeAuthUrl({}).then((result) => {
           router.push(result);
         })
     }
