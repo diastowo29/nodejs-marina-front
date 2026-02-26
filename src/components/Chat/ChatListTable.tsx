@@ -7,13 +7,15 @@ import { listChatComments } from "@/app/actions/chat/actions";
 import { getOrdersByUser } from "@/app/actions/order/actions";
 import { ChatSidebarV2 } from "./ChatSidebarv2";
 import { io } from "socket.io-client";
-import { HOST_WS } from "@/urls/internal";
+// import { HOST_WS } from "@/urls/internal";
+// import { useRouter } from "next/router";
 // import { createServer } from "http";
 // import { Server, Socket } from "socket.io";
 
 
 export const ChatListTable = (chat:any) => {
   const [chatList, setChatList] = useState(chat.chat.omnichat);
+  // const router = useRouter();
   const socket = io('https://marina-apps.et.r.appspot.com');
   socket.on(chat.chat.tenant_id, (message:any) => {
     const chatId = message.message || '7550636978061672712'
@@ -104,6 +106,12 @@ export const ChatListTable = (chat:any) => {
       cell: (row:any) => <ChatCell row={row} />
     }
   ];
+
+  /* useEffect(() => {
+    const exitingPage = () => {
+      console.log("exiting...");
+    };
+  }, []); */
   // console.log(chat);
   const [selectedContact, setSelectedContact] = useState(sampleContacts);
   const [listComments, setListComments] = useState(sampleComments);

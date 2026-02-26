@@ -16,6 +16,8 @@ export default function AddMarketplace(props:any) {
     let callbackEndpoint = `${props.marinaHost}/settings/marketplace`;
     
     const [marketName, setMarketName] = useState('');
+    const [shpePartnerId, setShpePartnerId] = useState('');
+    const [shpePartnerKey, setShpePartnerKey] = useState('');
     const [isNew, setNew] = useState(true);
     const [marketUrl, setMarketUrl] = useState('');
     const [invalidUrl, setInvalidUrl] = useState(false);
@@ -44,19 +46,15 @@ export default function AddMarketplace(props:any) {
             setInvalidUrl(true);
             return;
         }
-
+        // setMarketUrl(`${shpePartnerId}:${shpePartnerKey}`);
         const payload = {
-            identifier: marketUrl,
+            identifier: marketUrl || `${shpePartnerId}:${shpePartnerKey}`,
             name:name,
             status:'pending',
             channel: marketplace
         }
-        // await createStore(payload);
-        // setLoading(false);
-        console.log(payload);
         generateShopeeAuthUrl(payload).then((result) => {
             setLoading(false);
-            // console.log(result);
             router.push(result);
         })
     }
@@ -116,15 +114,26 @@ export default function AddMarketplace(props:any) {
                         placeholder="ABC Store"
                         onValueChange={setName} />
                         {(marketName == 'shopee') && (
+                            <>
                             <Input
                             isClearable
                             isInvalid={invalidUrl}
-                            errorMessage="Please enter a valid Shopee App ID and Secret"
-                            label={`Shopee App ID and Secret (format: app_id:app_secret)`}
+                            errorMessage="Please enter a valid Shopee live partner ID"
+                            label={`Shopee Live Partner ID`}
+                            placeholder="123456"
+                            onClear={() => onMarketUrlClear()}
+                            value={shpePartnerId}
+                            onChange={(e) => setShpePartnerId(e.target.value)} />
+                            <Input
+                            isClearable
+                            isInvalid={invalidUrl}
+                            errorMessage="Please enter a valid Shopee live partner key"
+                            label={`Shopee Live Partner Key`}
                             placeholder="123456:xxabcde123s"
                             onClear={() => onMarketUrlClear()}
-                            value={marketUrl}
-                            onChange={(e) => setMarketUrl(e.target.value)} />
+                            value={shpePartnerKey}
+                            onChange={(e) => setShpePartnerKey(e.target.value)} />
+                            </>
                         )}
                         {(marketName == 'tokopedia') && (
                             <Input
