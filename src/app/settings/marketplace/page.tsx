@@ -28,7 +28,8 @@ const Settings = async ({searchParams} : {
         } else if (urlParams.shop_id && urlParams.code) {
             /* SHOPEE */
             channel = 'Shopee';
-            let authorized = await generateShopeeToken(urlParams.code, urlParams.shop_id);
+
+            let authorized = await generateShopeeToken(urlParams.code, urlParams.shop_id, urlParams.id);
             if (!authorized.error) {
                 isConnected = true;
             }
