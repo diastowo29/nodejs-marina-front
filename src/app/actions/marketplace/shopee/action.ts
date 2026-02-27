@@ -3,7 +3,7 @@
 import { HOST } from "@/urls/internal";
 import { generateJwt } from "../../sign/actions";
 
-export async function generateShopeeToken (code:string, shopId:string) {
+export async function generateShopeeToken (code:string, shopId:string, id?:string, key?:string) {
 
     let authResponse = await fetch(`${HOST}/api/v1/shopee/authorize`, {
         method: 'POST',
@@ -14,7 +14,9 @@ export async function generateShopeeToken (code:string, shopId:string) {
         },
         body: JSON.stringify({
             code: code,
-            shop_id: shopId
+            shop_id: shopId,
+            ...(id) ? {partner_id: id} : {},
+            ...(key) ? {partner_key: key} : {}
         })
     });
 

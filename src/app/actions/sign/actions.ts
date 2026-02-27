@@ -25,7 +25,7 @@ export async function generateShopeeAuthUrl(payload:any) {
   const shopeeString = `${partnerId}${shopeeAuthPath}${ts}`;
   try {
       const hmac = createHmac('sha256', partnerKey).update(shopeeString).digest('hex');
-      return `${shopeeAuthHost}?auth_type=seller&partner_id=${partnerId}&${redirectKey}=${host}/settings/marketplace&response_type=code&timestamp=${ts}&sign=${hmac}`;
+      return `${shopeeAuthHost}?auth_type=seller&partner_id=${partnerId}&${redirectKey}=${host}/settings/marketplace?id=${partnerId}&key=${partnerKey}&response_type=code&timestamp=${ts}&sign=${hmac}`;
   } catch (error) {
       console.error('Error generating HMAC:', error);
       return '';
