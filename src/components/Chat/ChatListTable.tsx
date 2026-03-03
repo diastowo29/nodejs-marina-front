@@ -16,7 +16,10 @@ import { io } from "socket.io-client";
 export const ChatListTable = (chat:any) => {
   const [chatList, setChatList] = useState(chat.chat.omnichat);
   // const router = useRouter();
-  const socket = io('https://marina-apps.et.r.appspot.com');
+  const socket = io('https://marina-apps.et.r.appspot.com', {
+    retries: 3,
+    reconnectionAttempts: 3
+  });
   socket.on(chat.chat.tenant_id, (message:any) => {
     const chatId = message.message || '7550636978061672712'
     const indexed = chat.chat.omnichat.findIndex((c:any) => c.origin_id == chatId);
