@@ -11,14 +11,20 @@ export const ProductContent = (params:any) => {
             <ModalBody>
                 <div className="grid grid-cols-3 gap-4">
                     <Image
-                        alt="HeroUI hero Image with delay"
-                        // height={200}
-                        src="https://app.requestly.io/delay/5000/https://heroui.com/images/hero-card-complete.jpeg"
-                        width={300}/>
+                        alt={productDetail.name || "Product image"}
+                        src={
+                            // use source value from productDetail if available, otherwise fall back to generic not_found image
+                            (productDetail?.product_img && productDetail.product_img.length > 0
+                              ? productDetail.product_img[0].thumbnailUrl
+                              : (productDetail?.source?.url || "/images/not_found/not_found.jpg"))
+                        }
+                        width={300} />
                     <div>
-                        <p>{`Rp ${formatPrice(productDetail.price)}`}</p>
-                        <p>{`Condition: ${(conditions(productDetail.condition))}`}</p>
-                        <p>{(productDetail.desc) ?? '-'}</p>
+                        <p>{`SKU: ${productDetail.sku}`}</p>
+                        <p>{`Price: Rp ${formatPrice(productDetail.price)}`}</p>
+                        <p>{`Product URL: `}<a href={productDetail.url} target="_blank">Marketplace URL</a></p>
+                        {/* <p>{`Condition: ${(conditions(productDetail.condition))}`}</p> */}
+                        {/* <p>{(productDetail.desc) ?? '-'}</p> */}
                     </div>
                 </div>
             </ModalBody>
