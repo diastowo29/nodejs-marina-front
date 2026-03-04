@@ -4,7 +4,7 @@ import { popToast } from "@/app/actions/toast/pop";
 import { cancelReasons } from "@/config/enum";
 import { localStrings } from "@/config/local_strings";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Select, SelectItem} from "@nextui-org/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface orderBtnProps {
     orderId: string;
@@ -15,6 +15,8 @@ interface orderBtnProps {
 const OrderButton = (props: orderBtnProps) => {
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
     const [onCalling, setOnCalling] = useState(false);
+    const [modalTitle, setModalTitle] = useState('');
+    const [howtoShip, setHowToShip] = useState(['Drop Off', 'Pick Up']);
     // const { user, error, isLoading } = useUser();
     // console.log(user);
     // if (!isLoading) {
@@ -22,7 +24,7 @@ const OrderButton = (props: orderBtnProps) => {
     // }
     // console.log(props);
     const [selectedReason, setSelectedReason] = useState('');
-    console.log(props);
+    // console.log(props);
     const reasons = cancelReasons(props.channel, props.status);
     const submitReject = async (orderId:string) => {
         setOnCalling(true);
@@ -43,6 +45,11 @@ const OrderButton = (props: orderBtnProps) => {
             }
         }
     }
+    useEffect(() => {
+        if (modalTitle) {
+            console.log(selectedReason);
+        }
+    }, [selectedReason]);
 
     const updateOrdersMenu = async (orderId:string, key:string) => {
         let jsonPayload = {};
@@ -83,10 +90,16 @@ const OrderButton = (props: orderBtnProps) => {
                     console.log(orderUpdated);
                     popToast(localStrings.message.orderUpdateFailed, 'error');
                 } else {
-                    if (orderUpdated.data.order.code == 0) {
-                        popToast(localStrings.message.orderUpdateSuccess, 'success');
+                    if (!orderUpdated.data.shipping_params) {
+                        if (orderUpdated.data.order.code == 0) {
+                            popToast(localStrings.message.orderUpdateSuccess, 'success');
+                        } else {
+                            popToast(orderUpdated.data.order.response.message, 'error');
+                        }
                     } else {
-                        popToast(orderUpdated.data.order.response.message, 'error');
+                        console.log(orderUpdated);
+                        setModalTitle('Shipping Details');
+                        onOpen();
                     }
                 }
                 return;
@@ -109,6 +122,12 @@ const OrderButton = (props: orderBtnProps) => {
                 action = 'process';
                 break;
             case 'ORDER_REQUEST_CANCEL':
+                label =  localStrings.btn.order.label.approve_cancel;
+                disabled = false;
+                desc = localStrings.btn.order.desc.approve_cancel;
+                action = 'approve';
+                break;
+            case 'IN_CANCEL':
                 label =  localStrings.btn.order.label.approve_cancel;
                 disabled = false;
                 desc = localStrings.btn.order.desc.approve_cancel;
@@ -152,6 +171,12 @@ const OrderButton = (props: orderBtnProps) => {
                 action = 'cancel';
                 break;
             case 'ORDER_REQUEST_CANCEL':
+                label = localStrings.btn.order.label.reject_cancel;
+                disabled = false;
+                desc = localStrings.btn.order.desc.reject_cancel;
+                action = 'reject';
+                break;
+            case 'IN_CANCEL':
                 label = localStrings.btn.order.label.reject_cancel;
                 disabled = false;
                 desc = localStrings.btn.order.desc.reject_cancel;
@@ -240,19 +265,23 @@ const OrderButton = (props: orderBtnProps) => {
                 <ModalContent>
                 {(onClose) => (
                     <>
-                    <ModalHeader className="flex flex-col gap-1">Cancellation Form</ModalHeader>
+                    <ModalHeader className="flex flex-col gap-1">{(modalTitle) || `Cancellation Form`}</ModalHeader>
                     <ModalBody>
-                        <Select fullWidth onSelectionChange={(keys) => setSelectedReason(keys.anchorKey as string)} className="max-w-xs" label="Select a reason">
-                            {reasons.map((cancelReason) => (
+                        <Select fullWidth onSelectionChange={(keys) => setSelectedReason(keys.anchorKey as string)} 
+                        className="max-w-xs" 
+                        label={(modalTitle) ? 'Select how you want to Ship' : 'Select Cancellation Reason'}>
+                            {modalTitle ? howtoShip.map((shipMethod) => (
+                                <SelectItem key={shipMethod}>{shipMethod}</SelectItem>
+                            )) : reasons.map((cancelReason) => (
                             <SelectItem key={cancelReason.key}>{cancelReason.label}</SelectItem>
                             ))}
                         </Select>
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="danger" variant="light" onPress={onClose}>
+                        <Button color="danger" variant="light" onPress={() => onClose()}>
                             Close
                         </Button>
-                        <Button isLoading={onCalling} color="primary" onPressStart={() => submitReject(props.orderId)} onPress={onClose}>
+                        <Button isLoading={onCalling} color="primary" onPressStart={() => submitReject(props.orderId)} onPress={() => onClose()}>
                             Submit
                         </Button>
                     </ModalFooter>

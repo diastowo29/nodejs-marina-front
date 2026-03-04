@@ -38,7 +38,7 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
     let statusLabel = '';
     let statusColor = marinaStatusColor.GREEN;
     let statusUi = status;
-    switch (status) {
+    switch (status.toLowerCase()) {
       case 'ready_to_ship':
         statusLabel = 'AWAITING_SHIPMENT';
         statusUi = 'Ready to Ship'
