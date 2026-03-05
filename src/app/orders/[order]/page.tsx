@@ -20,18 +20,33 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
     )
   }
 
-  if (data.store.channel.name.toString().toLowerCase() == marinaChannel.Lazada.toLowerCase()) {
-    data.order_items.forEach((item:any) => {
-      let indexFound = itemOrdered.findIndex(i => i.productsId == item.productsId)
-      if (indexFound >= 0) {
-        itemOrdered[indexFound]['qty'] = (itemOrdered[indexFound]['qty'])+1;
-      } else {
-        itemOrdered.push(item);
-      }
-    });
-    // console.log(itemOrdered);
-  } else {
-    itemOrdered = data.order_items;
+  let isShipDocAvailable = false;
+  // if (data.store.channel.name.toString().toLowerCase() == marinaChannel.Shopee.toLowerCase()) {
+  //     isShipDocAvailable = ['PROCESSED', 'SHIPPED'].includes(data.status);
+  //     console.log(isShipDocAvailable)
+  // }
+  switch (data.store.channel.name.toString().toLowerCase()) {
+    case marinaChannel.Lazada.toLowerCase():
+      data.order_items.forEach((item:any) => {
+        let indexFound = itemOrdered.findIndex(i => i.productsId == item.productsId)
+        if (indexFound >= 0) {
+          itemOrdered[indexFound]['qty'] = (itemOrdered[indexFound]['qty'])+1;
+        } else {
+          itemOrdered.push(item);
+        }
+      });
+      break;
+    case marinaChannel.Shopee.toLowerCase():
+      isShipDocAvailable = ['PROCESSED', 'SHIPPED'].includes(data.status);
+      itemOrdered = data.order_items;
+      break;
+    default:
+      itemOrdered = data.order_items;
+      break;
+  }
+
+  const getShipDoc = () => {
+
   }
 
   const marinaStatus = (status:string) => {
@@ -111,7 +126,7 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
     if (item.products.currency) {
       productCurrency = item.products.currency;
     }
-  });  
+  });
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Order" />
@@ -213,6 +228,7 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
                   <div className="flex justify-center gap-4.5">
                     <Button color="primary" isDisabled>Print label</Button>
                     <OrderButton channel={data.store.channel.name} status={marinaStatus(data.status).status.label} orderId={data.id}></OrderButton>
+                    {/* {(isShipDocAvailable) && <Button onClick={() => {getShipDoc()}} color="primary">Print Shipping Document</Button>} */}
                   </div>
               </div>
             </div>

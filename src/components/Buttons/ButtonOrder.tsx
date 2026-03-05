@@ -16,21 +16,30 @@ const OrderButton = (props: orderBtnProps) => {
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
     const [onCalling, setOnCalling] = useState(false);
     const [modalTitle, setModalTitle] = useState('');
+    const [shippingMethod, setShippingMethod] = useState<any>({});
+    const [onShipping, setOnShipping] = useState(false);
     const [howtoShip, setHowToShip] = useState(['Drop Off', 'Pick Up']);
-    // const { user, error, isLoading } = useUser();
-    // console.log(user);
-    // if (!isLoading) {
-    //     console.log(user)
-    // }
-    // console.log(props);
     const [selectedReason, setSelectedReason] = useState('');
-    // console.log(props);
     const reasons = cancelReasons(props.channel, props.status);
     const submitReject = async (orderId:string) => {
         setOnCalling(true);
+        let defaultShippingAddressId = 0;
+        if (onShipping) {
+            const pickupAddress = shippingMethod.pickup.address_list.find((address: any) =>
+                address.address_flag.includes('pickup_address')
+            );
+            if (pickupAddress) {
+                defaultShippingAddressId = pickupAddress.address_id;
+            }
+        }
         const jsonPayload = {
-            action: switchLabelReject(props.status).action,
-            cancel_reason: selectedReason
+            action: (onShipping) ? switchLabelProceed(props.status).action : switchLabelReject(props.status).action,
+            ...((onShipping) ? {
+                shipment: {
+                    method: selectedReason,
+                    address_id: (selectedReason == 'Drop Off') ? null : defaultShippingAddressId 
+                },
+            } : {cancel_reason: selectedReason})
         }
         const orderUpdated = await updateOrder(orderId, jsonPayload);
         setOnCalling(false);
@@ -52,6 +61,7 @@ const OrderButton = (props: orderBtnProps) => {
     }, [selectedReason]);
 
     const updateOrdersMenu = async (orderId:string, key:string) => {
+        setModalTitle('');
         let jsonPayload = {};
         let orderUpdated;
         switch (key) {
@@ -91,13 +101,15 @@ const OrderButton = (props: orderBtnProps) => {
                     popToast(localStrings.message.orderUpdateFailed, 'error');
                 } else {
                     if (!orderUpdated.data.shipping_params) {
+                        setShippingMethod({});
                         if (orderUpdated.data.order.code == 0) {
                             popToast(localStrings.message.orderUpdateSuccess, 'success');
                         } else {
                             popToast(orderUpdated.data.order.response.message, 'error');
                         }
                     } else {
-                        console.log(orderUpdated);
+                        setShippingMethod(orderUpdated.data.shipping_params.response);
+                        setOnShipping(true);
                         setModalTitle('Shipping Details');
                         onOpen();
                     }
@@ -208,37 +220,34 @@ const OrderButton = (props: orderBtnProps) => {
     }
     
     const items: Array<{
-            key: string;
-            label: string;
-            divider: boolean;
-            color: "success" | "warning" | "default" | "danger" | "primary" | "secondary" | undefined;
-            desc: string;
-            disabled?: boolean;
-        }> = [
-            {
-                key: "chat",
-                label: localStrings.btn.order.label.chat,
-                divider: false,
-                color: 'default',
-                desc: localStrings.btn.order.desc.chat
-            },
-            {
-                key: 'process',
-                label: switchLabelProceed(props.status).label,
-                divider: true,
-                color: 'default',
-                disabled: switchLabelProceed(props.status).disabled,
-                desc: switchLabelProceed(props.status).desc
-            },
-            {
-                key: "cancel",
-                label: switchLabelReject(props.status).label,
-                divider: false,
-                color: 'danger',
-                disabled: switchLabelReject(props.status).disabled,
-                desc: switchLabelReject(props.status).desc
-            }
-        ];
+        key: string;
+        label: string;
+        divider: boolean;
+        color: "success" | "warning" | "default" | "danger" | "primary" | "secondary" | undefined;
+        desc: string;
+        disabled?: boolean;
+    }> = [
+        {
+            key: "chat",
+            label: localStrings.btn.order.label.chat,
+            divider: false,
+            color: 'default',
+            desc: localStrings.btn.order.desc.chat
+        },{
+            key: 'process',
+            label: switchLabelProceed(props.status).label,
+            divider: true,
+            color: 'default',
+            disabled: switchLabelProceed(props.status).disabled,
+            desc: switchLabelProceed(props.status).desc
+        },{
+            key: "cancel",
+            label: switchLabelReject(props.status).label,
+            divider: false,
+            color: 'danger',
+            disabled: switchLabelReject(props.status).disabled,
+            desc: switchLabelReject(props.status).desc
+        }];
 
     return (
         <>
