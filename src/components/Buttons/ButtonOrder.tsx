@@ -26,11 +26,13 @@ const OrderButton = (props: orderBtnProps) => {
         setOnCalling(true);
         let defaultShippingAddressId = 0;
         if (onShipping) {
-            const pickupAddress = shippingMethod.pickup.address_list.find((address: any) =>
-                address.address_flag.includes('pickup_address')
-            );
-            if (pickupAddress) {
-                defaultShippingAddressId = pickupAddress.address_id;
+            if (shippingMethod.pickup) {
+                const pickupAddress = shippingMethod.pickup.address_list.find((address: any) =>
+                    address.address_flag.includes('pickup_address')
+                );
+                if (pickupAddress) {
+                    defaultShippingAddressId = pickupAddress.address_id;
+                }
             }
         }
         const jsonPayload = {
@@ -96,6 +98,7 @@ const OrderButton = (props: orderBtnProps) => {
                     action: switchLabelProceed(props.status).action
                 }
                 orderUpdated = await updateOrder(orderId, jsonPayload);
+                console.log(orderUpdated);
                 setOnCalling(false);
                 if (orderUpdated.status !== 200) {
                     console.log(orderUpdated);
