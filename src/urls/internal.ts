@@ -42,6 +42,9 @@ export const INT_ORDER_BYCHANNEL = (channel:string) => {
 export const INT_GET_ORDER = (orderId:string) => {
     return `${ORDER_ENDPOINT}/${orderId}`;
 };
+export const INT_GET_ORDER_AWB = (orderId:string) => {
+    return `${ORDER_ENDPOINT}/${orderId}/awb_track`;
+};
 export const INT_GET_RRC = (rrcId:string) => {
     return `${RRC_ENDPOINT}/${rrcId}`;
 }

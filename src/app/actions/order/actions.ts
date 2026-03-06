@@ -1,5 +1,5 @@
 'use server'
-import { INT_GET_ORDER, INT_GET_ORDER_ByU, INT_ORDER_BYCHANNEL, INT_UPDATE_ORDER } from "@/urls/internal";
+import { INT_GET_ORDER, INT_GET_ORDER_AWB, INT_GET_ORDER_ByU, INT_ORDER_BYCHANNEL, INT_UPDATE_ORDER } from "@/urls/internal";
 // import { getAccessToken } from "@auth0/nextjs-auth0/edge";
 // import { getAccessToken } from "@auth0/nextjs-auth0";
 // import { popToast } from "../toast/pop";
@@ -7,6 +7,17 @@ import { generateJwt } from "../sign/actions";
 
 export async function getOrders (orderId:string) {
     const orderRaw = await fetch(INT_GET_ORDER(orderId), {
+        cache: 'no-store',
+        headers: {
+            'Authorization': 'Bearer ' + await generateJwt()
+        }
+    });
+    const order = await orderRaw.json();
+    return order;
+}
+
+export async function getOrdersAwb (orderId:string) {
+    const orderRaw = await fetch(INT_GET_ORDER_AWB(orderId), {
         cache: 'no-store',
         headers: {
             'Authorization': 'Bearer ' + await generateJwt()

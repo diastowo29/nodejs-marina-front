@@ -10,6 +10,7 @@ interface orderBtnProps {
     orderId: string;
     status:string;
     channel:string;
+    shipDoc?:boolean;
 }
 
 const OrderButton = (props: orderBtnProps) => {
@@ -248,6 +249,10 @@ const OrderButton = (props: orderBtnProps) => {
             disabled: switchLabelReject(props.status).disabled,
             desc: switchLabelReject(props.status).desc
         }];
+    
+    const getShipDoc = () => {
+        console.log('get ship doc')
+    }
 
     return (
         <>
@@ -298,6 +303,7 @@ const OrderButton = (props: orderBtnProps) => {
                 )}
                 </ModalContent>
             </Modal>
+           {(props.shipDoc) && <Button onClick={() => {getShipDoc()}} color="primary">Print Shipping Document</Button>}
         </>
     )
 }

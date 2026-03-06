@@ -2,7 +2,7 @@ import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import {Button, Chip} from "@nextui-org/react";
 import OrderButton from "@/components/Buttons/ButtonOrder";
-import { getOrders } from "@/app/actions/order/actions";
+import { getOrders, getOrdersAwb } from "@/app/actions/order/actions";
 import { marinaChannel, marinaStatusColor } from "@/config/enum";
 import { OrderedItems } from "@/components/Tables/OrderedItems";
 
@@ -21,6 +21,7 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
   }
 
   let isShipDocAvailable = false;
+  let awb:any = null;
   // if (data.store.channel.name.toString().toLowerCase() == marinaChannel.Shopee.toLowerCase()) {
   //     isShipDocAvailable = ['PROCESSED', 'SHIPPED'].includes(data.status);
   //     console.log(isShipDocAvailable)
@@ -37,16 +38,17 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
       });
       break;
     case marinaChannel.Shopee.toLowerCase():
-      isShipDocAvailable = ['PROCESSED', 'SHIPPED'].includes(data.status);
+      isShipDocAvailable = ['PROCESSED', 'SHIPPED', 'COMPLETED'].includes(data.status);
+      awb = await getOrdersAwb(params.order);
       itemOrdered = data.order_items;
       break;
+    case marinaChannel.Tiktok.toLowerCase():
+      isShipDocAvailable = ['COMPLETED'].includes(data.status);
+      awb = await getOrdersAwb(params.order);
+      itemOrdered = data.order_items;
     default:
       itemOrdered = data.order_items;
       break;
-  }
-
-  const getShipDoc = () => {
-
   }
 
   const marinaStatus = (status:string) => {
@@ -227,7 +229,7 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
                   </div>
                   <div className="flex justify-center gap-4.5">
                     <Button color="primary" isDisabled>Print label</Button>
-                    <OrderButton channel={data.store.channel.name} status={marinaStatus(data.status).status.label} orderId={data.id}></OrderButton>
+                    <OrderButton channel={data.store.channel.name} status={marinaStatus(data.status).status.label} orderId={data.id} shipDoc={isShipDocAvailable}></OrderButton>
                     {/* {(isShipDocAvailable) && <Button onClick={() => {getShipDoc()}} color="primary">Print Shipping Document</Button>} */}
                   </div>
               </div>
