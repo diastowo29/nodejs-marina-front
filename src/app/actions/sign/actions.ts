@@ -15,6 +15,7 @@ export async function generateShopeeAuthUrl(payload:any) {
   const partnerId = (identifier == '') ? process.env.NEXT_PUBLIC_SHOPEE_PARTNER_ID : identifier.split(':')[0];
   const partnerKey = (identifier == '') ? process.env.NEXT_PUBLIC_SHOPEE_PARTNER_KEY : identifier.split(':')[1];
   const partnerEncode = Buffer.from(`${partnerId}:${partnerKey}`).toString('base64');
+  const additionalParams = (identifier == '') ? '' : `id=${partnerEncode}&`;
   const shopeeHost = process.env.NEXT_PUBLIC_SHOPEE_HOST;
   let shopeeAuthHost = (shopeeHost) ? `${shopeeHost}/api/v2/shop/auth_partner` :  `https://open.sandbox.test-stable.shopee.com/auth`;
   let host = process.env.APP_BASE_URL;
@@ -26,7 +27,7 @@ export async function generateShopeeAuthUrl(payload:any) {
   const shopeeString = `${partnerId}${shopeeAuthPath}${ts}`;
   try {
       const hmac = createHmac('sha256', partnerKey).update(shopeeString).digest('hex');
-      return `${shopeeAuthHost}?auth_type=seller&partner_id=${partnerId}&${redirectKey}=${host}/settings/marketplace?id=${partnerEncode}&response_type=code&timestamp=${ts}&sign=${hmac}`;
+      return `${shopeeAuthHost}?auth_type=seller&partner_id=${partnerId}&${redirectKey}=${host}/settings/marketplace?${additionalParams}response_type=code&timestamp=${ts}&sign=${hmac}`;
   } catch (error) {
       console.error('Error generating HMAC:', error);
       return '';

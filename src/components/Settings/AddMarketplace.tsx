@@ -39,7 +39,7 @@ export default function AddMarketplace(props:any) {
         setInvalidUrl(false);
     }
 
-    const saveMarketplace = async (marketplace:string) => {
+    const saveModalMarketplace = async (marketplace:string) => {
         setLoading(true);
         let isValid = true;
         if (!isValid) {
@@ -151,7 +151,7 @@ export default function AddMarketplace(props:any) {
                             <Button color="danger" variant="light" onPress={onClose}>
                                 Close
                             </Button>
-                            <Button color="primary" onClick={() => saveMarketplace(marketName)} isLoading={isLoading}>
+                            <Button color="primary" onClick={() => saveModalMarketplace(marketName)} isLoading={isLoading}>
                                 Submit
                             </Button>
                         </ModalFooter>
