@@ -119,8 +119,12 @@ const TablesPage = async ({ params }: { params: { order: string } }) => {
   // const currency = item.products.price.toLocaleString('id-ID', { style: 'currency',  currency:(item.products.currency) ? item.products.currency : 'USD'})
   let totalPrice:number = 0;
   let productCurrency:string = "IDR"
+  let totalProductPrice:number = 0;
+  data.order_items.forEach((item:any) => {
+    totalProductPrice = totalProductPrice + item.total_price;
+  });
   if (!data.total_product_price) {
-    totalPrice = data.total_amount-data.shipping_price
+    totalPrice = totalProductPrice;
   } else {
     totalPrice = data.total_product_price;
   }
