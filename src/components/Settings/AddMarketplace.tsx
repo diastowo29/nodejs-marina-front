@@ -1,8 +1,11 @@
 "use client";
 import { createStore } from "@/app/actions/marketplace/actions";
+import { generateTiktokToken } from "@/app/actions/marketplace/tiktok/action";
 import { generateShopeeAuthUrl } from "@/app/actions/sign/actions";
+import { popToast } from "@/app/actions/toast/pop";
 // import { generateHmac } from "@/app/actions/sign/actions";
 import { BliBliIcon } from "@/app/settings/assets/BliBli";
+import { marinaChannel } from "@/config/enum";
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -37,6 +40,48 @@ export default function AddMarketplace(props:any) {
     const onMarketUrlClear  = () => {
         setMarketUrl('');
         setInvalidUrl(false);
+    }
+
+    const tiktokClicked = () => {
+        const tiktokWindow = window.open(tiktokAuth, '_blank');
+        const timer = setInterval(async () => {
+            try {
+                if (tiktokWindow?.closed) {
+                    clearInterval(timer);
+                }
+                if (tiktokWindow?.location.href.startsWith(process.env.APP_BASE_URL || 'http://localhost:3000')) {
+                    const windowUrl = new URL(tiktokWindow.location.href);
+                    let channel = '';
+                    let authResponse = {};
+                    if (windowUrl.searchParams.has('app_key') && windowUrl.searchParams.has('code')) {
+                        channel = marinaChannel.Tiktok;
+                        const code = windowUrl.searchParams.get('code');
+                        if (code) {
+                            authResponse = await generateTiktokToken(code);
+                        }
+                    } else {
+                        popToast('Invalid response from TikTok authentication', 'error');
+                        tiktokWindow.close();
+                        clearInterval(timer);
+                        return;
+                    }
+                    if ((authResponse as any).error) {
+                        popToast(`Connection failed for ${channel}`, "error");
+                    } else {
+                        popToast(`Connected to ${channel}`, "success");
+                    }
+                    tiktokWindow.close();
+                    clearInterval(timer);
+                }
+            } catch (e) {
+                if (e instanceof DOMException && e.name === "SecurityError") {
+                    console.log('Navigated to a different domain, cannot access location');
+                } else {
+                    console.log(e);
+                    clearInterval(timer);
+                }
+            }
+        }, 1000);
     }
 
     const saveModalMarketplace = async (marketplace:string) => {
@@ -92,10 +137,11 @@ export default function AddMarketplace(props:any) {
                 Add Lazada Store (Order)
                 </Link>
             </Button>
-            <Button className="bg-gradient-to-tr from-black to-white text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
-            <Link href={tiktokAuth}>
-                Add Tokopedia/TikTok Shop Store
-            </Link>
+            <Button onClick={tiktokClicked} className="bg-gradient-to-tr from-lime-500 to-black text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
+            Add Tokopedia/TikTok Store
+            {/* <Link href={tiktokAuth} target="_blank">
+            </Link> */}
+            {/* <Button onClick={tiktokClicked}>Tiktok</Button> */}
             </Button>
             <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
                 <ModalContent>
