@@ -8,7 +8,27 @@ export async function middleware(request: NextRequest) {
     if (request.nextUrl.pathname.startsWith("/auth")) {
       return authRes;
     }
-  
+    const isIframe = request.headers.get('sec-fetch-dest') === 'iframe';
+    if (isIframe) {
+      let host = request.headers.get('referer');
+      let clientId = '';
+      if (request.nextUrl.searchParams.has('client_id')) {
+        host = decodeURIComponent(request.nextUrl.searchParams.get('origin') || '')
+        clientId = request.nextUrl.searchParams.get('client_id') || '';
+      }
+      if (host && host.includes('zendesk.com')) {
+        return authRes;
+      } else {
+        return new NextResponse(
+          JSON.stringify({error: 'Unauthorized'}), 
+          {status: 401}
+        )
+      }
+      /* if (request.nextUrl.pathname.startsWith("/settings/lite/marketplace")) {
+        return authRes;
+      } */
+    }
+
     const session = await auth0.getSession();
     if (!session) {
       if (request.nextUrl.pathname.startsWith("/api")) {

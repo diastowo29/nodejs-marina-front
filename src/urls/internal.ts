@@ -1,12 +1,13 @@
 export const HOST = (process.env.BACKEND_HOST) ? `https://${process.env.BACKEND_HOST}` : `http://localhost:3002`;
 export const HOST_WS = process.env.NEXT_PUBLIC_WEBSOCKET_URL || 'http://localhost:5000';
 
-let CHANNEL_ENDPOINT = `${HOST}/api/v1/channels`;
-let PRODUCT_ENDPOINT = `${HOST}/api/v1/products`;
-let ORDER_ENDPOINT = `${HOST}/api/v1/orders`;
-let RRC_ENDPOINT = `${HOST}/api/v1/rrc`;
+const CHANNEL_ENDPOINT = `${HOST}/api/v1/channels`;
+const PRODUCT_ENDPOINT = `${HOST}/api/v1/products`;
+const ORDER_ENDPOINT = `${HOST}/api/v1/orders`;
+const RRC_ENDPOINT = `${HOST}/api/v1/rrc`;
+export const AUTH0_ENDPOINT = `${HOST}/api/v1/auth0`;
 export const CHAT_ENDPOINT = `${HOST}/api/v1/chats`;
-let STORE_ENDPOINT = `${HOST}/api/v1/stores`;
+const STORE_ENDPOINT = `${HOST}/api/v1/stores`;
 export const CRM_ENDPOINT = `${HOST}/api/v1/crm`;
 
 export const INT_STORES = STORE_ENDPOINT;
