@@ -22,15 +22,15 @@ export async function getListStores () {
     }
 }
 
-export async function getListStoresLite (referer:string, clientId:string) {
+export async function getListStoresLite (referer:string, orgId:string) {
     try {
-        const storeRaw = await fetch(`${INT_LIST_STORE_ByC}_lite?client_id=${clientId}`, { 
+        const storeRaw = await fetch(`${INT_LIST_STORE_ByC}_lite?client_id=${orgId}`, { 
             cache: 'no-store',
             headers: {
                 'iframe': 'true',
                 'referer': referer,
-                'client_id': clientId,
-                'm_client': clientId
+                'client_id': orgId,
+                'm_client': orgId
             }
         })
         const storeData = await storeRaw.json();
