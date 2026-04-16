@@ -49,9 +49,7 @@ export default function AddMarketplace(props:any) {
                 if (tiktokWindow?.closed) {
                     clearInterval(timer);
                 }
-                console.log(process.env.APP_BASE_URL);
-                console.log(tiktokWindow?.location);
-                if (tiktokWindow?.location.href.startsWith(process.env.APP_BASE_URL || 'http://localhost:3000')) {
+                if (tiktokWindow?.location.href.startsWith('https://marina-apps-553781175495.asia-southeast2.run.app')) {
                     const windowUrl = new URL(tiktokWindow.location.href);
                     let channel = '';
                     let authResponse = {};
@@ -74,6 +72,8 @@ export default function AddMarketplace(props:any) {
                     }
                     tiktokWindow.close();
                     clearInterval(timer);
+                } else {
+                    console.log(tiktokWindow?.location);
                 }
             } catch (e) {
                 if (e instanceof DOMException && e.name === "SecurityError") {
