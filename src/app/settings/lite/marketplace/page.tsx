@@ -47,7 +47,6 @@ const Settings = async ({searchParams} : {
     let lazadaChatKeyId = process.env.NEXT_PUBLIC_LAZ_APP_CHAT_KEY_ID;
     let lazadaOmsKeyId = process.env.NEXT_PUBLIC_LAZ_APP_OMS_KEY_ID;
     let host = process.env.APP_BASE_URL;
-    console.log(urlParams);
     let stores = await getListStoresLite(iframeReferer, urlParams.client_id);
     let showLoading = false;
 
