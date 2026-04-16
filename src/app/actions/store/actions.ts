@@ -29,7 +29,7 @@ export async function getListStoresLite (referer:string, orgId:string) {
             headers: {
                 'iframe': 'true',
                 'referer': referer,
-                'm-clinet-id': orgId,
+                'm-client-id': orgId,
             }
         })
         const storeData = await storeRaw.json();
