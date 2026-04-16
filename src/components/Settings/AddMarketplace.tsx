@@ -50,6 +50,8 @@ export default function AddMarketplace(props:any) {
                     clearInterval(timer);
                 }
                 if (tiktokWindow?.location.href.startsWith(process.env.APP_BASE_URL || 'http://localhost:3000')) {
+                    console.log(process.env.APP_BASE_URL);
+                    console.log(tiktokWindow?.location);
                     const windowUrl = new URL(tiktokWindow.location.href);
                     let channel = '';
                     let authResponse = {};
