@@ -49,9 +49,9 @@ export default function AddMarketplace(props:any) {
                 if (tiktokWindow?.closed) {
                     clearInterval(timer);
                 }
+                console.log(process.env.APP_BASE_URL);
+                console.log(tiktokWindow?.location);
                 if (tiktokWindow?.location.href.startsWith(process.env.APP_BASE_URL || 'http://localhost:3000')) {
-                    console.log(process.env.APP_BASE_URL);
-                    console.log(tiktokWindow?.location);
                     const windowUrl = new URL(tiktokWindow.location.href);
                     let channel = '';
                     let authResponse = {};
