@@ -2,6 +2,7 @@
 import { createHmac } from "crypto";
 import { auth0 } from "@/lib/auth0";
 import crypto from 'crypto'
+import { sign as jwtSign } from 'jsonwebtoken';
 
 const secret_key = process.env.M_SECRET_KEY || "xxx"
 const secret_iv = process.env.M_SECRET_IV || "xxx"
@@ -53,6 +54,29 @@ export const decryptHash = (encryptedData:string) => {
     )
 }
 
+export const generateServerJwt = async (clientId?:string) => {
+  console.log('Generating server JWT for clientId: ', clientId);
+  const secret = process.env.SERVER_TO_SERVER_JWT_SECRET || 'somereallycrazylongdefaultsecret292929R@hasia';
+  if (!secret) {
+    throw new Error('SERVER_TO_SERVER_JWT_SECRET is not defined');
+  }
+
+  //sub can be dynamic based on who is calling
+  return jwtSign(
+    {
+      iss: process.env.SERVER_TO_SERVER_JWT_ISS || 'marina-server',
+      aud: (clientId) ? clientId : process.env.SERVER_TO_SERVER_JWT_AUD,
+      sub: process.env.SERVER_TO_SERVER_JWT_SUB || 'marina-server',
+      scope: 'server-to-server',
+    },
+    secret,
+    {
+      algorithm: 'HS256',
+      expiresIn: '1m',
+    }
+  );
+}
+
 export const generateJwt = async () => {
     /* const cookiesStore = await cookies();
     const orgId = cookiesStore.get('org_id')?.value;
@@ -64,6 +88,7 @@ export const generateJwt = async () => {
         org_id: orgId
     }, privateKey, {algorithm: 'RS256'});
      */
+    console.log('Generating Auth0 JWT for API request...');
     const authToken = await auth0.getAccessToken();
     return authToken.token;
 }

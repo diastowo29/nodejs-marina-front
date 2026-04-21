@@ -1,6 +1,6 @@
 'use server'
 import { INT_LIST_STORE_ByC } from "@/urls/internal";
-import { generateJwt } from "../sign/actions";
+import { generateJwt, generateServerJwt } from "../sign/actions";
 
 export async function getListStores () {
     console.log('Fetching store list from server...');
@@ -30,6 +30,7 @@ export async function getListStoresLite (referer:string, orgId:string) {
                 'iframe': 'true',
                 'referer': referer,
                 'm-client-id': orgId,
+                'Authorization': 'Bearer ' + await generateServerJwt(orgId)
             }
         })
         const storeData = await storeRaw.json();

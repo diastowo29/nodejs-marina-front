@@ -18,6 +18,7 @@ const Settings = async ({searchParams} : {
     let channel = '';
     let urlParams = await searchParams;
     const headersList = headers();
+    let isLoading = false;
     const iframeReferer = headersList.get('referer') || '';
     if (urlParams.code) {
         if (urlParams.app && urlParams.code) {
@@ -47,11 +48,9 @@ const Settings = async ({searchParams} : {
     let lazadaChatKeyId = process.env.NEXT_PUBLIC_LAZ_APP_CHAT_KEY_ID;
     let lazadaOmsKeyId = process.env.NEXT_PUBLIC_LAZ_APP_OMS_KEY_ID;
     let host = process.env.APP_BASE_URL;
-    let stores = await getListStoresLite(iframeReferer, urlParams.client_id);
-    let showLoading = false;
-
+    let stores = await getListStoresLite(iframeReferer, urlParams.client_id); 
     if (stores.message == 'Client not found') {
-        showLoading = true;
+        isLoading = true;
         try {
             const hookBody = {
                 org_id: 'iframe',
@@ -59,10 +58,10 @@ const Settings = async ({searchParams} : {
             }
             await generateDb(hookBody);
             await generateSchema(hookBody);
-            showLoading = false;
+            isLoading = false;
         } catch (err) {
             console.log(err);
-            showLoading = false;
+            isLoading = false;
         }
     }
 
@@ -78,9 +77,10 @@ const Settings = async ({searchParams} : {
                 <CardBody>
                     <p>Connect your stores to Marina.</p>
                     <OrganizationIdPopup
-                        showLoading={showLoading}
+                        showLoading={isLoading}
                     />
                     <AddMarketplace
+                        clientId={urlParams.client_id || ''}
                         marinaHost={host}
                         lazadaChatKey={lazadaChatKeyId}
                         lazadaOmsKey={lazadaOmsKeyId}/>

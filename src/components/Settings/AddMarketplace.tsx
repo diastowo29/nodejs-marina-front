@@ -1,9 +1,7 @@
 "use client";
-import { createStore } from "@/app/actions/marketplace/actions";
 import { generateTiktokToken } from "@/app/actions/marketplace/tiktok/action";
 import { generateShopeeAuthUrl } from "@/app/actions/sign/actions";
 import { popToast } from "@/app/actions/toast/pop";
-// import { generateHmac } from "@/app/actions/sign/actions";
 import { BliBliIcon } from "@/app/settings/assets/BliBli";
 import { marinaChannel } from "@/config/enum";
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
@@ -36,6 +34,12 @@ export default function AddMarketplace(props:any) {
         setMarketName(btn);
         onOpen();
     }
+
+    //is it iframed?
+    const isIframe = window.self !== window.top;
+    if (isIframe) {
+        console.log(props.clientId);
+    }
   
     const onMarketUrlClear  = () => {
         setMarketUrl('');
@@ -49,7 +53,7 @@ export default function AddMarketplace(props:any) {
                 if (tiktokWindow?.closed) {
                     clearInterval(timer);
                 }
-                if (tiktokWindow?.location.href.startsWith('https://marina-apps-553781175495.asia-southeast2.run.app')) {
+                if (tiktokWindow?.location.href.startsWith('https://marina-apps-553781175495.asia-southeast2.run.app/')) {
                     const windowUrl = new URL(tiktokWindow.location.href);
                     let channel = '';
                     let authResponse = {};
@@ -57,7 +61,7 @@ export default function AddMarketplace(props:any) {
                         channel = marinaChannel.Tiktok;
                         const code = windowUrl.searchParams.get('code');
                         if (code) {
-                            authResponse = await generateTiktokToken(code);
+                            authResponse = await generateTiktokToken(code, isIframe, props.clientId);
                         }
                     } else {
                         popToast('Invalid response from TikTok authentication', 'error');
@@ -66,6 +70,7 @@ export default function AddMarketplace(props:any) {
                         return;
                     }
                     if ((authResponse as any).error) {
+                        console.log(authResponse)
                         popToast(`Connection failed for ${channel}`, "error");
                     } else {
                         popToast(`Connected to ${channel}`, "success");

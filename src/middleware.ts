@@ -3,13 +3,15 @@ import { auth0 } from './lib/auth0';
 export async function middleware(request: NextRequest) {
   const { origin } = new URL(request.url);
   try {
-    console.log(request.nextUrl.pathname)
     if (request.nextUrl.pathname.startsWith('/marketplace/callmeback')) {
       return NextResponse.next();
     }
     const authRes = await auth0.middleware(request); // Returns a NextResponse object
   
     if (request.nextUrl.pathname.startsWith("/auth")) {
+      return authRes;
+    }
+    if (request.nextUrl.href == request.headers.get('referer')) {
       return authRes;
     }
     const isIframe = request.headers.get('sec-fetch-dest') === 'iframe';
