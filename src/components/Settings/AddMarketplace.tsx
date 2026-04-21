@@ -53,7 +53,8 @@ export default function AddMarketplace(props:any) {
                 if (tiktokWindow?.closed) {
                     clearInterval(timer);
                 }
-                if (tiktokWindow?.location.href.startsWith('https://marina-apps-553781175495.asia-southeast2.run.app/')) {
+                const host = tiktokWindow?.location.host || '';
+                if (tiktokWindow?.location.host === host) {
                     const windowUrl = new URL(tiktokWindow.location.href);
                     let channel = '';
                     let authResponse = {};

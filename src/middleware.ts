@@ -14,6 +14,9 @@ export async function middleware(request: NextRequest) {
     if (request.nextUrl.href == request.headers.get('referer')) {
       return authRes;
     }
+    if (request.nextUrl.pathname.startsWith("/settings/lite/marketplace") && request.method == 'POST') {
+      return authRes;
+    }
     const isIframe = request.headers.get('sec-fetch-dest') === 'iframe';
     if (isIframe) {
       let host = request.headers.get('referer');
@@ -30,9 +33,6 @@ export async function middleware(request: NextRequest) {
           {status: 401}
         )
       }
-      /* if (request.nextUrl.pathname.startsWith("/settings/lite/marketplace")) {
-        return authRes;
-      } */
     }
 
     const session = await auth0.getSession();
