@@ -7,7 +7,10 @@ import { marinaChannel } from "@/config/enum";
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Script from "next/script";
 import { useState } from "react";
+
+declare const ZAFClient: any;
 
 export default function AddMarketplace(props:any) {
     const router = useRouter();
@@ -23,6 +26,7 @@ export default function AddMarketplace(props:any) {
     const [marketUrl, setMarketUrl] = useState('');
     const [invalidUrl, setInvalidUrl] = useState(false);
     const [isLoading, setLoading] = useState(false);
+    const [isIframe, setIsIframe] = useState(window.self !== window.top);
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
     const [name, setName] = useState('');
     const modalMarketplace = (btn:any, newModal:boolean) => {
@@ -34,13 +38,6 @@ export default function AddMarketplace(props:any) {
         setMarketName(btn);
         onOpen();
     }
-
-    //is it iframed?
-    const isIframe = window.self !== window.top;
-    if (isIframe) {
-        console.log(props.clientId);
-    }
-  
     const onMarketUrlClear  = () => {
         setMarketUrl('');
         setInvalidUrl(false);
@@ -121,13 +118,25 @@ export default function AddMarketplace(props:any) {
         })
     }
 
+    const loadZendeskClient = () => {
+        console.log('loaded')
+        const client = ZAFClient.init();
+        client.metadata().then((metadata:any) => {
+            console.log(metadata);
+        })
+        client.invoke("notify", "Marina successfully loaded!!");
+    }
+
     return (
         <div className="flex flex-wrap gap-4 items-center">
+            {isIframe && (
+                <Script src="https://static.zdassets.com/zendesk_app_framework_sdk/2.0/zaf_sdk.min.js" onLoad={loadZendeskClient}/>
+            )}
             <Button isDisabled onClick={() => modalMarketplace('blibli', true)} className="bg-gradient-to-tr from-blue-400 to-sky-400 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
                 Add BliBli Store
             </Button>
-            <Button isDisabled onClick={() => modalMarketplace('tokopedia', true)} className="bg-gradient-to-tr from-lime-600 to-green-400 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
-                Add Tokopedia Store
+            <Button onClick={tiktokClicked} className="bg-gradient-to-tr from-lime-500 to-black text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
+                Add Tokopedia/TikTok Store
             </Button>
             <Button onClick={() => modalMarketplace('shopee', true)} className="bg-gradient-to-tr from-orange-500 to-orange-300 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
                 Add Shopee Store (Chat)
@@ -144,12 +153,6 @@ export default function AddMarketplace(props:any) {
                 <Link href={`${lazadaAuth}&redirect_uri=https://marina-apps-553781175495.asia-southeast2.run.app/settings/marketplace?app=oms&client_id=${props.lazadaOmsKey}`}>
                 Add Lazada Store (Order)
                 </Link>
-            </Button>
-            <Button onClick={tiktokClicked} className="bg-gradient-to-tr from-lime-500 to-black text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
-            Add Tokopedia/TikTok Store
-            {/* <Link href={tiktokAuth} target="_blank">
-            </Link> */}
-            {/* <Button onClick={tiktokClicked}>Tiktok</Button> */}
             </Button>
             <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
                 <ModalContent>
