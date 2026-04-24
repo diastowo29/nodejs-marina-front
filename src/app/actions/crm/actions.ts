@@ -1,10 +1,20 @@
 'use server'
 import { CRM_ENDPOINT, HANDSHAKE_SUNCO, HANDSHAKE_ZD } from "@/urls/internal";
-import { generateJwt } from "../sign/actions";
-// import * as crypto from "crypto";
+import { generateJwt, generateServerJwt } from "../sign/actions";
+
+export async function upsertCrm (payload:{}, iframe?:boolean, clientId?:string) {
+    const token = (iframe) ? await generateServerJwt(clientId) : await generateJwt();
+    const crmRaw = await fetch(`${CRM_ENDPOINT}/upsert`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 
+            'Authorization': 'Bearer ' + token },
+        body: JSON.stringify(payload)
+    });
+    const crm = await crmRaw.json();
+    return crm;
+}
 
 export async function createCrm (payload:{}) {
-    // console.log(payload)
     const crmRaw = await fetch(CRM_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 
@@ -16,7 +26,6 @@ export async function createCrm (payload:{}) {
 }
 
 export async function updateCrm (payload:{}, id:string) {
-    // console.log(payload)
     const crmRaw = await fetch(`${CRM_ENDPOINT}/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 
@@ -43,11 +52,12 @@ export async function deleteCrm (id:string) {
     }
 }
 
-export async function getCrm () {
+export async function getCrm (iframe?:boolean, clientId?:string) {
+    const token = (iframe) ? await generateServerJwt(clientId) : await generateJwt();
     try {
         const storesRaw = await fetch(CRM_ENDPOINT, {
             method: 'GET',
-            headers: { 'Authorization': 'Bearer ' + await generateJwt() }
+            headers: { 'Authorization': `Bearer ${token}` }
         });
         const stores = await storesRaw.json();
         return stores;

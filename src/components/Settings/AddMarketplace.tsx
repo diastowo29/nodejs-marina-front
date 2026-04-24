@@ -1,10 +1,11 @@
 "use client";
+import { upsertCrm } from "@/app/actions/crm/actions";
 import { generateTiktokToken } from "@/app/actions/marketplace/tiktok/action";
 import { generateShopeeAuthUrl } from "@/app/actions/sign/actions";
 import { popToast } from "@/app/actions/toast/pop";
 import { BliBliIcon } from "@/app/settings/assets/BliBli";
 import { marinaChannel } from "@/config/enum";
-import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
+import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner, useDisclosure } from "@nextui-org/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Script from "next/script";
@@ -26,6 +27,7 @@ export default function AddMarketplace(props:any) {
     const [marketUrl, setMarketUrl] = useState('');
     const [invalidUrl, setInvalidUrl] = useState(false);
     const [isLoading, setLoading] = useState(false);
+    const [isLoadingZendesk, setIsLoadingZendesk] = useState(false);
     const [isIframe, setIsIframe] = useState(window.self !== window.top);
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
     const [name, setName] = useState('');
@@ -118,15 +120,33 @@ export default function AddMarketplace(props:any) {
         })
     }
 
-    const loadZendeskClient = () => {
-        console.log('loaded')
-        const client = ZAFClient.init();
-        client.metadata().then((metadata:any) => {
-            console.log(metadata);
-        })
-        client.invoke("notify", "Marina successfully loaded!!");
+    const loadZendeskClient = async () => {
+        setIsLoadingZendesk(true);
+        try {
+            const zdClient = ZAFClient.init();
+            const zdMetadata = await zdClient.metadata();
+            if (isIframe) {
+                const crmPayload = {
+                    host: window.location.ancestorOrigins[0],
+                    name: 'ZENDESK',
+                    suncoAppId: zdMetadata.settings.sunco_app_id,
+                    suncoAppKey: zdMetadata.settings.sunco_app_key,
+                    suncoAppSecret: zdMetadata.settings.sunco_app_secret,
+                    apiToken: 'iframe_token',
+                    resource: ['chat']
+                }
+                const marinaUserOriginId = await zdClient.get('requirement:marina_user_origin_id');
+                console.log(marinaUserOriginId);
+                await upsertCrm(crmPayload, isIframe, zdMetadata.settings.client_id);
+            }
+            zdClient.invoke("notify", "Marina successfully loaded!!");
+        } catch (err) {
+            console.error("Error loading Zendesk client:", err);
+            popToast('Failed to load Zendesk client', "error");
+        } finally {
+            setIsLoadingZendesk(false);
+        }
     }
-
     return (
         <div className="flex flex-wrap gap-4 items-center">
             {isIframe && (
@@ -227,6 +247,16 @@ export default function AddMarketplace(props:any) {
                 )}
                 </ModalContent>
             </Modal>
+            {isLoadingZendesk && (
+                <Modal isOpen={isLoadingZendesk} backdrop="blur" onOpenChange={() => {}}>
+                    <ModalContent>
+                        <ModalBody className="flex justify-center items-center py-8">
+                            <Spinner size="lg" />
+                            <p className="ml-4">Loading Zendesk client...</p>
+                        </ModalBody>
+                    </ModalContent>
+                </Modal>
+            )}
         </div>
     )
 }

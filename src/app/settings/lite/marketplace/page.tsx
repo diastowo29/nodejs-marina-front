@@ -75,7 +75,7 @@ const Settings = async ({searchParams} : {
                 </CardHeader>
                 <Divider/>
                 <CardBody>
-                    <p>Connect your stores to Marina.</p>
+                    <p>Integrate your store into Zendesk.</p>
                     <OrganizationIdPopup
                         showLoading={isLoading}
                     />

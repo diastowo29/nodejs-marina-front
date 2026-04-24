@@ -4,7 +4,8 @@ import { HOST } from "@/urls/internal";
 import { generateJwt, generateServerJwt } from "../../sign/actions";
 
 export async function generateTiktokToken (code:string, isIframe?:boolean, clientId?:string) {
-    const token = isIframe ? await generateServerJwt(clientId) : generateJwt()
+    const token = isIframe ? await generateServerJwt(clientId) : await generateJwt()
+    console.log('Generated JWT for Tiktok Token:', token);
     try {
         let authResponse = await fetch(`${HOST}/api/v1/tiktok/authorize`, {
             method: 'POST',
