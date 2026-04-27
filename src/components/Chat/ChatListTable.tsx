@@ -6,7 +6,7 @@ import DataTable from 'react-data-table-component';
 import { listChatComments } from "@/app/actions/chat/actions";
 import { getOrdersByUser } from "@/app/actions/order/actions";
 import { ChatSidebarV2 } from "./ChatSidebarv2";
-import { io } from "socket.io-client";
+// import { io } from "socket.io-client";
 // import { HOST_WS } from "@/urls/internal";
 // import { useRouter } from "next/router";
 // import { createServer } from "http";
@@ -16,19 +16,19 @@ import { io } from "socket.io-client";
 export const ChatListTable = (chat:any) => {
   const [chatList, setChatList] = useState(chat.chat.omnichat);
   // const router = useRouter();
-  const socket = io('https://marina-apps.et.r.appspot.com', {
-    retries: 3,
-    reconnectionAttempts: 3
-  });
-  socket.on(chat.chat.tenant_id, (message:any) => {
-    const chatId = message.message || '7550636978061672712'
-    const indexed = chat.chat.omnichat.findIndex((c:any) => c.origin_id == chatId);
-    if (indexed) {
-      chat.chat.omnichat[indexed]['new'] = false;
-      const newChat = moveObjectPosition(chat.chat.omnichat, indexed, 0);
-      setChatList([...newChat]);
-    }
-  });
+  // const socket = io('https://marina-apps.et.r.appspot.com', {
+  //   retries: 3,
+  //   reconnectionAttempts: 3
+  // });
+  // socket.on(chat.chat.tenant_id, (message:any) => {
+  //   const chatId = message.message || '7550636978061672712'
+  //   const indexed = chat.chat.omnichat.findIndex((c:any) => c.origin_id == chatId);
+  //   if (indexed) {
+  //     chat.chat.omnichat[indexed]['new'] = false;
+  //     const newChat = moveObjectPosition(chat.chat.omnichat, indexed, 0);
+  //     setChatList([...newChat]);
+  //   }
+  // });
   
   const moveObjectPosition = (array: [], fromIndex:number, toIndex:number) => {
     if (fromIndex < 0 || fromIndex >= array.length || toIndex < 0 || toIndex >= array.length) {
