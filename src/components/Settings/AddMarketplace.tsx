@@ -126,6 +126,11 @@ export default function AddMarketplace(props:any) {
             const zdClient = ZAFClient.init();
             const zdMetadata = await zdClient.metadata();
             if (isIframe) {
+                const marinaUserOriginId = await zdClient.get('requirement:marina_user_origin_id');
+                const marinaMessageId = await zdClient.get('requirement:marina_message_id');
+                const marinaStoreId = await zdClient.get('requirement:marina_store_id');
+                const marinaChannel = await zdClient.get('requirement:marina_channel');
+                const marinaStore = await zdClient.get('requirement:marina_store');
                 const crmPayload = {
                     host: window.location.ancestorOrigins[0],
                     name: 'ZENDESK',
@@ -133,10 +138,9 @@ export default function AddMarketplace(props:any) {
                     suncoAppKey: zdMetadata.settings.sunco_app_key,
                     suncoAppSecret: zdMetadata.settings.sunco_app_secret,
                     apiToken: 'iframe_token',
-                    resource: ['chat']
+                    resource: ['chat'],
+                    notes: `${marinaUserOriginId}-${marinaMessageId}-${marinaStoreId}-${marinaChannel}-${marinaStore}`
                 }
-                const marinaUserOriginId = await zdClient.get('requirement:marina_user_origin_id');
-                console.log(marinaUserOriginId);
                 await upsertCrm(crmPayload, isIframe, zdMetadata.settings.client_id);
             }
             zdClient.invoke("notify", "Marina successfully loaded!!");
