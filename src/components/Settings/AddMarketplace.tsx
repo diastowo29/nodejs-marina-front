@@ -139,7 +139,7 @@ export default function AddMarketplace(props:any) {
                     suncoAppSecret: zdMetadata.settings.sunco_app_secret,
                     apiToken: 'iframe_token',
                     resource: ['chat'],
-                    notes: `${marinaUserOriginId}-${marinaMessageId}-${marinaStoreId}-${marinaChannel}-${marinaStore}`
+                    notes: `${marinaUserOriginId.marina_user_origin_id.requirement_id}-${marinaMessageId.marina_message_id.requirement_id}-${marinaStoreId.marina_store_id.requirement_id}-${marinaChannel.marina_channel.requirement_id}-${marinaStore.marina_store.requirement_id}`
                 }
                 await upsertCrm(crmPayload, isIframe, zdMetadata.settings.client_id);
             }
