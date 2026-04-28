@@ -125,12 +125,19 @@ export default function AddMarketplace(props:any) {
         try {
             const zdClient = ZAFClient.init();
             const zdMetadata = await zdClient.metadata();
+            const reqList = {
+                marina_user_origin_id: 'requirement:marina_user_origin_id',
+                marina_message_id: 'requirement:marina_message_id',
+                marina_store_id: 'requirement:marina_store_id',
+                marina_channel: 'requirement:marina_channel',
+                marina_store: 'requirement:marina_store'
+            }
             if (isIframe) {
-                const marinaUserOriginId = await zdClient.get('requirement:marina_user_origin_id');
-                const marinaMessageId = await zdClient.get('requirement:marina_message_id');
-                const marinaStoreId = await zdClient.get('requirement:marina_store_id');
-                const marinaChannel = await zdClient.get('requirement:marina_channel');
-                const marinaStore = await zdClient.get('requirement:marina_store');
+                const marinaUserOriginId = await zdClient.get(reqList.marina_user_origin_id);
+                const marinaMessageId = await zdClient.get(reqList.marina_message_id);
+                const marinaStoreId = await zdClient.get(reqList.marina_store_id);
+                const marinaChannel = await zdClient.get(reqList.marina_channel);
+                const marinaStore = await zdClient.get(reqList.marina_store);
                 const crmPayload = {
                     host: window.location.ancestorOrigins[0],
                     name: 'ZENDESK',
@@ -139,7 +146,7 @@ export default function AddMarketplace(props:any) {
                     suncoAppSecret: zdMetadata.settings.sunco_app_secret,
                     apiToken: 'iframe_token',
                     resource: ['chat'],
-                    notes: `${marinaUserOriginId.marina_user_origin_id.requirement_id}-${marinaMessageId.marina_message_id.requirement_id}-${marinaStoreId.marina_store_id.requirement_id}-${marinaChannel.marina_channel.requirement_id}-${marinaStore.marina_store.requirement_id}`
+                    notes: `${marinaUserOriginId[reqList.marina_user_origin_id].requirement_id}-${marinaMessageId[reqList.marina_message_id].requirement_id}-${marinaStoreId[reqList.marina_store_id].requirement_id}-${marinaChannel[reqList.marina_channel].requirement_id}-${marinaStore[reqList.marina_store].requirement_id}`
                 }
                 await upsertCrm(crmPayload, isIframe, zdMetadata.settings.client_id);
             }
