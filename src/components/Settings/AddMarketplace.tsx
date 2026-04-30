@@ -3,7 +3,7 @@ import { upsertCrm } from "@/app/actions/crm/actions";
 import { generateTiktokToken } from "@/app/actions/marketplace/tiktok/action";
 import { generateShopeeAuthUrl } from "@/app/actions/sign/actions";
 import { popToast } from "@/app/actions/toast/pop";
-import { BliBliIcon } from "@/app/settings/assets/BliBli";
+import { GeneralStoreIcon, LazadaIcon, TiktokIcon } from "@/app/settings/assets/Icons";
 import { marinaChannel } from "@/config/enum";
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner, useDisclosure } from "@nextui-org/react";
 import Link from "next/link";
@@ -163,26 +163,26 @@ export default function AddMarketplace(props:any) {
             {isIframe && (
                 <Script src="https://static.zdassets.com/zendesk_app_framework_sdk/2.0/zaf_sdk.min.js" onLoad={loadZendeskClient}/>
             )}
-            <Button isDisabled onClick={() => modalMarketplace('blibli', true)} className="bg-gradient-to-tr from-blue-400 to-sky-400 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
-                Add BliBli Store
+            <Button isDisabled onClick={() => modalMarketplace('blibli', true)} className="bg-gradient-to-tr from-blue-400 to-sky-400 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<GeneralStoreIcon/>}>
+                BliBli
             </Button>
-            <Button onClick={tiktokClicked} className="bg-gradient-to-tr from-lime-500 to-black text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
-                Add Tokopedia/TikTok Store
+            <Button onClick={tiktokClicked} className="bg-gradient-to-tr from-lime-500 to-black text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<TiktokIcon/>}>
+                Tokopedia/TikTok
             </Button>
-            <Button onClick={() => modalMarketplace('shopee', true)} className="bg-gradient-to-tr from-orange-500 to-orange-300 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
-                Add Shopee Store (Chat)
+            <Button onClick={() => modalMarketplace('shopee', true)} className="bg-gradient-to-tr from-orange-500 to-orange-300 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<GeneralStoreIcon/>}>
+                Shopee (Chat)
             </Button>
-            <Button isDisabled={isLoading} onClick={(e) => shopeeClick(e)} className="bg-gradient-to-tr from-orange-500 to-orange-300 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
-                Add Shopee Store
+            <Button isDisabled={isLoading} onClick={(e) => shopeeClick(e)} className="bg-gradient-to-tr from-orange-500 to-orange-300 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<GeneralStoreIcon/>}>
+                Shopee
             </Button>
-            <Button isDisabled className="bg-gradient-to-tr from-blue-800 to-red-500 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
+            <Button isDisabled className="bg-gradient-to-tr from-blue-800 to-red-500 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<LazadaIcon/>}>
                 <Link href={`${lazadaAuth}&redirect_uri=${callbackEndpoint}?app=chat&client_id=${props.lazadaChatKey}`}>
-                Add Lazada Store (Chat)
+                Lazada (Chat)
                 </Link>
             </Button>
-            <Button isDisabled className="bg-gradient-to-tr from-blue-800 to-red-500 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<BliBliIcon/>}>
+            <Button isDisabled className="bg-gradient-to-tr from-blue-800 to-red-500 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<LazadaIcon/>}>
                 <Link href={`${lazadaAuth}&redirect_uri=https://marina-apps-553781175495.asia-southeast2.run.app/settings/marketplace?app=oms&client_id=${props.lazadaOmsKey}`}>
-                Add Lazada Store (Order)
+                Lazada (Order)
                 </Link>
             </Button>
             <Modal isOpen={isOpen} onOpenChange={onOpenChange}>

@@ -1,5 +1,4 @@
 "use client";
-import { TokoIcon } from "@/app/settings/assets/Tokopedia";
 import { Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Listbox, ListboxItem, ListboxSection } from "@nextui-org/react";
 import { useState } from "react";
 import { CheckIcon, DotsIcon } from "../Icons/dotsaction";
@@ -7,6 +6,7 @@ import { popToast } from "@/app/actions/toast/pop";
 import Link from "next/link";
 import { generateShopeeAuthUrl } from "@/app/actions/sign/actions";
 import { useRouter } from "next/navigation";
+import { GeneralStoreIconSmall } from "@/app/settings/assets/Icons";
 
 export default function MarketplaceList(channels:any) {
     const router = useRouter();
@@ -57,7 +57,7 @@ export default function MarketplaceList(channels:any) {
                 {listChannels.map((channel:Record<string, any>) => (
                     <ListboxSection key={channel.id} title={channel.name} showDivider>
                         {channel.store.map((store:Record<string, string>) => (
-                            <ListboxItem startContent={<TokoIcon/>} key={store.id}>
+                            <ListboxItem startContent={<GeneralStoreIconSmall/>} key={store.id}>
                                 <div className="flex" style={{alignItems: "center"}}>
                                     <div className="flex-1">
                                         <label>{store.name}</label>
