@@ -20,20 +20,25 @@ export async function updateOrder (orderId:string) {
 
 export async function generateLazToken (lazadaParams: any) {
     const token = lazadaParams.iframe ? await generateServerJwt(lazadaParams.clientId) : await generateJwt()
+    console.log(lazadaParams);
+    try {
+        let authResponse = await fetch(`${HOST}/api/v1/lazada/authorize`, {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({
+                code: lazadaParams.code,
+                app: lazadaParams.app
+            })
+        });
     
-    let authResponse = await fetch(`${HOST}/api/v1/lazada/authorize`, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + token
-        },
-        body: JSON.stringify({
-            code: lazadaParams.code,
-            app: lazadaParams.app
-        })
-    });
-
-    let auth = await authResponse.json();
-    return auth;
+        let auth = await authResponse.json();
+        return auth;
+    } catch (error) {
+        console.error('Error generating Lazada token:', error);
+        throw error;
+    }
 }
