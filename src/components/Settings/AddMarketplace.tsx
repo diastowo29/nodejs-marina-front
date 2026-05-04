@@ -69,7 +69,8 @@ export default function AddMarketplace(props:any) {
     // }
 
     const lazadaChatClicked = () => {
-        const lazadaAuthUrl = `${lazadaAuth}&redirect_uri=${callbackEndpoint}?app=chat&client_id=${props.lazadaChatKey}`;
+        // const lazadaAuthUrl = `${lazadaAuth}&redirect_uri=${callbackEndpoint}?app=chat&client_id=${props.lazadaChatKey}`;
+        const lazadaAuthUrl = `https://sellercenter.lazada.co.id/apps/seller/login?login=1&redirect_url=https%3A%2F%2Fapi.lazada.co.id%2Foauth%2Fauthorize%3Fresponse_type%3Dcode%26redirect_uri%3D${callbackEndpoint}%253Fapp%253Dchat%26force_auth%3Dfalse%26client_id%3D${props.lazadaChatKey}`;
         const lazadaWindow = window.open(lazadaAuthUrl, '_blank');
         const timer = setInterval(async () => {
             try {

@@ -4,7 +4,6 @@ const Settings = async ({searchParams} : {
     } >
 }) => {
     let urlParams = await searchParams;
-    console.log(urlParams);
     return (
         <></>
     );
