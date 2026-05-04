@@ -24,7 +24,12 @@ const Settings = async ({searchParams} : {
         if (urlParams.app && urlParams.code) {
             /* LAZADA */
             channel = 'Lazada';
-            let authorized = await generateLazToken(urlParams.code, urlParams.app);
+            const lazadaParams = {
+                code: urlParams.code || '',
+                app: urlParams.app || '',
+                iframe: false
+            };
+            let authorized = await generateLazToken(lazadaParams);
             if (!authorized.error) {
                 isConnected = true;
             }

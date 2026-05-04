@@ -1,7 +1,7 @@
 'use server'
 
 import { HOST } from "@/urls/internal";
-import { generateJwt } from "../../sign/actions";
+import { generateJwt, generateServerJwt } from "../../sign/actions";
 
 export async function updateOrder (orderId:string) {
     let authResponse = await fetch(`${HOST}/api/v1/lazada/order/${orderId}`, {
@@ -18,18 +18,19 @@ export async function updateOrder (orderId:string) {
     return authResponse;
 }
 
-export async function generateLazToken (code:string, apps:string) {
-
+export async function generateLazToken (lazadaParams: any) {
+    const token = lazadaParams.iframe ? await generateServerJwt(lazadaParams.clientId) : await generateJwt()
+    
     let authResponse = await fetch(`${HOST}/api/v1/lazada/authorize`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + await generateJwt()
+          'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify({
-            code: code,
-            app: apps
+            code: lazadaParams.code,
+            app: lazadaParams.app
         })
     });
 

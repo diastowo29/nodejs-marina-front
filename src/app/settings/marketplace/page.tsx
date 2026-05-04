@@ -21,7 +21,12 @@ const Settings = async ({searchParams} : {
         if (urlParams.app && urlParams.code) {
             /* LAZADA */
             channel = 'Lazada';
-            let authorized = await generateLazToken(urlParams.code, urlParams.app);
+            const lazadaParams = {
+                code: urlParams.code || '',
+                app: urlParams.app || '',
+                iframe: false,
+            }
+            let authorized = await generateLazToken(lazadaParams);
             if (!authorized.error) {
                 isConnected = true;
             }
@@ -58,7 +63,7 @@ const Settings = async ({searchParams} : {
                 <Card className="col-span-5">
                     <CardHeader className="flex gap-3">
                         <div className="flex flex-col">
-                            <p className="text-md">CRM Integration</p>
+                            <p className="text-md">Marketplace Integration</p>
                         </div>
                     </CardHeader>
                     <Divider/>

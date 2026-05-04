@@ -1,5 +1,6 @@
 "use client";
 import { upsertCrm } from "@/app/actions/crm/actions";
+import { generateLazToken } from "@/app/actions/marketplace/lazada/action";
 import { generateTiktokToken } from "@/app/actions/marketplace/tiktok/action";
 import { generateShopeeAuthUrl } from "@/app/actions/sign/actions";
 import { popToast } from "@/app/actions/toast/pop";
@@ -45,6 +46,82 @@ export default function AddMarketplace(props:any) {
         setInvalidUrl(false);
     }
 
+    // const checkWindowLocation = (popupWindow: Window | null, expectedHost: string) => {
+    //     return new Promise((resolve, reject) => {
+    //         const timer = setInterval(() => {
+    //             try {
+    //                 if (popupWindow?.closed) {
+    //                     clearInterval(timer);
+    //                     reject(new Error('Popup closed by user'));
+    //                 }
+    //                 const currentHost = popupWindow?.location.host || '';
+    //                 if (currentHost === expectedHost) {
+    //                     clearInterval(timer);
+    //                     resolve(popupWindow.location.href);
+    //                 } else {
+    //                     console.log('Current host:', currentHost);
+    //                 }
+    //             } catch (e) {
+    //                 console.error('Error occurred while checking window location:', e);
+    //             }
+    //         }, 1000);
+    //     });
+    // }
+
+    const lazadaChatClicked = () => {
+        const lazadaAuthUrl = `${lazadaAuth}&redirect_uri=${callbackEndpoint}?app=chat&client_id=${props.lazadaChatKey}`;
+        const lazadaWindow = window.open(lazadaAuthUrl, '_blank');
+        const timer = setInterval(async () => {
+            try {
+                if (lazadaWindow?.closed) {
+                    clearInterval(timer);
+                }
+                const host = lazadaWindow?.location.host || '';
+                if (lazadaWindow?.location.host === host) {
+                    console.log('lazada host')
+                    const windowUrl = new URL(lazadaWindow.location.href);
+                    let channel = '';
+                    let authResponse = {};
+                    if (windowUrl.searchParams.has('app') && windowUrl.searchParams.has('code')) {
+                        channel = marinaChannel.Lazada;
+                        const code = windowUrl.searchParams.get('code');
+                        const lazadaParams = {
+                            code: code || '',
+                            app: windowUrl.searchParams.get('app') || '',
+                            iframe: isIframe,
+                            clientId: props.clientId 
+                        }
+                        if (code) {
+                            authResponse = await generateLazToken(lazadaParams);
+                        }
+                    } else {
+                        popToast('Invalid response from Lazada authentication', 'error');
+                        lazadaWindow.close();
+                        clearInterval(timer);
+                        return;
+                    }
+                    if ((authResponse as any).error) {
+                        console.log(authResponse)
+                        popToast(`Connection failed for ${channel}`, "error");
+                    } else {
+                        popToast(`Connected to ${channel}`, "success");
+                    }
+                    lazadaWindow.close();
+                    clearInterval(timer);
+                } else {
+                    console.log(lazadaWindow?.location);
+                }
+            } catch (e) {
+                if (e instanceof DOMException && e.name === "SecurityError") {
+                    console.log('Navigated to a different domain, cannot access location');
+                } else {
+                    console.log(e);
+                    clearInterval(timer);
+                }
+            }
+        }, 1000);
+    }
+
     const tiktokClicked = () => {
         const tiktokWindow = window.open(tiktokAuth, '_blank');
         const timer = setInterval(async () => {
@@ -54,6 +131,7 @@ export default function AddMarketplace(props:any) {
                 }
                 const host = tiktokWindow?.location.host || '';
                 if (tiktokWindow?.location.host === host) {
+                    console.log('tiktok host')
                     const windowUrl = new URL(tiktokWindow.location.href);
                     let channel = '';
                     let authResponse = {};
@@ -175,10 +253,10 @@ export default function AddMarketplace(props:any) {
             <Button isDisabled={isLoading} onClick={(e) => shopeeClick(e)} className="bg-gradient-to-tr from-orange-500 to-orange-300 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<GeneralStoreIcon/>}>
                 Shopee
             </Button>
-            <Button isDisabled className="bg-gradient-to-tr from-blue-800 to-red-500 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<LazadaIcon/>}>
-                <Link href={`${lazadaAuth}&redirect_uri=${callbackEndpoint}?app=chat&client_id=${props.lazadaChatKey}`}>
+            <Button onClick={lazadaChatClicked} className="bg-gradient-to-tr from-blue-800 to-red-500 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<LazadaIcon/>}>
                 Lazada (Chat)
-                </Link>
+                {/* <Link href={`${lazadaAuth}&redirect_uri=${callbackEndpoint}?app=chat&client_id=${props.lazadaChatKey}`}>
+                </Link> */}
             </Button>
             <Button isDisabled className="bg-gradient-to-tr from-blue-800 to-red-500 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<LazadaIcon/>}>
                 <Link href={`${lazadaAuth}&redirect_uri=https://marina-apps-553781175495.asia-southeast2.run.app/settings/marketplace?app=oms&client_id=${props.lazadaOmsKey}`}>
