@@ -77,14 +77,11 @@ export default function AddMarketplace(props:any) {
                 if (lazadaWindow?.closed) {
                     clearInterval(timer);
                 }
-                const host = lazadaWindow?.location.host || '';
-                console.log(host);
-                console.log('Expected host:', new URL(callbackEndpoint).host);
-                //check current host
-                if (lazadaWindow?.location.host === host) {
+                if (lazadaWindow?.location.host === new URL(callbackEndpoint).host) {
                     const windowUrl = new URL(lazadaWindow.location.href);
                     let channel = '';
                     let authResponse = {};
+                    console.log(windowUrl.searchParams);
                     if (windowUrl.searchParams.has('app') && windowUrl.searchParams.has('code')) {
                         channel = marinaChannel.Lazada;
                         const code = windowUrl.searchParams.get('code');
@@ -96,6 +93,19 @@ export default function AddMarketplace(props:any) {
                         }
                         if (code) {
                             authResponse = await generateLazToken(lazadaParams);
+                            if ((authResponse as any).error) {
+                                console.log(authResponse)
+                                popToast(`Connection failed for ${channel}`, "error");
+                            } else {
+                                popToast(`Connected to ${channel}`, "success");
+                            }
+                            lazadaWindow.close();
+                            clearInterval(timer);
+                        } else {
+                            popToast('Invalid response from Lazada authentication', 'error');
+                            lazadaWindow.close();
+                            clearInterval(timer);
+                            return;
                         }
                     } else {
                         popToast('Invalid response from Lazada authentication', 'error');
@@ -103,14 +113,6 @@ export default function AddMarketplace(props:any) {
                         clearInterval(timer);
                         return;
                     }
-                    if ((authResponse as any).error) {
-                        console.log(authResponse)
-                        popToast(`Connection failed for ${channel}`, "error");
-                    } else {
-                        popToast(`Connected to ${channel}`, "success");
-                    }
-                    lazadaWindow.close();
-                    clearInterval(timer);
                 } else {
                     console.log(lazadaWindow?.location);
                 }
@@ -132,8 +134,7 @@ export default function AddMarketplace(props:any) {
                 if (tiktokWindow?.closed) {
                     clearInterval(timer);
                 }
-                const host = tiktokWindow?.location.host || '';
-                if (tiktokWindow?.location.host === host) {
+                if (tiktokWindow?.location.host === new URL(callbackEndpoint).host) {
                     const windowUrl = new URL(tiktokWindow.location.href);
                     let channel = '';
                     let authResponse = {};
