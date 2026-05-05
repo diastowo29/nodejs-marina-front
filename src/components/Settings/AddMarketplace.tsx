@@ -91,10 +91,12 @@ export default function AddMarketplace(props:any) {
                             iframe: isIframe,
                             clientId: props.clientId 
                         }
+                        console.log(lazadaParams);
                         if (code) {
                             authResponse = await generateLazToken(lazadaParams);
+                            console.log(authResponse);
                             if ((authResponse as any).error) {
-                                console.log(authResponse)
+                                // console.log(authResponse)
                                 popToast(`Connection failed for ${channel}`, "error");
                             } else {
                                 popToast(`Connected to ${channel}`, "success");
