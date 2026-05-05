@@ -81,7 +81,6 @@ export default function AddMarketplace(props:any) {
                     const windowUrl = new URL(lazadaWindow.location.href);
                     let channel = '';
                     let authResponse = {};
-                    console.log(windowUrl.searchParams);
                     if (windowUrl.searchParams.has('app') && windowUrl.searchParams.has('code')) {
                         channel = marinaChannel.Lazada;
                         const code = windowUrl.searchParams.get('code');
@@ -91,12 +90,10 @@ export default function AddMarketplace(props:any) {
                             iframe: isIframe,
                             clientId: props.clientId 
                         }
-                        console.log(lazadaParams);
                         if (code) {
                             authResponse = await generateLazToken(lazadaParams);
-                            console.log(authResponse);
                             if ((authResponse as any).error) {
-                                // console.log(authResponse)
+                                console.log(authResponse)
                                 popToast(`Connection failed for ${channel}`, "error");
                             } else {
                                 popToast(`Connected to ${channel}`, "success");
@@ -145,6 +142,14 @@ export default function AddMarketplace(props:any) {
                         const code = windowUrl.searchParams.get('code');
                         if (code) {
                             authResponse = await generateTiktokToken(code, isIframe, props.clientId);
+                            if ((authResponse as any).error) {
+                                console.log(authResponse)
+                                popToast(`Connection failed for ${channel}`, "error");
+                            } else {
+                                popToast(`Connected to ${channel}`, "success");
+                            }
+                            tiktokWindow.close();
+                            clearInterval(timer);
                         }
                     } else {
                         popToast('Invalid response from TikTok authentication', 'error');
@@ -152,14 +157,6 @@ export default function AddMarketplace(props:any) {
                         clearInterval(timer);
                         return;
                     }
-                    if ((authResponse as any).error) {
-                        console.log(authResponse)
-                        popToast(`Connection failed for ${channel}`, "error");
-                    } else {
-                        popToast(`Connected to ${channel}`, "success");
-                    }
-                    tiktokWindow.close();
-                    clearInterval(timer);
                 } else {
                     console.log(tiktokWindow?.location);
                 }
