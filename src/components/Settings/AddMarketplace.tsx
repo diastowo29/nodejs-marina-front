@@ -79,6 +79,8 @@ export default function AddMarketplace(props:any) {
                 }
                 const host = lazadaWindow?.location.host || '';
                 console.log(host);
+                console.log('Expected host:', new URL(callbackEndpoint).host);
+                //check current host
                 if (lazadaWindow?.location.host === host) {
                     const windowUrl = new URL(lazadaWindow.location.href);
                     let channel = '';
