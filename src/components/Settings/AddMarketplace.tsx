@@ -78,6 +78,7 @@ export default function AddMarketplace(props:any) {
                     clearInterval(timer);
                 }
                 const host = lazadaWindow?.location.host || '';
+                console.log(host);
                 if (lazadaWindow?.location.host === host) {
                     const windowUrl = new URL(lazadaWindow.location.href);
                     let channel = '';
@@ -249,19 +250,23 @@ export default function AddMarketplace(props:any) {
             <Button onClick={() => modalMarketplace('shopee', true)} className="bg-gradient-to-tr from-orange-500 to-orange-300 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<GeneralStoreIcon/>}>
                 Shopee (Chat)
             </Button>
-            <Button isDisabled={isLoading} onClick={(e) => shopeeClick(e)} className="bg-gradient-to-tr from-orange-500 to-orange-300 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<GeneralStoreIcon/>}>
-                Shopee
-            </Button>
+            {!isIframe && (
+                <Button isDisabled={isLoading} onClick={(e) => shopeeClick(e)} className="bg-gradient-to-tr from-orange-500 to-orange-300 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<GeneralStoreIcon/>}>
+                    Shopee
+                </Button>
+            )}
             <Button onClick={lazadaChatClicked} className="bg-gradient-to-tr from-blue-800 to-red-500 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<LazadaIcon/>}>
                 Lazada (Chat)
                 {/* <Link href={`${lazadaAuth}&redirect_uri=${callbackEndpoint}?app=chat&client_id=${props.lazadaChatKey}`}>
                 </Link> */}
             </Button>
-            <Button isDisabled className="bg-gradient-to-tr from-blue-800 to-red-500 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<LazadaIcon/>}>
-                <Link href={`${lazadaAuth}&redirect_uri=https://marina-apps-553781175495.asia-southeast2.run.app/settings/marketplace?app=oms&client_id=${props.lazadaOmsKey}`}>
-                Lazada (Order)
-                </Link>
-            </Button>
+            {!isIframe && (
+                <Button isDisabled className="bg-gradient-to-tr from-blue-800 to-red-500 text-white shadow-lg" color="primary" variant="flat" size="md" startContent={<LazadaIcon/>}>
+                    <Link href={`${lazadaAuth}&redirect_uri=https://marina-apps-553781175495.asia-southeast2.run.app/settings/marketplace?app=oms&client_id=${props.lazadaOmsKey}`}>
+                    Lazada (Order)
+                    </Link>
+                </Button>
+            )}
             <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
                 <ModalContent>
                 {(onClose) => (
