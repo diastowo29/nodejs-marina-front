@@ -20,7 +20,6 @@ export async function updateOrder (orderId:string) {
 
 export async function generateLazToken (lazadaParams: any) {
     const token = lazadaParams.iframe ? await generateServerJwt(lazadaParams.clientId) : await generateJwt()
-    console.log(lazadaParams);
     try {
         let authResponse = await fetch(`${HOST}/api/v1/lazada/authorize`, {
             method: 'POST',

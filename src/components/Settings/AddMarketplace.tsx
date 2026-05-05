@@ -19,7 +19,7 @@ export default function AddMarketplace(props:any) {
     // let tiktokAuth = `https://services.tiktokshop.com/open/authorize?service_id=7449020282483050246`
     let tiktokAuth = 'https://services.tiktokshop.com/open/authorize?service_id=7523274804246841144'
     let lazadaAuth = 'https://auth.lazada.com/oauth/authorize?response_type=code&force_auth=true';
-    let callbackEndpoint = `${props.marinaHost}/settings/marketplace`;
+    let callbackEndpoint = `${props.marinaHost}/marketplace/callmeback`;
     
     const [marketName, setMarketName] = useState('');
     const [shpePartnerId, setShpePartnerId] = useState('');
@@ -79,7 +79,6 @@ export default function AddMarketplace(props:any) {
                 }
                 const host = lazadaWindow?.location.host || '';
                 if (lazadaWindow?.location.host === host) {
-                    console.log('lazada host')
                     const windowUrl = new URL(lazadaWindow.location.href);
                     let channel = '';
                     let authResponse = {};
@@ -132,7 +131,6 @@ export default function AddMarketplace(props:any) {
                 }
                 const host = tiktokWindow?.location.host || '';
                 if (tiktokWindow?.location.host === host) {
-                    console.log('tiktok host')
                     const windowUrl = new URL(tiktokWindow.location.href);
                     let channel = '';
                     let authResponse = {};
